@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Nueva Consulta - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-notes-medical me-2"></i>
+                        Registrar Consulta Médica
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <!-- Información de la cita -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0">
+                                <i class="fas fa-info-circle me-2"></i>Información de la Cita
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Paciente:</strong> {{ cita.paciente.usuario.nombre }}</p>
+                                    <p><strong>Carrera:</strong> {{ cita.paciente.carrera }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Fecha:</strong> {{ cita.fecha.strftime('%d/%m/%Y') }}</p>
+                                    <p><strong>Tipo:</strong> 
+                                        {% if cita.tipo_cita.value == 'MEDICINA' %}
+                                            <span class="badge bg-primary">Medicina</span>
+                                        {% elif cita.tipo_cita.value == 'PSICOLOGIA' %}
+                                            <span class="badge bg-info">Psicología</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Emergencia</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                            {% if cita.motivo %}
+                                <p><strong>Motivo:</strong> {{ cita.motivo }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Formulario de consulta -->
+                    <form method="POST" class="needs-validation" novalidate>
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            {{ form.diagnostico.label(class="form-label") }}
+                            {{ form.diagnostico(class="form-control" + (" is-invalid" if form.diagnostico.errors else ""), rows="4") }}
+                            {% if form.diagnostico.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.diagnostico.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">Describe el diagnóstico médico detallado</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.tratamiento.label(class="form-label") }}
+                            {{ form.tratamiento(class="form-control" + (" is-invalid" if form.tratamiento.errors else ""), rows="4") }}
+                            {% if form.tratamiento.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.tratamiento.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">Indica el tratamiento prescrito</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.observaciones.label(class="form-label") }}
+                            {{ form.observaciones(class="form-control" + (" is-invalid" if form.observaciones.errors else ""), rows="3") }}
+                            {% if form.observaciones.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.observaciones.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">Observaciones adicionales (opcional)</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.nivel_riesgo.label(class="form-label") }}
+                            {{ form.nivel_riesgo(class="form-select" + (" is-invalid" if form.nivel_riesgo.errors else "")) }}
+                            {% if form.nivel_riesgo.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.nivel_riesgo.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">Evalúa el nivel de riesgo del paciente</div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('citas.detalle', cita_id=cita.id) }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save me-2"></i>Registrar Consulta
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

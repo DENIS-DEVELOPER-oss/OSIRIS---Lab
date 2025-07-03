@@ -1,0 +1,330 @@
+{% extends "base.html" %}
+
+{% block title %}Gestión de Usuarios - Sistema Médico Universitario{% endblock %}
+
+{% block extra_css %}
+<style>
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: white;
+        margin-right: 10px;
+    }
+    .role-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+    .status-active {
+        color: #28a745;
+    }
+    .status-inactive {
+        color: #dc3545;
+    }
+    .table-actions {
+        min-width: 120px;
+    }
+    .user-card {
+        transition: all 0.3s ease;
+        border: 1px solid #e0e0e0;
+    }
+    .user-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+    .stats-summary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-0">Gestión de Usuarios</h2>
+                    <p class="text-muted">Administrar usuarios del sistema médico universitario</p>
+                </div>
+                <div>
+                    <a href="{{ url_for('reportes.crear_usuario_directo') }}" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> Nuevo Usuario
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resumen de Estadísticas -->
+    <div class="stats-summary">
+        <div class="row">
+            <div class="col-md-3 text-center">
+                <h3 class="mb-0">{{ usuarios|selectattr('activo')|list|length }}</h3>
+                <small>Usuarios Activos</small>
+            </div>
+            <div class="col-md-3 text-center">
+                <h3 class="mb-0">{{ usuarios|selectattr('rol', 'equalto', 'PACIENTE')|list|length }}</h3>
+                <small>Estudiantes</small>
+            </div>
+            <div class="col-md-3 text-center">
+                <h3 class="mb-0">{{ usuarios|selectattr('rol', 'equalto', 'PROFESIONAL')|list|length }}</h3>
+                <small>Profesionales</small>
+            </div>
+            <div class="col-md-3 text-center">
+                <h3 class="mb-0">{{ usuarios|selectattr('rol', 'equalto', 'ADMINISTRADOR')|list|length }}</h3>
+                <small>Administradores</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="filtroRol">Filtrar por Rol:</label>
+                                <select id="filtroRol" class="form-control">
+                                    <option value="">Todos los roles</option>
+                                    <option value="PACIENTE">Estudiantes</option>
+                                    <option value="PROFESIONAL">Profesionales</option>
+                                    <option value="ADMINISTRADOR">Administradores</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="filtroEstado">Filtrar por Estado:</label>
+                                <select id="filtroEstado" class="form-control">
+                                    <option value="">Todos los estados</option>
+                                    <option value="activo">Activos</option>
+                                    <option value="inactivo">Inactivos</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="buscarUsuario">Buscar Usuario:</label>
+                                <input type="text" id="buscarUsuario" class="form-control" placeholder="Buscar por nombre o DNI...">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>&nbsp;</label>
+                                <button type="button" class="btn btn-secondary btn-block" onclick="limpiarFiltros()">
+                                    <i class="fas fa-undo"></i> Limpiar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de Usuarios -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Lista de Usuarios</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="tablaUsuarios">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Rol</th>
+                                    <th>Identificación</th>
+                                    <th>Estado</th>
+                                    <th>Fecha Registro</th>
+                                    <th class="table-actions">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for usuario in usuarios %}
+                                <tr class="usuario-row" 
+                                    data-rol="{{ usuario.rol }}" 
+                                    data-estado="{{ 'activo' if usuario.activo else 'inactivo' }}"
+                                    data-busqueda="{{ usuario.nombre.lower() }} {{ usuario.dni or '' }} {{ usuario.codigo_matricula or '' }}">
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="user-avatar" style="background-color: {% if usuario.rol.name == 'ADMINISTRADOR' %}#dc3545{% elif usuario.rol.name == 'PROFESIONAL' %}#007bff{% else %}#28a745{% endif %};">
+                                                {{ usuario.nombre[0].upper() }}
+                                            </div>
+                                            <div>
+                                                <div class="font-weight-medium">{{ usuario.nombre }}</div>
+                                                <small class="text-muted">ID: {{ usuario.id }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge role-badge {% if usuario.rol.name == 'ADMINISTRADOR' %}badge-danger{% elif usuario.rol.name == 'PROFESIONAL' %}badge-primary{% else %}badge-success{% endif %}">
+                                            {% if usuario.rol.name == 'PACIENTE' %}Estudiante
+                                            {% elif usuario.rol.name == 'PROFESIONAL' %}Profesional
+                                            {% else %}Administrador{% endif %}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if usuario.dni %}
+                                            <strong>DNI:</strong> {{ usuario.dni }}
+                                        {% elif usuario.codigo_matricula %}
+                                            <strong>Matrícula:</strong> {{ usuario.codigo_matricula }}
+                                        {% else %}
+                                            <span class="text-muted">No disponible</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="{% if usuario.activo %}status-active{% else %}status-inactive{% endif %}">
+                                            <i class="fas fa-circle fa-xs"></i>
+                                            {{ 'Activo' if usuario.activo else 'Inactivo' }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {{ usuario.fecha_creacion.strftime('%d/%m/%Y') if usuario.fecha_creacion else 'N/A' }}
+                                    </td>
+                                    <td class="table-actions">
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a href="{{ url_for('reportes.toggle_usuario_activo', usuario_id=usuario.id) }}" 
+                                               class="btn btn-{{ 'warning' if usuario.activo else 'success' }}"
+                                               onclick="return confirm('¿Está seguro de {{ 'desactivar' if usuario.activo else 'activar' }} este usuario?')">
+                                                <i class="fas fa-{{ 'pause' if usuario.activo else 'play' }}"></i>
+                                                {{ 'Desactivar' if usuario.activo else 'Activar' }}
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para detalles del usuario -->
+    <div class="modal fade" id="modalDetalleUsuario" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalles del Usuario</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- El contenido se cargará dinámicamente -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Función para filtrar usuarios
+function filtrarUsuarios() {
+    const filtroRol = document.getElementById('filtroRol').value;
+    const filtroEstado = document.getElementById('filtroEstado').value;
+    const busqueda = document.getElementById('buscarUsuario').value.toLowerCase();
+    
+    const filas = document.querySelectorAll('.usuario-row');
+    
+    filas.forEach(fila => {
+        const rol = fila.dataset.rol;
+        const estado = fila.dataset.estado;
+        const textoBusqueda = fila.dataset.busqueda;
+        
+        let mostrar = true;
+        
+        // Filtro por rol
+        if (filtroRol && rol !== filtroRol) {
+            mostrar = false;
+        }
+        
+        // Filtro por estado
+        if (filtroEstado && estado !== filtroEstado) {
+            mostrar = false;
+        }
+        
+        // Búsqueda por texto
+        if (busqueda && !textoBusqueda.includes(busqueda)) {
+            mostrar = false;
+        }
+        
+        fila.style.display = mostrar ? '' : 'none';
+    });
+    
+    // Mostrar mensaje si no hay resultados
+    const filasVisibles = document.querySelectorAll('.usuario-row[style=""]').length;
+    const tbody = document.querySelector('#tablaUsuarios tbody');
+    
+    // Remover mensaje anterior si existe
+    const mensajeAnterior = tbody.querySelector('.mensaje-sin-resultados');
+    if (mensajeAnterior) {
+        mensajeAnterior.remove();
+    }
+    
+    if (filasVisibles === 0) {
+        const mensaje = document.createElement('tr');
+        mensaje.className = 'mensaje-sin-resultados';
+        mensaje.innerHTML = '<td colspan="6" class="text-center text-muted py-4">No se encontraron usuarios que coincidan con los criterios de búsqueda.</td>';
+        tbody.appendChild(mensaje);
+    }
+}
+
+// Función para limpiar filtros
+function limpiarFiltros() {
+    document.getElementById('filtroRol').value = '';
+    document.getElementById('filtroEstado').value = '';
+    document.getElementById('buscarUsuario').value = '';
+    filtrarUsuarios();
+}
+
+// Event listeners para filtros
+document.getElementById('filtroRol').addEventListener('change', filtrarUsuarios);
+document.getElementById('filtroEstado').addEventListener('change', filtrarUsuarios);
+document.getElementById('buscarUsuario').addEventListener('input', filtrarUsuarios);
+
+// Función para mostrar detalles del usuario
+function mostrarDetalles(usuarioId) {
+    // Aquí se puede implementar una llamada AJAX para obtener más detalles
+    console.log('Mostrar detalles del usuario:', usuarioId);
+}
+
+// Confirmación para cambios de estado
+document.querySelectorAll('a[onclick*="confirm"]').forEach(link => {
+    link.addEventListener('click', function(e) {
+        const mensaje = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+        if (!confirm(mensaje)) {
+            e.preventDefault();
+        }
+    });
+});
+
+// Inicializar tooltips si Bootstrap está disponible
+$(document).ready(function() {
+    if (typeof $().tooltip === 'function') {
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+});
+</script>
+{% endblock %}

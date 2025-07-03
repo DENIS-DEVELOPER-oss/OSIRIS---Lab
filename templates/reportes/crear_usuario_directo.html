@@ -1,0 +1,318 @@
+{% extends "base.html" %}
+
+{% block title %}Crear Usuario - Sistema Médico Universitario{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-section {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 25px;
+        border-left: 4px solid #007bff;
+        margin-bottom: 20px;
+    }
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    .help-text {
+        color: #6c757d;
+        font-size: 0.875rem;
+        margin-top: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-0">Crear Nuevo Usuario</h2>
+                    <p class="text-muted">Formulario directo para crear usuarios</p>
+                </div>
+                <div>
+                    <a href="{{ url_for('reportes.gestion_usuarios') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Volver a Usuarios
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alertas -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Formulario -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-user-plus"></i> Registro Directo de Usuario
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" autocomplete="off">
+                        
+                        <div class="form-section">
+                            <h6 class="mb-3"><i class="fas fa-user"></i> Datos Generales</h6>
+                            
+                            <div class="row">
+                                <div class="col-md-8 mb-3">
+                                    <label for="nombre" class="form-label fw-bold">Nombre Completo *</label>
+                                    <input type="text" class="form-control" id="nombre" name="nombre" required 
+                                           placeholder="Ej: Juan Pérez García">
+                                    <div class="help-text">
+                                        <i class="fas fa-info-circle"></i> Nombre completo del usuario
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4 mb-3">
+                                    <label for="rol" class="form-label fw-bold">Rol *</label>
+                                    <select class="form-select" id="rol" name="rol" required>
+                                        <option value="">Seleccionar...</option>
+                                        <option value="PACIENTE">Estudiante</option>
+                                        <option value="PROFESIONAL">Profesional</option>
+                                        <option value="ADMINISTRADOR">Administrador</option>
+                                    </select>
+                                    <div class="help-text">
+                                        <i class="fas fa-user-tag"></i> Tipo de usuario
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h6 class="mb-3"><i class="fas fa-id-card"></i> Identificación</h6>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3" id="dniField">
+                                    <label for="dni" class="form-label fw-bold">DNI</label>
+                                    <input type="text" class="form-control" id="dni" name="dni" 
+                                           placeholder="Ej: 12345678">
+                                    <div class="help-text">
+                                        <i class="fas fa-id-badge"></i> Para profesionales y administradores
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3" id="matriculaField">
+                                    <label for="codigo_matricula" class="form-label fw-bold">Código de Matrícula</label>
+                                    <input type="text" class="form-control" id="codigo_matricula" name="codigo_matricula" 
+                                           placeholder="Ej: 20240001">
+                                    <div class="help-text">
+                                        <i class="fas fa-graduation-cap"></i> Para estudiantes
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h6 class="mb-3"><i class="fas fa-key"></i> Credenciales de Acceso</h6>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="password" class="form-label fw-bold">Contraseña *</label>
+                                    <input type="password" class="form-control" id="password" name="password" 
+                                           required minlength="6" placeholder="Mínimo 6 caracteres">
+                                    <div class="help-text">
+                                        <i class="fas fa-shield-alt"></i> <span id="passwordHelp">Mínimo 6 caracteres</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="confirm_password" class="form-label fw-bold">Confirmar Contraseña *</label>
+                                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
+                                           required minlength="6" placeholder="Repetir contraseña">
+                                    <div class="help-text">
+                                        <i class="fas fa-check-double"></i> <span id="confirmHelp">Debe coincidir</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información dinámica -->
+                        <div class="alert alert-info" id="infoRol">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Seleccione un rol</strong> para ver los requisitos de identificación.
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-success btn-lg w-100" id="submitBtn">
+                                    <i class="fas fa-user-plus"></i> Crear Usuario
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="{{ url_for('reportes.gestion_usuarios') }}" class="btn btn-secondary btn-lg w-100">
+                                    <i class="fas fa-times"></i> Cancelar
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Configuración de roles
+const rolesConfig = {
+    'PACIENTE': {
+        info: '<strong>Estudiante:</strong> Necesita código de matrícula para acceder al sistema.',
+        dniRequerido: false,
+        matriculaRequerida: true
+    },
+    'PROFESIONAL': {
+        info: '<strong>Profesional Médico:</strong> Necesita DNI para gestionar consultas.',
+        dniRequerido: true,
+        matriculaRequerida: false
+    },
+    'ADMINISTRADOR': {
+        info: '<strong>Administrador:</strong> Necesita DNI para acceso completo al sistema.',
+        dniRequerido: true,
+        matriculaRequerida: false
+    }
+};
+
+// Elementos del DOM
+const rolSelect = document.getElementById('rol');
+const dniField = document.getElementById('dniField');
+const matriculaField = document.getElementById('matriculaField');
+const dniInput = document.getElementById('dni');
+const matriculaInput = document.getElementById('codigo_matricula');
+const infoRol = document.getElementById('infoRol');
+const passwordInput = document.getElementById('password');
+const confirmInput = document.getElementById('confirm_password');
+const passwordHelp = document.getElementById('passwordHelp');
+const confirmHelp = document.getElementById('confirmHelp');
+
+// Actualizar interfaz según rol
+function actualizarRol() {
+    const rol = rolSelect.value;
+    
+    if (!rol) {
+        infoRol.innerHTML = '<i class="fas fa-info-circle"></i> <strong>Seleccione un rol</strong> para ver los requisitos de identificación.';
+        dniField.style.display = 'block';
+        matriculaField.style.display = 'block';
+        dniInput.required = false;
+        matriculaInput.required = false;
+        return;
+    }
+    
+    const config = rolesConfig[rol];
+    if (!config) return;
+    
+    // Actualizar información
+    infoRol.innerHTML = '<i class="fas fa-info-circle"></i> ' + config.info;
+    
+    // Mostrar/ocultar campos
+    dniField.style.display = config.dniRequerido ? 'block' : 'none';
+    matriculaField.style.display = config.matriculaRequerida ? 'block' : 'none';
+    
+    // Configurar campos requeridos
+    dniInput.required = config.dniRequerido;
+    matriculaInput.required = config.matriculaRequerida;
+    
+    // Limpiar campos no utilizados
+    if (!config.dniRequerido) dniInput.value = '';
+    if (!config.matriculaRequerida) matriculaInput.value = '';
+}
+
+// Validar contraseñas
+function validarPassword() {
+    const password = passwordInput.value;
+    const confirm = confirmInput.value;
+    
+    // Validar longitud
+    if (password.length < 6) {
+        passwordHelp.innerHTML = '<span class="text-warning">Mínimo 6 caracteres</span>';
+        passwordInput.classList.remove('is-valid');
+        passwordInput.classList.add('is-invalid');
+    } else {
+        passwordHelp.innerHTML = '<span class="text-success">Contraseña válida</span>';
+        passwordInput.classList.remove('is-invalid');
+        passwordInput.classList.add('is-valid');
+    }
+    
+    // Validar coincidencia
+    if (confirm && password !== confirm) {
+        confirmHelp.innerHTML = '<span class="text-danger">No coincide</span>';
+        confirmInput.classList.remove('is-valid');
+        confirmInput.classList.add('is-invalid');
+    } else if (confirm && password === confirm) {
+        confirmHelp.innerHTML = '<span class="text-success">Coincide</span>';
+        confirmInput.classList.remove('is-invalid');
+        confirmInput.classList.add('is-valid');
+    } else {
+        confirmHelp.innerHTML = 'Debe coincidir';
+        confirmInput.classList.remove('is-valid', 'is-invalid');
+    }
+}
+
+// Validar formulario antes del envío
+function validarFormulario(e) {
+    const rol = rolSelect.value;
+    const dni = dniInput.value.trim();
+    const matricula = matriculaInput.value.trim();
+    const password = passwordInput.value;
+    const confirm = confirmInput.value;
+    
+    let errores = [];
+    
+    // Validar rol
+    if (!rol) errores.push('Debe seleccionar un rol');
+    
+    // Validar identificación según rol
+    if (rol === 'PACIENTE' && !matricula) {
+        errores.push('Código de matrícula es obligatorio para estudiantes');
+    }
+    if ((rol === 'PROFESIONAL' || rol === 'ADMINISTRADOR') && !dni) {
+        errores.push('DNI es obligatorio para profesionales y administradores');
+    }
+    
+    // Validar contraseñas
+    if (password.length < 6) errores.push('Contraseña debe tener al menos 6 caracteres');
+    if (password !== confirm) errores.push('Las contraseñas no coinciden');
+    
+    if (errores.length > 0) {
+        e.preventDefault();
+        alert('Errores encontrados:\n- ' + errores.join('\n- '));
+        return false;
+    }
+    
+    // Mostrar indicador de carga
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando...';
+    submitBtn.disabled = true;
+    
+    return true;
+}
+
+// Event listeners
+rolSelect.addEventListener('change', actualizarRol);
+passwordInput.addEventListener('input', validarPassword);
+confirmInput.addEventListener('input', validarPassword);
+document.querySelector('form').addEventListener('submit', validarFormulario);
+
+// Inicializar
+document.addEventListener('DOMContentLoaded', function() {
+    actualizarRol();
+});
+</script>
+{% endblock %}

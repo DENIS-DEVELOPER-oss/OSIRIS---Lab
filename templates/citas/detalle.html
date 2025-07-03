@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}Detalle de Cita - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-calendar-alt me-2"></i>
+                    Detalle de Cita
+                </h1>
+                <a href="{{ url_for('citas.lista') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Volver
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Información de la Cita
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-calendar me-2"></i>Fecha y Hora</h6>
+                            <p class="h5">{{ cita.fecha.strftime('%d/%m/%Y') }} - {{ cita.hora.strftime('%H:%M') }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-clipboard me-2"></i>Tipo de Cita</h6>
+                            <p>
+                                {% if cita.tipo_cita.value == 'MEDICINA' %}
+                                    <span class="badge bg-primary fs-6">Medicina</span>
+                                {% elif cita.tipo_cita.value == 'PSICOLOGIA' %}
+                                    <span class="badge bg-info fs-6">Psicología</span>
+                                {% else %}
+                                    <span class="badge bg-danger fs-6">Emergencia</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-user me-2"></i>Paciente</h6>
+                            <p>{{ cita.paciente.usuario.nombre }}</p>
+                            <p class="text-muted">{{ cita.paciente.carrera }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-user-md me-2"></i>Profesional</h6>
+                            <p>{{ cita.profesional.nombre }}</p>
+                            <p class="text-muted">{{ cita.profesional.rol.value }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-flag me-2"></i>Estado</h6>
+                            <p>
+                                {% if cita.estado == 'PROGRAMADA' %}
+                                    <span class="badge bg-warning fs-6">Programada</span>
+                                {% elif cita.estado == 'COMPLETADA' %}
+                                    <span class="badge bg-success fs-6">Completada</span>
+                                {% else %}
+                                    <span class="badge bg-secondary fs-6">Cancelada</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-clock me-2"></i>Creada</h6>
+                            <p class="text-muted">{{ cita.fecha_creacion.strftime('%d/%m/%Y %H:%M') }}</p>
+                        </div>
+                    </div>
+                    
+                    {% if cita.motivo %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h6><i class="fas fa-comment-alt me-2"></i>Motivo</h6>
+                                <p class="bg-light p-3 rounded">{{ cita.motivo }}</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cog me-2"></i>Acciones
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if current_user.es_profesional() and cita.profesional_id == current_user.id and cita.estado == 'PROGRAMADA' and not cita.consulta %}
+                        <a href="{{ url_for('consultas.crear', cita_id=cita.id) }}" class="btn btn-success w-100 mb-2">
+                            <i class="fas fa-notes-medical me-2"></i>Crear Consulta
+                        </a>
+                    {% endif %}
+                    
+                    {% if cita.consulta %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Esta cita ya tiene una consulta registrada.
+                        </div>
+                    {% endif %}
+                    
+                    {% if current_user.es_administrador() %}
+                        <div class="btn-group w-100" role="group">
+                            <button type="button" class="btn btn-outline-warning">
+                                <i class="fas fa-edit me-1"></i>Editar
+                            </button>
+                            <button type="button" class="btn btn-outline-danger">
+                                <i class="fas fa-trash me-1"></i>Cancelar
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if cita.consulta %}
+                <div class="card mt-3">
+                    <div class="card-header bg-success text-white">
+                        <h6 class="mb-0">
+                            <i class="fas fa-notes-medical me-2"></i>Consulta Médica
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <h6>Diagnóstico:</h6>
+                            <p class="text-muted">{{ cita.consulta.diagnostico }}</p>
+                        </div>
+                        
+                        {% if cita.consulta.tratamiento %}
+                            <div class="mb-3">
+                                <h6>Tratamiento:</h6>
+                                <p class="text-muted">{{ cita.consulta.tratamiento }}</p>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="mb-3">
+                            <h6>Nivel de Riesgo:</h6>
+                            <p>
+                                {% if cita.consulta.nivel_riesgo.value == 'BAJO' %}
+                                    <span class="badge bg-success">Bajo</span>
+                                {% elif cita.consulta.nivel_riesgo.value == 'MEDIO' %}
+                                    <span class="badge bg-warning">Medio</span>
+                                {% elif cita.consulta.nivel_riesgo.value == 'ALTO' %}
+                                    <span class="badge bg-danger">Alto</span>
+                                {% else %}
+                                    <span class="badge bg-dark">Crítico</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        
+                        <div class="text-muted">
+                            <small>Registrada: {{ cita.consulta.fecha_consulta.strftime('%d/%m/%Y %H:%M') }}</small>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

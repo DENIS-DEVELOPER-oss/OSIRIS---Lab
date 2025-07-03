@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Iniciar Sesión - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white text-center">
+                <h4 class="mb-0">
+                    <i class="fas fa-sign-in-alt me-2"></i>
+                    Iniciar Sesión
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" class="needs-validation" novalidate>
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        {{ form.identificador.label(class="form-label") }}
+                        {{ form.identificador(class="form-control" + (" is-invalid" if form.identificador.errors else "")) }}
+                        {% if form.identificador.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.identificador.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Estudiantes: usar código de matrícula. Profesionales/Admin: usar DNI.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.password.label(class="form-label") }}
+                        {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
+                        {% if form.password.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.password.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt me-2"></i>
+                            Iniciar Sesión
+                        </button>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p class="mb-0">
+                            ¿No tienes cuenta? 
+                            <a href="{{ url_for('auth.registro') }}" class="text-decoration-none">
+                                Regístrate aquí
+                            </a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Información de acceso por defecto -->
+        <div class="card mt-3">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Acceso de Demostración
+                </h6>
+            </div>
+            <div class="card-body">
+                <p class="mb-2"><strong>Administrador:</strong></p>
+                <ul class="list-unstyled mb-0">
+                    <li><i class="fas fa-key me-2"></i>DNI: 12345678</li>
+                    <li><i class="fas fa-lock me-2"></i>Contraseña: admin123</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

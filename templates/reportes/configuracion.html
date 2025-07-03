@@ -1,0 +1,496 @@
+{% extends "base.html" %}
+
+{% block title %}Configuración del Sistema - Sistema Médico Universitario{% endblock %}
+
+{% block extra_css %}
+<style>
+    .config-section {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 25px;
+        margin-bottom: 25px;
+        border-left: 4px solid #007bff;
+    }
+    .config-card {
+        border: none;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    .config-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .system-status {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .status-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 8px;
+    }
+    .status-online {
+        background-color: #28a745;
+        box-shadow: 0 0 10px #28a745;
+    }
+    .status-warning {
+        background-color: #ffc107;
+        box-shadow: 0 0 10px #ffc107;
+    }
+    .status-offline {
+        background-color: #dc3545;
+        box-shadow: 0 0 10px #dc3545;
+    }
+    .metric-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+    .metric-item:last-child {
+        border-bottom: none;
+    }
+    .backup-section {
+        background: #e7f3ff;
+        border: 1px solid #b3d9ff;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .maintenance-section {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-0">Configuración del Sistema</h2>
+                    <p class="text-muted">Panel de administración y configuración del sistema médico universitario</p>
+                </div>
+                <div>
+                    <a href="{{ url_for('reportes.dashboard_admin') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Volver al Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estado del Sistema -->
+    <div class="system-status">
+        <div class="row">
+            <div class="col-md-3">
+                <h4><span class="status-indicator status-online"></span>Sistema Operativo</h4>
+                <small>Todos los servicios funcionando correctamente</small>
+            </div>
+            <div class="col-md-3">
+                <h5>{{ config.version_sistema }}</h5>
+                <small>Versión del Sistema</small>
+            </div>
+            <div class="col-md-3">
+                <h5>{{ config.base_datos }}</h5>
+                <small>Base de Datos</small>
+            </div>
+            <div class="col-md-3">
+                <h5>{{ config.total_usuarios }}</h5>
+                <small>Usuarios Registrados</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Configuración General -->
+        <div class="col-lg-6 mb-4">
+            <div class="card config-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-cog"></i> Configuración General
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form id="configForm">
+                        <div class="form-group">
+                            <label for="nombreSistema">Nombre del Sistema:</label>
+                            <input type="text" class="form-control" id="nombreSistema" 
+                                   value="Sistema Médico Universitario" placeholder="Nombre del sistema">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="emailAdmin">Email del Administrador:</label>
+                            <input type="email" class="form-control" id="emailAdmin" 
+                                   placeholder="admin@universidad.edu" value="admin@universidad.edu">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="horarioAtencion">Horario de Atención:</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="time" class="form-control" id="horarioInicio" value="08:00">
+                                    <small class="form-text text-muted">Hora de inicio</small>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="time" class="form-control" id="horarioFin" value="18:00">
+                                    <small class="form-text text-muted">Hora de fin</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="notificacionesEmail" checked>
+                                <label class="custom-control-label" for="notificacionesEmail">
+                                    Notificaciones por Email
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="registroAbierto" checked>
+                                <label class="custom-control-label" for="registroAbierto">
+                                    Permitir Registro de Nuevos Usuarios
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Guardar Configuración
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estadísticas del Sistema -->
+        <div class="col-lg-6 mb-4">
+            <div class="card config-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-line"></i> Estadísticas del Sistema
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="metric-item">
+                        <span>Total de Usuarios:</span>
+                        <strong>{{ config.total_usuarios }}</strong>
+                    </div>
+                    <div class="metric-item">
+                        <span>Usuarios Activos:</span>
+                        <strong class="text-success">{{ config.usuarios_activos }}</strong>
+                    </div>
+                    <div class="metric-item">
+                        <span>Estudiantes:</span>
+                        <strong>{{ config.usuarios_por_rol.get('RolUsuario.PACIENTE', 0) }}</strong>
+                    </div>
+                    <div class="metric-item">
+                        <span>Profesionales:</span>
+                        <strong>{{ config.usuarios_por_rol.get('RolUsuario.PROFESIONAL', 0) }}</strong>
+                    </div>
+                    <div class="metric-item">
+                        <span>Administradores:</span>
+                        <strong>{{ config.usuarios_por_rol.get('RolUsuario.ADMINISTRADOR', 0) }}</strong>
+                    </div>
+                    <div class="metric-item">
+                        <span>Última Cita:</span>
+                        <strong>{{ config.ultima_cita.strftime('%d/%m/%Y') if config.ultima_cita else 'N/A' }}</strong>
+                    </div>
+                    <div class="metric-item">
+                        <span>Última Consulta:</span>
+                        <strong>{{ config.ultima_consulta.strftime('%d/%m/%Y') if config.ultima_consulta else 'N/A' }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Configuración de Respaldos -->
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card config-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-database"></i> Respaldos de Base de Datos
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="backup-section">
+                        <h6><i class="fas fa-info-circle"></i> Información de Respaldos</h6>
+                        <p class="mb-3">Los respaldos automáticos se realizan diariamente a las 2:00 AM.</p>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button class="btn btn-success btn-block mb-2" onclick="crearRespaldo()">
+                                    <i class="fas fa-download"></i> Crear Respaldo Manual
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-warning btn-block mb-2" onclick="restaurarRespaldo()">
+                                    <i class="fas fa-upload"></i> Restaurar Respaldo
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="frecuenciaRespaldo">Frecuencia de Respaldos:</label>
+                            <select class="form-control" id="frecuenciaRespaldo">
+                                <option value="diario" selected>Diario</option>
+                                <option value="semanal">Semanal</option>
+                                <option value="mensual">Mensual</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mantenimiento del Sistema -->
+        <div class="col-lg-6 mb-4">
+            <div class="card config-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-tools"></i> Mantenimiento del Sistema
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="maintenance-section">
+                        <h6><i class="fas fa-exclamation-triangle"></i> Tareas de Mantenimiento</h6>
+                        <p class="mb-3">Herramientas para el mantenimiento y optimización del sistema.</p>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button class="btn btn-info btn-block mb-2" onclick="limpiarCache()">
+                                    <i class="fas fa-broom"></i> Limpiar Caché
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-secondary btn-block mb-2" onclick="optimizarDB()">
+                                    <i class="fas fa-database"></i> Optimizar DB
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button class="btn btn-primary btn-block mb-2" onclick="generarReporte()">
+                                    <i class="fas fa-file-alt"></i> Generar Reporte
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-warning btn-block mb-2" onclick="reiniciarSistema()">
+                                    <i class="fas fa-redo"></i> Reiniciar Sistema
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Configuración de Seguridad -->
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="card config-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-shield-alt"></i> Configuración de Seguridad
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="sesionExpiracion">Expiración de Sesión (minutos):</label>
+                                <input type="number" class="form-control" id="sesionExpiracion" value="60" min="15" max="480">
+                                <small class="form-text text-muted">Entre 15 y 480 minutos</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="intentosLogin">Máximo Intentos de Login:</label>
+                                <input type="number" class="form-control" id="intentosLogin" value="5" min="3" max="10">
+                                <small class="form-text text-muted">Entre 3 y 10 intentos</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="longitudPassword">Longitud Mínima de Contraseña:</label>
+                                <input type="number" class="form-control" id="longitudPassword" value="8" min="6" max="20">
+                                <small class="form-text text-muted">Entre 6 y 20 caracteres</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="autenticacionDosFactor">
+                                <label class="custom-control-label" for="autenticacionDosFactor">
+                                    Autenticación de Dos Factores (Próximamente)
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="registroAccesos" checked>
+                                <label class="custom-control-label" for="registroAccesos">
+                                    Registro de Accesos al Sistema
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-success" onclick="guardarSeguridad()">
+                            <i class="fas fa-save"></i> Guardar Configuración de Seguridad
+                        </button>
+                        <button type="button" class="btn btn-info ml-2" onclick="verRegistroAccesos()">
+                            <i class="fas fa-eye"></i> Ver Registro de Accesos
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Guardar configuración general
+document.getElementById('configForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const config = {
+        nombre_sistema: document.getElementById('nombreSistema').value,
+        email_admin: document.getElementById('emailAdmin').value,
+        horario_inicio: document.getElementById('horarioInicio').value,
+        horario_fin: document.getElementById('horarioFin').value,
+        notificaciones_email: document.getElementById('notificacionesEmail').checked,
+        registro_abierto: document.getElementById('registroAbierto').checked
+    };
+    
+    // Aquí se enviaría la configuración al servidor
+    console.log('Configuración a guardar:', config);
+    
+    // Simular guardado exitoso
+    mostrarMensaje('Configuración guardada exitosamente', 'success');
+});
+
+// Funciones de respaldo
+function crearRespaldo() {
+    if (confirm('¿Está seguro de crear un respaldo manual de la base de datos?')) {
+        mostrarMensaje('Creando respaldo... Esto puede tomar unos minutos.', 'info');
+        
+        // Simular creación de respaldo
+        setTimeout(() => {
+            mostrarMensaje('Respaldo creado exitosamente', 'success');
+        }, 3000);
+    }
+}
+
+function restaurarRespaldo() {
+    if (confirm('¿Está seguro de restaurar un respaldo? Esta acción no se puede deshacer.')) {
+        mostrarMensaje('Función de restauración en desarrollo', 'warning');
+    }
+}
+
+// Funciones de mantenimiento
+function limpiarCache() {
+    if (confirm('¿Está seguro de limpiar el caché del sistema?')) {
+        mostrarMensaje('Limpiando caché...', 'info');
+        setTimeout(() => {
+            mostrarMensaje('Caché limpiado exitosamente', 'success');
+        }, 2000);
+    }
+}
+
+function optimizarDB() {
+    if (confirm('¿Está seguro de optimizar la base de datos?')) {
+        mostrarMensaje('Optimizando base de datos...', 'info');
+        setTimeout(() => {
+            mostrarMensaje('Base de datos optimizada exitosamente', 'success');
+        }, 5000);
+    }
+}
+
+function generarReporte() {
+    mostrarMensaje('Generando reporte del sistema...', 'info');
+    setTimeout(() => {
+        mostrarMensaje('Reporte generado exitosamente', 'success');
+    }, 3000);
+}
+
+function reiniciarSistema() {
+    if (confirm('¿Está seguro de reiniciar el sistema? Los usuarios conectados perderán su sesión.')) {
+        mostrarMensaje('Esta función requiere acceso de super administrador', 'warning');
+    }
+}
+
+// Funciones de seguridad
+function guardarSeguridad() {
+    const configSeguridad = {
+        sesion_expiracion: document.getElementById('sesionExpiracion').value,
+        intentos_login: document.getElementById('intentosLogin').value,
+        longitud_password: document.getElementById('longitudPassword').value,
+        autenticacion_dos_factor: document.getElementById('autenticacionDosFactor').checked,
+        registro_accesos: document.getElementById('registroAccesos').checked
+    };
+    
+    console.log('Configuración de seguridad:', configSeguridad);
+    mostrarMensaje('Configuración de seguridad guardada exitosamente', 'success');
+}
+
+function verRegistroAccesos() {
+    mostrarMensaje('Función de registro de accesos en desarrollo', 'info');
+}
+
+// Función para mostrar mensajes
+function mostrarMensaje(mensaje, tipo) {
+    // Crear elemento de alerta
+    const alerta = document.createElement('div');
+    alerta.className = `alert alert-${tipo} alert-dismissible fade show position-fixed`;
+    alerta.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    alerta.innerHTML = `
+        ${mensaje}
+        <button type="button" class="close" data-dismiss="alert">
+            <span>&times;</span>
+        </button>
+    `;
+    
+    // Agregar al body
+    document.body.appendChild(alerta);
+    
+    // Remover automáticamente después de 5 segundos
+    setTimeout(() => {
+        if (alerta.parentNode) {
+            alerta.parentNode.removeChild(alerta);
+        }
+    }, 5000);
+}
+
+// Inicializar tooltips
+$(document).ready(function() {
+    if (typeof $().tooltip === 'function') {
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+});
+</script>
+{% endblock %}

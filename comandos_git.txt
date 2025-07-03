@@ -1,0 +1,17 @@
+Comandos para ejecutar en la Terminal de Replit con tu token:
+
+1. Abrir terminal (Shell)
+
+2. Ejecutar estos comandos uno por uno:
+
+git init
+
+git remote add origin https://DENIS-DEVELOPER-oss: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@github.com/DENIS-DEVELOPER-oss/OSIRIS---Lab.git
+
+git add .
+
+git commit -m "Sistema médico universitario completo con Plotly y dashboard administrativo"
+
+git push -u origin main
+
+IMPORTANTE: No compartas este token con nadie más, mantén estos comandos privados.

@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+{% block title %}Dashboard de Estadísticas - Sistema Médico Universitario{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">Dashboard de Estadísticas con Gráficos</h1>
+                <div>
+                    <a href="{{ url_for('reportes.dashboard_admin') }}" class="btn btn-secondary me-2">
+                        <i class="fas fa-arrow-left"></i> Dashboard Principal
+                    </a>
+                    <button onclick="exportarDashboard()" class="btn btn-info">
+                        <i class="fas fa-download"></i> Exportar Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos individuales -->
+    <div class="row mb-4">
+        <!-- Gráfico de Citas por Tipo -->
+        {% if graficos.citas_tipo %}
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar me-2"></i>
+                        Citas por Tipo de Consulta
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="grafico-citas-tipo"></div>
+                    <div class="mt-3">
+                        <a href="{{ url_for('reportes.grafico_citas_por_tipo') }}" class="btn btn-sm btn-outline-success">
+                            Ver Detalle Completo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Gráfico de Consultas por Carrera -->
+        {% if graficos.consultas_carrera %}
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-pie me-2"></i>
+                        Consultas por Carrera
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="grafico-consultas-carrera"></div>
+                    <div class="mt-3">
+                        <a href="{{ url_for('reportes.grafico_consultas_por_carrera') }}" class="btn btn-sm btn-outline-info">
+                            Ver Detalle Completo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Gráfico de Tendencia Mensual -->
+    {% if graficos.tendencia_mensual %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-line me-2"></i>
+                        Tendencia Mensual de Citas
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="grafico-tendencia-mensual"></div>
+                    <div class="mt-3">
+                        <a href="{{ url_for('reportes.grafico_tendencia_mensual') }}" class="btn btn-sm btn-outline-primary">
+                            Ver Detalle Completo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Enlaces adicionales -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-tools me-2"></i>
+                        Herramientas Adicionales
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('reportes.grafico_citas_por_tipo') }}" class="btn btn-outline-success w-100">
+                                <i class="fas fa-chart-bar d-block mb-2"></i>
+                                Citas por Tipo
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('reportes.grafico_consultas_por_carrera') }}" class="btn btn-outline-info w-100">
+                                <i class="fas fa-chart-pie d-block mb-2"></i>
+                                Consultas por Carrera
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('reportes.grafico_tendencia_mensual') }}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-chart-line d-block mb-2"></i>
+                                Tendencia Mensual
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('reportes.gestion_usuarios') }}" class="btn btn-outline-secondary w-100">
+                                <i class="fas fa-users d-block mb-2"></i>
+                                Gestión Usuarios
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensajes informativos si no hay datos -->
+    {% if not graficos.citas_tipo and not graficos.consultas_carrera and not graficos.tendencia_mensual %}
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-warning text-center">
+                <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+                <h4>No hay datos suficientes</h4>
+                <p>Para ver las estadísticas, necesita crear citas, consultas y pacientes en el sistema.</p>
+                <div class="mt-3">
+                    <a href="{{ url_for('reportes.crear_usuario_directo') }}" class="btn btn-primary me-2">
+                        Crear Usuarios
+                    </a>
+                    <a href="{{ url_for('citas.crear') }}" class="btn btn-success">
+                        Programar Citas
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    // Renderizar todos los gráficos
+    document.addEventListener('DOMContentLoaded', function() {
+        // Configuración común para todos los gráficos
+        const config = {
+            responsive: true,
+            displayModeBar: true,
+            modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d'],
+            displaylogo: false
+        };
+
+        // Renderizar gráfico de citas por tipo
+        {% if graficos.citas_tipo %}
+        const graficosCitasTipo = {{ graficos.citas_tipo|safe }};
+        Plotly.newPlot('grafico-citas-tipo', graficosCitasTipo.data, graficosCitasTipo.layout, config);
+        {% endif %}
+
+        // Renderizar gráfico de consultas por carrera
+        {% if graficos.consultas_carrera %}
+        const graficosConsultasCarrera = {{ graficos.consultas_carrera|safe }};
+        Plotly.newPlot('grafico-consultas-carrera', graficosConsultasCarrera.data, graficosConsultasCarrera.layout, config);
+        {% endif %}
+
+        // Renderizar gráfico de tendencia mensual
+        {% if graficos.tendencia_mensual %}
+        const graficosTendenciaMensual = {{ graficos.tendencia_mensual|safe }};
+        Plotly.newPlot('grafico-tendencia-mensual', graficosTendenciaMensual.data, graficosTendenciaMensual.layout, config);
+        {% endif %}
+    });
+
+    // Función para exportar dashboard como imagen
+    function exportarDashboard() {
+        // Crear un nuevo canvas para combinar todos los gráficos
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Configurar el canvas
+        canvas.width = 1200;
+        canvas.height = 800;
+        
+        // Fondo blanco
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Título del dashboard
+        ctx.fillStyle = 'black';
+        ctx.font = 'bold 24px Arial';
+        ctx.fillText('Dashboard Estadístico - Sistema Médico Universitario', 50, 40);
+        
+        // Fecha actual
+        ctx.font = '14px Arial';
+        ctx.fillText('Generado el: ' + new Date().toLocaleDateString(), 50, 70);
+        
+        // Crear enlace de descarga
+        const link = document.createElement('a');
+        link.download = 'dashboard_estadisticas.png';
+        link.href = canvas.toDataURL();
+        link.click();
+        
+        // Mostrar mensaje de éxito
+        alert('Dashboard exportado exitosamente');
+    }
+</script>
+{% endblock %}

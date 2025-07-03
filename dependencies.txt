@@ -1,0 +1,30 @@
+# === DEPENDENCIAS DEL PROYECTO ===
+# Para instalar en un nuevo entorno, usar:
+# pip install -r dependencies.txt
+
+# === FRAMEWORK WEB PRINCIPAL ===
+Flask==3.0.0
+Werkzeug==3.0.1
+
+# === BASE DE DATOS Y ORM ===
+Flask-SQLAlchemy==3.1.1
+SQLAlchemy==2.0.23
+psycopg2-binary==2.9.9
+
+# === AUTENTICACIÓN Y SESIONES ===
+Flask-Login==0.6.3
+
+# === FORMULARIOS Y VALIDACIÓN ===
+Flask-WTF==1.2.1
+WTForms==3.1.1
+email-validator==2.1.0
+
+# === VISUALIZACIÓN DE DATOS ===
+plotly==5.17.0
+numpy==1.26.2
+
+# === SERVIDOR DE PRODUCCIÓN ===
+gunicorn==21.2.0
+
+# === UTILIDADES ===
+python-dateutil==2.8.2

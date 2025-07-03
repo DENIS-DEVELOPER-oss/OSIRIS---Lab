@@ -1,0 +1,407 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Administrativo - Gestión Médica Universitaria{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card-stats {
+        border-left: 4px solid #007bff;
+        transition: all 0.3s ease;
+    }
+    .card-stats:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .stat-icon {
+        font-size: 2.5rem;
+        opacity: 0.7;
+    }
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #333;
+    }
+    .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+    }
+    .alert-custom {
+        border-left: 4px solid #ffc107;
+        background-color: #fff3cd;
+    }
+    .chart-container {
+        position: relative;
+        height: 400px;
+        margin-bottom: 20px;
+    }
+    .navbar-admin {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .quick-actions {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header del Dashboard -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-0">Panel de Administración</h2>
+                    <p class="text-muted">Sistema de Gestión Médica Universitaria</p>
+                </div>
+                <div>
+                    <span class="badge badge-success">Sistema Operativo</span>
+                    <small class="text-muted d-block">
+                        Actualizado: {{ moment().format('DD/MM/YYYY HH:mm') if moment else 'Ahora' }}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estadísticas Principales -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card card-stats h-100">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <i class="fas fa-user-graduate stat-icon text-primary"></i>
+                        </div>
+                        <div class="col">
+                            <div class="stat-number">{{ resumen.total_pacientes }}</div>
+                            <div class="stat-label">Estudiantes Registrados</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card card-stats h-100">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <i class="fas fa-calendar-check stat-icon text-success"></i>
+                        </div>
+                        <div class="col">
+                            <div class="stat-number">{{ resumen.total_citas }}</div>
+                            <div class="stat-label">Citas Programadas</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card card-stats h-100">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <i class="fas fa-stethoscope stat-icon text-info"></i>
+                        </div>
+                        <div class="col">
+                            <div class="stat-number">{{ resumen.total_consultas }}</div>
+                            <div class="stat-label">Consultas Realizadas</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card card-stats h-100">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <i class="fas fa-exclamation-triangle stat-icon text-warning"></i>
+                        </div>
+                        <div class="col">
+                            <div class="stat-number">{{ resumen.consultas_riesgo_alto }}</div>
+                            <div class="stat-label">Consultas Alto Riesgo</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Acciones Rápidas -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="quick-actions">
+                <h5 class="mb-3">Acciones Rápidas</h5>
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <a href="{{ url_for('citas.crear') }}" class="btn btn-primary btn-block">
+                            <i class="fas fa-plus"></i> Nueva Cita
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{{ url_for('reportes.gestion_usuarios') }}" class="btn btn-info btn-block">
+                            <i class="fas fa-users"></i> Gestionar Usuarios
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{{ url_for('reportes.estadisticas_detalladas') }}" class="btn btn-success btn-block">
+                            <i class="fas fa-chart-bar"></i> Estadísticas Detalladas
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{{ url_for('reportes.configuracion_sistema') }}" class="btn btn-secondary btn-block">
+                            <i class="fas fa-cog"></i> Configuración
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <a href="{{ url_for('reportes.gestion_respaldo_csv') }}" class="btn btn-success btn-block">
+                            <i class="fas fa-file-csv"></i> Respaldo CSV
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{{ url_for('reportes.dashboard_graficos_completo') }}" class="btn btn-info btn-block">
+                            <i class="fas fa-chart-line"></i> Gráficos Plotly
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{{ url_for('reportes.grafico_citas_por_tipo') }}" class="btn btn-warning btn-block">
+                            <i class="fas fa-chart-bar"></i> Citas por Tipo
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{{ url_for('reportes.grafico_consultas_por_carrera') }}" class="btn btn-purple btn-block" style="background-color: #6f42c1; color: white;">
+                            <i class="fas fa-chart-pie"></i> Consultas/Carrera
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Citas por Tipo</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="citasPorTipoChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Consultas por Carrera</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="consultasCarreraChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tendencia Mensual -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Tendencia Mensual de Citas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="tendenciaMensualChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alertas del Sistema -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Alertas del Sistema</h5>
+                </div>
+                <div class="card-body">
+                    <div id="alertas-container">
+                        <!-- Las alertas se cargarán aquí dinámicamente -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actividad del Mes -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Actividad del Mes Actual</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="alert alert-info">
+                                <h6><i class="fas fa-calendar"></i> Citas del Mes</h6>
+                                <p class="mb-0">Se han programado <strong>{{ resumen.citas_mes }}</strong> citas este mes.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="alert alert-warning">
+                                <h6><i class="fas fa-exclamation-circle"></i> Consultas de Riesgo</h6>
+                                <p class="mb-0">Hay <strong>{{ resumen.consultas_riesgo_alto }}</strong> consultas que requieren seguimiento.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Configurar Chart.js
+Chart.defaults.font.family = 'Roboto, sans-serif';
+Chart.defaults.color = '#666';
+
+// Gráfico de Citas por Tipo
+fetch('/reportes/api/estadisticas-citas')
+    .then(response => response.json())
+    .then(data => {
+        const ctx = document.getElementById('citasPorTipoChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(data),
+                datasets: [{
+                    data: Object.values(data),
+                    backgroundColor: [
+                        '#007bff',
+                        '#28a745',
+                        '#dc3545',
+                        '#ffc107'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    });
+
+// Gráfico de Consultas por Carrera
+fetch('/reportes/api/estadisticas-carreras')
+    .then(response => response.json())
+    .then(data => {
+        const ctx = document.getElementById('consultasCarreraChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(data),
+                datasets: [{
+                    label: 'Consultas',
+                    data: Object.values(data),
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+
+// Gráfico de Tendencia Mensual
+fetch('/reportes/api/tendencia-mensual')
+    .then(response => response.json())
+    .then(data => {
+        const ctx = document.getElementById('tendenciaMensualChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.meses,
+                datasets: [{
+                    label: 'Citas por Mes',
+                    data: data.totales,
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+
+// Cargar alertas del sistema
+fetch('/reportes/api/alertas-sistema')
+    .then(response => response.json())
+    .then(alertas => {
+        const container = document.getElementById('alertas-container');
+        if (alertas.length === 0) {
+            container.innerHTML = '<div class="alert alert-success">No hay alertas en este momento.</div>';
+        } else {
+            container.innerHTML = alertas.map(alerta => `
+                <div class="alert alert-${alerta.tipo === 'critico' ? 'danger' : alerta.tipo}">
+                    <i class="fas fa-${alerta.tipo === 'critico' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    ${alerta.mensaje}
+                    <a href="${alerta.enlace}" class="btn btn-sm btn-outline-${alerta.tipo === 'critico' ? 'danger' : 'info'} ml-2">
+                        Ver Detalles
+                    </a>
+                </div>
+            `).join('');
+        }
+    });
+</script>
+{% endblock %}

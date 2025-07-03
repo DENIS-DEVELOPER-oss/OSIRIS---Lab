@@ -1,0 +1,628 @@
+{% extends "base.html" %}
+
+{% block title %}Estadísticas Detalladas - Sistema Médico Universitario{% endblock %}
+
+{% block extra_css %}
+<style>
+    .chart-card {
+        border: none;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    .chart-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .chart-container {
+        position: relative;
+        height: 350px;
+        margin: 20px 0;
+    }
+    .metric-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    .metric-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .metric-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+    .tab-content {
+        padding-top: 20px;
+    }
+    .nav-tabs .nav-link {
+        border: none;
+        color: #666;
+        font-weight: 500;
+    }
+    .nav-tabs .nav-link.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 5px;
+    }
+    .filter-section {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+    .export-section {
+        background: #e9ecef;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-0">Estadísticas Detalladas</h2>
+                    <p class="text-muted">Análisis completo del sistema médico universitario</p>
+                </div>
+                <div>
+                    <a href="{{ url_for('reportes.dashboard_admin') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Volver al Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros y Exportación -->
+    <div class="filter-section">
+        <div class="row">
+            <div class="col-md-8">
+                <h5>Filtros de Análisis</h5>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="fechaInicio">Fecha Inicio:</label>
+                            <input type="date" id="fechaInicio" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="fechaFin">Fecha Fin:</label>
+                            <input type="date" id="fechaFin" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="tipoAnalisis">Tipo de Análisis:</label>
+                            <select id="tipoAnalisis" class="form-control">
+                                <option value="todos">Todos</option>
+                                <option value="medicina">Solo Medicina</option>
+                                <option value="psicologia">Solo Psicología</option>
+                                <option value="emergencia">Solo Emergencias</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h5>Exportar Datos</h5>
+                <div class="export-section">
+                    <button class="btn btn-success btn-sm btn-block mb-2" onclick="exportarExcel()">
+                        <i class="fas fa-file-excel"></i> Exportar a Excel
+                    </button>
+                    <button class="btn btn-danger btn-sm btn-block" onclick="exportarPDF()">
+                        <i class="fas fa-file-pdf"></i> Exportar a PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs de Análisis -->
+    <ul class="nav nav-tabs" id="estadisticasTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="general-tab" data-toggle="tab" href="#general" role="tab">
+                <i class="fas fa-chart-pie"></i> General
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="profesionales-tab" data-toggle="tab" href="#profesionales" role="tab">
+                <i class="fas fa-user-md"></i> Profesionales
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="horarios-tab" data-toggle="tab" href="#horarios" role="tab">
+                <i class="fas fa-clock"></i> Horarios
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="riesgos-tab" data-toggle="tab" href="#riesgos" role="tab">
+                <i class="fas fa-exclamation-triangle"></i> Niveles de Riesgo
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="estadisticasTabsContent">
+        <!-- Tab General -->
+        <div class="tab-pane fade show active" id="general" role="tabpanel">
+            <div class="row">
+                <!-- Métricas Rápidas -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="metric-card">
+                        <div class="metric-number" id="totalCitasMetric">0</div>
+                        <div class="metric-label">Total de Citas</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="metric-card">
+                        <div class="metric-number" id="totalConsultasMetric">0</div>
+                        <div class="metric-label">Total de Consultas</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="metric-card">
+                        <div class="metric-number" id="promedioDiarioMetric">0</div>
+                        <div class="metric-label">Promedio Diario</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="metric-card">
+                        <div class="metric-number" id="tasaCompletitudMetric">0%</div>
+                        <div class="metric-label">Tasa Completitud</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Citas por Tipo -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Distribución de Citas por Tipo</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="citasTipoChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Consultas por Carrera -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Consultas por Carrera Universitaria</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="consultasCarreraChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tendencia Mensual -->
+            <div class="row">
+                <div class="col-12 mb-4">
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Tendencia de Citas (Últimos 12 Meses)</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="tendenciaMensualChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Profesionales -->
+        <div class="tab-pane fade" id="profesionales" role="tabpanel">
+            <div class="row">
+                <div class="col-lg-8 mb-4">
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Rendimiento de Profesionales</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="rendimientoProfesionalesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Métricas de Profesionales</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="metricasProfesionales">
+                                <!-- Las métricas se cargarán aquí -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Horarios -->
+        <div class="tab-pane fade" id="horarios" role="tabpanel">
+            <div class="row">
+                <div class="col-lg-8 mb-4">
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Horarios Más Populares</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="horariosPopularesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Análisis de Horarios</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-info">
+                                <h6><i class="fas fa-info-circle"></i> Horario Pico</h6>
+                                <p class="mb-0">El horario más demandado es entre las 10:00 y 12:00.</p>
+                            </div>
+                            <div class="alert alert-warning">
+                                <h6><i class="fas fa-clock"></i> Horario Libre</h6>
+                                <p class="mb-0">Menor demanda después de las 16:00.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Niveles de Riesgo -->
+        <div class="tab-pane fade" id="riesgos" role="tabpanel">
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Distribución de Niveles de Riesgo</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="nivelesRiesgoChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Alertas de Riesgo</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="alertasRiesgo">
+                                <!-- Las alertas se cargarán aquí -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Variables globales para los gráficos
+let graficos = {};
+
+// Configuración base para Chart.js
+Chart.defaults.font.family = 'Roboto, sans-serif';
+Chart.defaults.color = '#666';
+
+// Cargar datos iniciales
+document.addEventListener('DOMContentLoaded', function() {
+    cargarDatosGenerales();
+    cargarDatosProfesionales();
+    cargarDatosHorarios();
+    cargarDatosRiesgos();
+});
+
+// Función para cargar datos generales
+async function cargarDatosGenerales() {
+    try {
+        // Cargar citas por tipo
+        const citasTipo = await fetch('/reportes/api/estadisticas-citas').then(r => r.json());
+        crearGraficoCitasTipo(citasTipo);
+        
+        // Cargar consultas por carrera
+        const consultasCarrera = await fetch('/reportes/api/estadisticas-carreras').then(r => r.json());
+        crearGraficoConsultasCarrera(consultasCarrera);
+        
+        // Cargar tendencia mensual
+        const tendenciaMensual = await fetch('/reportes/api/tendencia-mensual').then(r => r.json());
+        crearGraficoTendenciaMensual(tendenciaMensual);
+        
+        // Actualizar métricas
+        actualizarMetricasGenerales(citasTipo, consultasCarrera);
+        
+    } catch (error) {
+        console.error('Error cargando datos generales:', error);
+    }
+}
+
+// Función para cargar datos de profesionales
+async function cargarDatosProfesionales() {
+    try {
+        const rendimiento = await fetch('/reportes/api/profesionales-rendimiento').then(r => r.json());
+        crearGraficoRendimientoProfesionales(rendimiento);
+        actualizarMetricasProfesionales(rendimiento);
+    } catch (error) {
+        console.error('Error cargando datos de profesionales:', error);
+    }
+}
+
+// Función para cargar datos de horarios
+async function cargarDatosHorarios() {
+    try {
+        const horarios = await fetch('/reportes/api/horarios-populares').then(r => r.json());
+        crearGraficoHorarios(horarios);
+    } catch (error) {
+        console.error('Error cargando datos de horarios:', error);
+    }
+}
+
+// Función para cargar datos de riesgos
+async function cargarDatosRiesgos() {
+    try {
+        const riesgos = await fetch('/reportes/api/niveles-riesgo').then(r => r.json());
+        crearGraficoNivelesRiesgo(riesgos);
+        
+        const alertas = await fetch('/reportes/api/alertas-sistema').then(r => r.json());
+        mostrarAlertasRiesgo(alertas);
+    } catch (error) {
+        console.error('Error cargando datos de riesgos:', error);
+    }
+}
+
+// Crear gráfico de citas por tipo
+function crearGraficoCitasTipo(data) {
+    const ctx = document.getElementById('citasTipoChart').getContext('2d');
+    graficos.citasTipo = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(data),
+            datasets: [{
+                data: Object.values(data),
+                backgroundColor: ['#007bff', '#28a745', '#dc3545', '#ffc107'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+}
+
+// Crear gráfico de consultas por carrera
+function crearGraficoConsultasCarrera(data) {
+    const ctx = document.getElementById('consultasCarreraChart').getContext('2d');
+    graficos.consultasCarrera = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(data),
+            datasets: [{
+                label: 'Consultas',
+                data: Object.values(data),
+                backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+}
+
+// Crear gráfico de tendencia mensual
+function crearGraficoTendenciaMensual(data) {
+    const ctx = document.getElementById('tendenciaMensualChart').getContext('2d');
+    graficos.tendenciaMensual = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: data.meses,
+            datasets: [{
+                label: 'Citas por Mes',
+                data: data.totales,
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+}
+
+// Crear gráfico de rendimiento de profesionales
+function crearGraficoRendimientoProfesionales(data) {
+    const ctx = document.getElementById('rendimientoProfesionalesChart').getContext('2d');
+    const profesionales = Object.keys(data);
+    const citasData = profesionales.map(p => data[p].total_citas);
+    const completitudData = profesionales.map(p => data[p].tasa_completitud);
+    
+    graficos.rendimientoProfesionales = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: profesionales,
+            datasets: [{
+                label: 'Total Citas',
+                data: citasData,
+                backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                yAxisID: 'y'
+            }, {
+                label: 'Tasa Completitud (%)',
+                data: completitudData,
+                backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                yAxisID: 'y1'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true, position: 'left' },
+                y1: { beginAtZero: true, position: 'right', max: 100 }
+            }
+        }
+    });
+}
+
+// Crear gráfico de horarios populares
+function crearGraficoHorarios(data) {
+    const ctx = document.getElementById('horariosPopularesChart').getContext('2d');
+    graficos.horarios = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(data),
+            datasets: [{
+                label: 'Número de Citas',
+                data: Object.values(data),
+                backgroundColor: 'rgba(153, 102, 255, 0.7)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+}
+
+// Crear gráfico de niveles de riesgo
+function crearGraficoNivelesRiesgo(data) {
+    const ctx = document.getElementById('nivelesRiesgoChart').getContext('2d');
+    graficos.nivelesRiesgo = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: Object.keys(data),
+            datasets: [{
+                data: Object.values(data),
+                backgroundColor: ['#28a745', '#ffc107', '#fd7e14', '#dc3545'],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+}
+
+// Actualizar métricas generales
+function actualizarMetricasGenerales(citasTipo, consultasCarrera) {
+    const totalCitas = Object.values(citasTipo).reduce((a, b) => a + b, 0);
+    const totalConsultas = Object.values(consultasCarrera).reduce((a, b) => a + b, 0);
+    
+    document.getElementById('totalCitasMetric').textContent = totalCitas;
+    document.getElementById('totalConsultasMetric').textContent = totalConsultas;
+    document.getElementById('promedioDiarioMetric').textContent = Math.round(totalCitas / 30);
+    document.getElementById('tasaCompletitudMetric').textContent = 
+        totalCitas > 0 ? Math.round((totalConsultas / totalCitas) * 100) + '%' : '0%';
+}
+
+// Actualizar métricas de profesionales
+function actualizarMetricasProfesionales(data) {
+    const container = document.getElementById('metricasProfesionales');
+    const profesionales = Object.keys(data);
+    
+    let html = '';
+    profesionales.forEach(profesional => {
+        const datos = data[profesional];
+        html += `
+            <div class="mb-3 p-3 border rounded">
+                <h6>${profesional}</h6>
+                <small class="text-muted">
+                    Citas: ${datos.total_citas} | 
+                    Completitud: ${datos.tasa_completitud}% |
+                    Riesgo Promedio: ${datos.promedio_riesgo}
+                </small>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+// Mostrar alertas de riesgo
+function mostrarAlertasRiesgo(alertas) {
+    const container = document.getElementById('alertasRiesgo');
+    
+    if (alertas.length === 0) {
+        container.innerHTML = '<div class="alert alert-success">No hay alertas de riesgo en este momento.</div>';
+        return;
+    }
+    
+    const html = alertas.map(alerta => `
+        <div class="alert alert-${alerta.tipo === 'critico' ? 'danger' : alerta.tipo}">
+            <i class="fas fa-${alerta.tipo === 'critico' ? 'exclamation-circle' : 'info-circle'}"></i>
+            ${alerta.mensaje}
+        </div>
+    `).join('');
+    
+    container.innerHTML = html;
+}
+
+// Funciones de exportación
+function exportarExcel() {
+    alert('Función de exportación a Excel en desarrollo');
+}
+
+function exportarPDF() {
+    alert('Función de exportación a PDF en desarrollo');
+}
+
+// Event listeners para tabs
+document.querySelectorAll('#estadisticasTabs a[data-toggle="tab"]').forEach(tab => {
+    tab.addEventListener('shown.bs.tab', function(e) {
+        // Redimensionar gráficos cuando se cambia de tab
+        Object.values(graficos).forEach(chart => {
+            if (chart) chart.resize();
+        });
+    });
+});
+</script>
+{% endblock %}
