@@ -1,92 +1,89 @@
-{% extends "admin_base.html" %}
+{% extends "modern_base.html" %}
 
-{% block title %}Perfil de Paciente - {{ super() }}{% endblock %}
+{% block title %}Mi Perfil - Sistema Médico Universitario{% endblock %}
 
 {% block content %}
-<!-- Dashboard Header -->
-<div class="admin-header">
-    <div>
-        <h1 class="admin-header-title">Perfil de Paciente</h1>
-        <p class="admin-header-subtitle">Información detallada del paciente {{ paciente.usuario.nombre }}</p>
-        <small class="admin-status">Código: {{ paciente.usuario.codigo_matricula }}</small>
-    </div>
-    <div class="admin-header-actions">
-        {% if current_user.es_administrador() %}
-        <a href="{{ url_for('pacientes.lista') }}" class="admin-btn admin-btn-secondary">
-            <i class='bx bx-arrow-back'></i>
-            Volver a Lista
-        </a>
-        {% endif %}
+<!-- Header estudiante -->
+<div class="dashboard-header-gradient">
+    <div class="dashboard-header-content">
+        <h1 class="dashboard-title">
+            <i class='bx bx-user-circle'></i>
+            Mi Perfil de Estudiante
+        </h1>
+        <p class="dashboard-subtitle">Información personal y académica - {{ paciente.usuario.nombre }}</p>
     </div>
 </div>
-<!-- Información del Paciente -->
-<div style="display: grid; grid-template-columns: 350px 1fr; gap: 30px; margin-bottom: 30px;">
-    <!-- Información Personal -->
-    <div class="admin-chart-card">
-        <div class="admin-chart-header">
-            <h3 class="admin-chart-title">Información Personal</h3>
-        </div>
-        <div style="padding: 30px; text-align: center;">
-            <div style="margin-bottom: 20px;">
-                <i class='bx bx-user-circle' style="font-size: 80px; color: var(--admin-primary);"></i>
+
+<div class="dashboard-actions">
+    <!-- Información del Estudiante -->
+    <div class="perfil-container">
+        <!-- Información Personal -->
+        <div class="perfil-card">
+            <div class="perfil-header">
+                <h3><i class='bx bx-user'></i> Información Personal</h3>
             </div>
-            <h4 style="color: var(--admin-text-primary); margin-bottom: 8px;">{{ paciente.usuario.nombre }}</h4>
-            <p style="color: var(--admin-text-secondary); margin-bottom: 20px;">{{ paciente.usuario.rol.value }}</p>
-            
-            <div style="border-top: 1px solid var(--admin-border); padding-top: 20px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                    <strong style="color: var(--admin-text-primary);">Código:</strong>
-                    <code style="background: var(--admin-secondary); padding: 4px 8px; border-radius: 4px;">
-                        {{ paciente.usuario.codigo_matricula }}
-                    </code>
+            <div class="perfil-body">
+                <div class="perfil-avatar">
+                    <i class='bx bx-user-circle'></i>
                 </div>
+                <h4>{{ paciente.usuario.nombre }}</h4>
+                <p class="estudiante-rol">ESTUDIANTE</p>
                 
-                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                    <strong style="color: var(--admin-text-primary);">Edad:</strong>
-                    <span class="admin-badge admin-badge-info">{{ paciente.edad() }} años</span>
-                </div>
-                
-                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                    <strong style="color: var(--admin-text-primary);">Carrera:</strong>
-                    <span style="color: var(--admin-text-secondary);">{{ paciente.carrera }}</span>
-                </div>
-                
-                <div style="display: flex; justify-content: space-between;">
-                    <strong style="color: var(--admin-text-primary);">Teléfono:</strong>
-                    <span style="color: var(--admin-text-secondary);">{{ paciente.telefono or 'No registrado' }}</span>
+                <div class="perfil-datos">
+                    <div class="dato-item">
+                        <span class="dato-label">Código:</span>
+                        <span class="dato-valor codigo">{{ paciente.usuario.codigo_matricula }}</span>
+                    </div>
+                    
+                    <div class="dato-item">
+                        <span class="dato-label">Edad:</span>
+                        <span class="badge-edad">{{ paciente.edad() }} años</span>
+                    </div>
+                    
+                    <div class="dato-item">
+                        <span class="dato-label">Carrera:</span>
+                        <span class="dato-valor">{{ paciente.carrera }}</span>
+                    </div>
+                    
+                    <div class="dato-item">
+                        <span class="dato-label">Teléfono:</span>
+                        <span class="dato-valor">{{ paciente.telefono or 'No registrado' }}</span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Información Detallada -->
-    <div>
         <!-- Información Adicional -->
-        <div class="admin-chart-card" style="margin-bottom: 20px;">
-            <div class="admin-chart-header">
-                <h3 class="admin-chart-title">Información Adicional</h3>
+        <div class="perfil-card">
+            <div class="perfil-header">
+                <h3><i class='bx bx-info-circle'></i> Información Adicional</h3>
             </div>
-            <div style="padding: 25px;">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-                    <div>
-                        <h6 style="color: var(--admin-text-primary); margin-bottom: 8px;"><i class='bx bx-calendar'></i> Fecha de Nacimiento</h6>
-                        <p style="color: var(--admin-text-secondary); margin: 0;">{{ paciente.fecha_nacimiento.strftime('%d/%m/%Y') }}</p>
+            <div class="perfil-body">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h6><i class='bx bx-calendar'></i> Fecha de Nacimiento</h6>
+                        <p>{{ paciente.fecha_nacimiento.strftime('%d/%m/%Y') }}</p>
                     </div>
-                    <div>
-                        <h6 style="color: var(--admin-text-primary); margin-bottom: 8px;"><i class='bx bx-map'></i> Dirección</h6>
-                        <p style="color: var(--admin-text-secondary); margin: 0;">{{ paciente.direccion or 'No registrada' }}</p>
+                    <div class="info-item">
+                        <h6><i class='bx bx-map'></i> Procedencia</h6>
+                        <p>{{ paciente.procedencia or 'No registrada' }}</p>
                     </div>
                 </div>
                 
-                <div style="border-top: 1px solid var(--admin-border); padding-top: 20px;">
-                    <h6 style="color: var(--admin-text-primary); margin-bottom: 15px;"><i class='bx bx-phone'></i> Contacto de Emergencia</h6>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <div>
-                            <strong style="color: var(--admin-text-primary);">Nombre:</strong>
-                            <p style="color: var(--admin-text-secondary); margin: 0;">{{ paciente.contacto_emergencia or 'No registrado' }}</p>
+                <div class="info-item direccion">
+                    <h6><i class='bx bx-home'></i> Dirección</h6>
+                    <p>{{ paciente.direccion or 'No registrada' }}</p>
+                </div>
+                
+                <div class="emergencia-section">
+                    <h6><i class='bx bx-phone'></i> Contacto de Emergencia</h6>
+                    <div class="emergencia-grid">
+                        <div class="emergencia-item">
+                            <span class="emergencia-label">Nombre:</span>
+                            <span class="emergencia-valor">{{ paciente.contacto_emergencia or 'No registrado' }}</span>
                         </div>
-                        <div>
-                            <strong style="color: var(--admin-text-primary);">Teléfono:</strong>
-                            <p style="color: var(--admin-text-secondary); margin: 0;">{{ paciente.telefono_emergencia or 'No registrado' }}</p>
+                        <div class="emergencia-item">
+                            <span class="emergencia-label">Teléfono:</span>
+                            <span class="emergencia-valor">{{ paciente.telefono_emergencia or 'No registrado' }}</span>
                         </div>
                     </div>
                 </div>
@@ -94,45 +91,344 @@
         </div>
         
         <!-- Historial Médico -->
-        <div class="admin-chart-card" style="margin-bottom: 20px;">
-            <div class="admin-chart-header">
-                <h3 class="admin-chart-title">Historial Médico</h3>
+        <div class="perfil-card">
+            <div class="perfil-header">
+                <h3><i class='bx bx-health'></i> Historial Médico</h3>
             </div>
-            <div style="padding: 25px;">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                    <div style="background: var(--admin-secondary); padding: 20px; border-radius: 8px; text-align: center;">
-                        <i class='bx bx-calendar-check' style="font-size: 32px; color: var(--admin-primary); margin-bottom: 10px; display: block;"></i>
-                        <h6 style="color: var(--admin-text-primary); margin-bottom: 5px;">Citas Totales</h6>
-                        <h3 style="color: var(--admin-primary); margin: 0;">{{ paciente.citas|length }}</h3>
+            <div class="perfil-body">
+                <div class="historial-grid">
+                    <div class="historial-item">
+                        <div class="historial-icon citas">
+                            <i class='bx bx-calendar-check'></i>
+                        </div>
+                        <div class="historial-info">
+                            <h6>Citas Totales</h6>
+                            <span class="historial-numero">{{ paciente.citas|length }}</span>
+                        </div>
                     </div>
-                    <div style="background: var(--admin-secondary); padding: 20px; border-radius: 8px; text-align: center;">
-                        <i class='bx bx-health' style="font-size: 32px; color: #28a745; margin-bottom: 10px; display: block;"></i>
-                        <h6 style="color: var(--admin-text-primary); margin-bottom: 5px;">Consultas</h6>
-                        <h3 style="color: #28a745; margin: 0;">{{ paciente.citas|selectattr('consulta')|list|length }}</h3>
+                    
+                    <div class="historial-item">
+                        <div class="historial-icon consultas">
+                            <i class='bx bx-clipboard-check'></i>
+                        </div>
+                        <div class="historial-info">
+                            <h6>Consultas</h6>
+                            <span class="historial-numero">{{ paciente.citas|selectattr('consulta')|list|length }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Acciones -->
-        <div class="admin-chart-card">
-            <div class="admin-chart-header">
-                <h3 class="admin-chart-title">Acciones</h3>
+        <!-- Acciones Rápidas -->
+        <div class="perfil-card">
+            <div class="perfil-header">
+                <h3><i class='bx bx-cog'></i> Acciones</h3>
             </div>
-            <div style="padding: 25px;">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                    <a href="{{ url_for('citas.crear', paciente_id=paciente.id) }}" class="admin-btn admin-btn-primary">
-                        <i class='bx bx-calendar-plus'></i> Nueva Cita
+            <div class="perfil-body">
+                <div class="acciones-grid">
+                    <a href="{{ url_for('citas.lista_paciente') }}" class="accion-btn citas">
+                        <i class='bx bx-calendar'></i>
+                        <span>Ver Mis Citas</span>
                     </a>
-                    <a href="{{ url_for('citas.lista_paciente', paciente_id=paciente.id) }}" class="admin-btn admin-btn-info">
-                        <i class='bx bx-calendar'></i> Ver Citas
-                    </a>
-                    <a href="{{ url_for('consultas.lista', paciente_id=paciente.id) }}" class="admin-btn admin-btn-success">
-                        <i class='bx bx-health'></i> Consultas
+                    <a href="{{ url_for('consultas.lista') }}" class="accion-btn consultas">
+                        <i class='bx bx-clipboard'></i>
+                        <span>Mis Consultas</span>
                     </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+.perfil-container {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.perfil-card {
+    background: #f8fafc;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.perfil-card:hover {
+    border-color: #06b6d4;
+    box-shadow: 0 8px 25px rgba(6, 182, 212, 0.12);
+}
+
+.perfil-header {
+    padding: 20px 25px;
+    border-bottom: 2px solid #e5e7eb;
+    background: linear-gradient(135deg, #f0f9ff, #e0f7fa);
+    border-radius: 16px 16px 0 0;
+}
+
+.perfil-header h3 {
+    margin: 0;
+    color: #1f2937;
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.perfil-header i {
+    color: #06b6d4;
+    font-size: 20px;
+}
+
+.perfil-body {
+    padding: 25px;
+}
+
+.perfil-avatar {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.perfil-avatar i {
+    font-size: 80px;
+    color: #06b6d4;
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.perfil-body h4 {
+    text-align: center;
+    margin: 0 0 8px 0;
+    color: #1f2937;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.estudiante-rol {
+    text-align: center;
+    margin: 0 0 20px 0;
+    color: #06b6d4;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+.perfil-datos {
+    border-top: 2px solid #e5e7eb;
+    padding-top: 20px;
+}
+
+.dato-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.dato-label {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.dato-valor {
+    color: #6b7280;
+}
+
+.dato-valor.codigo {
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-edad {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.info-item h6 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.info-item i {
+    color: #06b6d4;
+}
+
+.info-item p {
+    margin: 0;
+    color: #6b7280;
+}
+
+.info-item.direccion {
+    margin-bottom: 20px;
+}
+
+.emergencia-section {
+    border-top: 2px solid #e5e7eb;
+    padding-top: 20px;
+}
+
+.emergencia-section h6 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.emergencia-section i {
+    color: #ef4444;
+}
+
+.emergencia-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.emergencia-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.emergencia-label {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 14px;
+}
+
+.emergencia-valor {
+    color: #6b7280;
+}
+
+.historial-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.historial-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: #f0f9ff;
+    border-radius: 12px;
+    border: 1px solid #e0f7fa;
+}
+
+.historial-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+    flex-shrink: 0;
+}
+
+.historial-icon.citas {
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+}
+
+.historial-icon.consultas {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.historial-info h6 {
+    margin: 0 0 5px 0;
+    color: #1f2937;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.historial-numero {
+    font-size: 24px;
+    font-weight: 700;
+    color: #06b6d4;
+}
+
+.acciones-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.accion-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.accion-btn.citas {
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+}
+
+.accion-btn.consultas {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.accion-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    text-decoration: none;
+    color: white;
+}
+
+.accion-btn i {
+    font-size: 24px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .perfil-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .info-grid,
+    .historial-grid,
+    .acciones-grid,
+    .emergencia-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
 {% endblock %}

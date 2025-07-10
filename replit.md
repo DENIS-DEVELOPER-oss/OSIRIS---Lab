@@ -403,6 +403,33 @@ El proyecto está preparado para ser subido a GitHub con:
   - Administradores mantienen acceso completo a gestión de citas
   - Navegación sidebar actualizada para direccionar a rutas específicas por rol
 
+### July 10, 2025 - Rediseño Completo del Perfil de Estudiante
+- ✅ **Vista de perfil modernizada para estudiantes:**
+  - Migración de `templates/pacientes/perfil.html` de `admin_base.html` a `modern_base.html`
+  - Header con gradiente cyan-azul específico para estudiantes
+  - Diseño de tarjetas modernas con efectos hover y paleta cyan temática
+  - Layout de dos columnas: información personal (izquierda) e información adicional (derecha)
+  - Avatar grande con gradiente y datos organizados en secciones visuales
+
+- ✅ **Funcionalidades específicas del perfil estudiantil:**
+  - Código de matrícula destacado con badge especial cyan
+  - Información académica (carrera, edad) con badges de colores diferenciados
+  - Sección de procedencia integrada con icono de mapa
+  - Contacto de emergencia con iconografía roja para destacar importancia
+  - Historial médico con tarjetas de estadísticas (citas totales y consultas)
+
+- ✅ **Acciones rápidas personalizadas:**
+  - Botones de acción específicos para estudiantes: "Ver Mis Citas" y "Mis Consultas"
+  - Enlaces direccionados a vistas específicas por rol (`lista_paciente`, `consultas.lista`)
+  - Diseño de botones con gradientes cyan y verde para diferenciación visual
+  - Efectos hover con elevación y sombras profesionales
+
+- ✅ **Experiencia de usuario optimizada:**
+  - Diseño completamente responsivo para dispositivos móviles
+  - Grid layouts que se adaptan a pantallas pequeñas
+  - Paleta de colores consistente con el tema estudiantil cyan
+  - Iconos Boxicons integrados para mantener coherencia visual
+
 ### July 10, 2025 - Eliminación de Opción de Respaldo CSV
 - ✅ **Limpieza de navegación administrativa:**
   - Eliminación de opción "Respaldo CSV" del sidebar de administradores
