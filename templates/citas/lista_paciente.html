@@ -1,0 +1,348 @@
+{% extends "modern_base.html" %}
+
+{% block title %}Mis Citas - Sistema Médico Universitario{% endblock %}
+
+{% block content %}
+<!-- Header estudiante -->
+<div class="dashboard-header-gradient">
+    <div class="dashboard-header-content">
+        <h1 class="dashboard-title">
+            <i class='bx bx-calendar-heart'></i>
+            Mis Citas Médicas
+        </h1>
+        <p class="dashboard-subtitle">Historial y próximas consultas médicas programadas</p>
+    </div>
+</div>
+
+<div class="dashboard-actions">
+    {% if citas %}
+        <div class="actions-header">
+            <h3>Mis Citas Programadas</h3>
+            <p class="actions-subtitle">{{ citas|length }} cita(s) médica(s) en tu historial</p>
+        </div>
+        
+        <!-- Lista de citas con diseño moderno -->
+        <div class="citas-container">
+            {% for cita in citas %}
+            <div class="cita-card">
+                <div class="cita-header">
+                    <div class="cita-fecha">
+                        <i class='bx bx-calendar'></i>
+                        <div>
+                            <span class="fecha">{{ cita.fecha.strftime('%d/%m/%Y') }}</span>
+                            <span class="hora">{{ cita.hora.strftime('%H:%M') }}</span>
+                        </div>
+                    </div>
+                    <div class="cita-tipo">
+                        {% if cita.tipo_cita.value == 'MEDICINA' %}
+                            <span class="badge-tipo medicina">
+                                <i class='bx bx-health'></i>
+                                Medicina
+                            </span>
+                        {% elif cita.tipo_cita.value == 'PSICOLOGIA' %}
+                            <span class="badge-tipo psicologia">
+                                <i class='bx bx-brain'></i>
+                                Psicología
+                            </span>
+                        {% else %}
+                            <span class="badge-tipo emergencia">
+                                <i class='bx bx-plus-medical'></i>
+                                Emergencia
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="cita-body">
+                    <div class="profesional-info">
+                        <div class="profesional-avatar">
+                            <i class='bx bx-user-check'></i>
+                        </div>
+                        <div class="profesional-datos">
+                            <h5>Dr. {{ cita.profesional.nombre }}</h5>
+                            <p>Profesional médico</p>
+                        </div>
+                    </div>
+                    
+                    {% if cita.motivo %}
+                    <div class="cita-motivo">
+                        <h6><i class='bx bx-clipboard'></i> Motivo de consulta</h6>
+                        <p>{{ cita.motivo }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="cita-estado">
+                        {% if cita.estado.value == 'PROGRAMADA' %}
+                            <span class="badge-estado programada">
+                                <i class='bx bx-time'></i>
+                                Programada
+                            </span>
+                        {% elif cita.estado.value == 'COMPLETADA' %}
+                            <span class="badge-estado completada">
+                                <i class='bx bx-check-circle'></i>
+                                Completada
+                            </span>
+                        {% else %}
+                            <span class="badge-estado cancelada">
+                                <i class='bx bx-x-circle'></i>
+                                Cancelada
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="cita-footer">
+                    <a href="{{ url_for('citas.detalle', cita_id=cita.id) }}" class="btn-detalle">
+                        <i class='bx bx-show'></i>
+                        Ver Detalle
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- Estado vacío -->
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class='bx bx-calendar-x'></i>
+            </div>
+            <h3>Sin Citas Programadas</h3>
+            <p>Aún no tienes citas médicas programadas en el sistema.</p>
+            <p class="text-muted">Contacta con el personal médico para programar una consulta.</p>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+.citas-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.cita-card {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 25px;
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+}
+
+.cita-card:hover {
+    border-color: #06b6d4;
+    box-shadow: 0 8px 25px rgba(6, 182, 212, 0.12);
+    background: white;
+}
+
+.cita-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.cita-fecha {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.cita-fecha i {
+    color: #06b6d4;
+    font-size: 24px;
+}
+
+.fecha {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+    display: block;
+}
+
+.hora {
+    font-size: 14px;
+    color: #6b7280;
+    display: block;
+}
+
+.badge-tipo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.badge-tipo.medicina {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.badge-tipo.psicologia {
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+    color: white;
+}
+
+.badge-tipo.emergencia {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+.cita-body {
+    display: grid;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.profesional-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.profesional-avatar {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.profesional-datos h5 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.profesional-datos p {
+    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.cita-motivo {
+    background: #f0f9ff;
+    padding: 15px;
+    border-radius: 12px;
+    border-left: 4px solid #06b6d4;
+}
+
+.cita-motivo h6 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.cita-motivo i {
+    color: #06b6d4;
+}
+
+.cita-motivo p {
+    margin: 0;
+    color: #374151;
+    line-height: 1.5;
+}
+
+.badge-estado {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.badge-estado.programada {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+}
+
+.badge-estado.completada {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.badge-estado.cancelada {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+.cita-footer {
+    padding-top: 15px;
+    border-top: 2px solid #e5e7eb;
+    text-align: right;
+}
+
+.btn-detalle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-detalle:hover {
+    background: linear-gradient(135deg, #0891b2, #0e7490);
+    transform: translateY(-2px);
+    color: white;
+    text-decoration: none;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6b7280;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    color: #d1d5db;
+    margin-bottom: 20px;
+}
+
+.empty-state h3 {
+    color: #1f2937;
+    margin-bottom: 10px;
+}
+
+.text-muted {
+    font-size: 14px;
+    color: #9ca3af;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cita-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .profesional-info {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+</style>
+
+{% endblock %}

@@ -376,6 +376,33 @@ El proyecto está preparado para ser subido a GitHub con:
   - Eliminada referencia a vista administrativa en navegación profesional
   - Mantiene al profesional dentro de su interfaz sin salir a vistas administrativas
 
+### July 10, 2025 - Separación Completa de Vistas de Citas por Rol
+- ✅ **Rediseño completo del sistema de citas con vistas específicas:**
+  - Creación de `templates/citas/lista_profesional.html` - Vista exclusiva para profesionales
+  - Creación de `templates/citas/lista_paciente.html` - Vista exclusiva para estudiantes/pacientes
+  - Mantenimiento de `templates/citas/lista.html` - Vista administrativa exclusiva
+  - Redirección automática desde `/citas/` según rol de usuario para evitar acceso cruzado
+
+- ✅ **Vista profesional de citas modernizada:**
+  - Header con gradiente azul profesional y iconos Boxicons consistentes
+  - Tarjetas de cita con información detallada del paciente (avatar, carrera, procedencia)
+  - Badges con gradientes para tipos de consulta y estados de cita
+  - Botón "Registrar Consulta" para citas programadas sin consulta registrada
+  - Diseño de tarjetas con efectos hover y sombras elegantes
+
+- ✅ **Vista estudiantil de citas personalizada:**
+  - Header con gradiente cyan-azul específico para estudiantes
+  - Información del profesional médico asignado con avatar distintivo
+  - Diseño centrado en la experiencia del paciente con colores cyan temáticos
+  - Estados vacíos informativos con mensajes específicos por rol
+  - Diseño completamente responsivo para dispositivos móviles
+
+- ✅ **Control de acceso mejorado:**
+  - Profesionales ya no pueden acceder a vistas administrativas de citas
+  - Estudiantes solo ven sus citas personales sin opciones administrativas
+  - Administradores mantienen acceso completo a gestión de citas
+  - Navegación sidebar actualizada para direccionar a rutas específicas por rol
+
 ### July 10, 2025 - Eliminación de Opción de Respaldo CSV
 - ✅ **Limpieza de navegación administrativa:**
   - Eliminación de opción "Respaldo CSV" del sidebar de administradores

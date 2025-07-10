@@ -181,17 +181,16 @@ def registrar_rutas(app):
     @citas_bp.route('/')
     @requiere_login
     def lista():
-        """Lista de citas basada en el rol"""
-        if current_user.es_administrador():
-            citas = ServicioCita.obtener_citas()
+        """Lista de citas - solo para administradores"""
+        if current_user.es_paciente():
+            # Los pacientes van a su vista específica
+            return redirect(url_for('citas.lista_paciente'))
         elif current_user.es_profesional():
-            citas = ServicioCita.obtener_citas_por_profesional(current_user.id)
-        else:  # Paciente
-            if not current_user.paciente:
-                flash('Complete su perfil de paciente primero', 'warning')
-                return redirect(url_for('pacientes.completar_perfil'))
-            citas = ServicioCita.obtener_citas_por_paciente(current_user.paciente.id)
+            # Los profesionales van a su vista específica
+            return redirect(url_for('citas.lista_profesional'))
         
+        # Solo administradores llegan aquí
+        citas = ServicioCita.obtener_citas()
         return render_template('citas/lista.html', citas=citas)
     
     @citas_bp.route('/lista-profesional')
@@ -199,7 +198,7 @@ def registrar_rutas(app):
     def lista_profesional():
         """Lista de citas para profesionales"""
         citas = ServicioCita.obtener_citas_por_profesional(current_user.id)
-        return render_template('citas/lista.html', citas=citas, es_profesional=True)
+        return render_template('citas/lista_profesional.html', citas=citas)
     
     @citas_bp.route('/lista-paciente')
     @requiere_login
@@ -214,7 +213,7 @@ def registrar_rutas(app):
             return redirect(url_for('pacientes.completar_perfil'))
         
         citas = ServicioCita.obtener_citas_por_paciente(current_user.paciente.id)
-        return render_template('citas/lista.html', citas=citas, es_paciente=True)
+        return render_template('citas/lista_paciente.html', citas=citas)
     
     @citas_bp.route('/crear', methods=['GET', 'POST'])
     @requiere_login
