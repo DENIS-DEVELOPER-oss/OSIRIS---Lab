@@ -98,6 +98,57 @@
                 </div>
             </div>
             
+            <!-- Información Académica (Solo para Estudiantes) -->
+            <div id="academicSection" style="display: none; margin-bottom: 30px;">
+                <h5 style="color: var(--admin-text-primary); margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+                    <i class='bx bx-school'></i> Información Académica
+                </h5>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">
+                            <i class='bx bx-book'></i> Carrera
+                        </label>
+                        <input type="text" name="carrera"
+                               style="width: 100%; padding: 12px; border: 1px solid var(--admin-border); border-radius: 6px; background: var(--admin-bg);"
+                               placeholder="Ej: Medicina, Enfermería, Ingeniería">
+                        <small style="color: var(--admin-text-secondary); font-size: 12px;">Carrera universitaria del estudiante</small>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">
+                            <i class='bx bx-map'></i> Procedencia
+                        </label>
+                        <select name="procedencia"
+                                style="width: 100%; padding: 12px; border: 1px solid var(--admin-border); border-radius: 6px; background: var(--admin-bg);">
+                            <option value="">Seleccionar procedencia</option>
+                            <option value="Puno">Puno (Ciudad)</option>
+                            <option value="Juliaca">Juliaca</option>
+                            <option value="Ilave">Ilave</option>
+                            <option value="Yunguyo">Yunguyo</option>
+                            <option value="Desaguadero">Desaguadero</option>
+                            <option value="Ayaviri">Ayaviri</option>
+                            <option value="Putina">Putina</option>
+                            <option value="Sandia">Sandia</option>
+                            <option value="Macusani">Macusani</option>
+                            <option value="Crucero">Crucero</option>
+                            <option value="Azángaro">Azángaro</option>
+                            <option value="Lampa">Lampa</option>
+                            <option value="Juli">Juli</option>
+                            <option value="Pomata">Pomata</option>
+                            <option value="Zepita">Zepita</option>
+                            <option value="Pilcuyo">Pilcuyo</option>
+                            <option value="Huancané">Huancané</option>
+                            <option value="Moho">Moho</option>
+                            <option value="Conima">Conima</option>
+                            <option value="Tilali">Tilali</option>
+                            <option value="Taraco">Taraco</option>
+                            <option value="Otro">Otro lugar</option>
+                        </select>
+                        <small style="color: var(--admin-text-secondary); font-size: 12px;">Distrito o provincia de origen para el mapa</small>
+                    </div>
+                </div>
+            </div>
+            
             <!-- Credenciales -->
             <div style="margin-bottom: 30px;">
                 <h5 style="color: var(--admin-text-primary); margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
@@ -146,6 +197,7 @@ function toggleFields() {
     const roleDescription = document.getElementById('roleDescription');
     const dniField = document.getElementById('dniField');
     const matriculaField = document.getElementById('matriculaField');
+    const academicSection = document.getElementById('academicSection');
     
     const selectedRole = rolSelect.value;
     
@@ -153,24 +205,29 @@ function toggleFields() {
         roleInfo.style.display = 'block';
         
         if (selectedRole === 'PACIENTE') {
-            roleDescription.innerHTML = 'Los estudiantes pueden acceder a consultas médicas, gestionar su perfil y agendar citas.';
+            roleDescription.innerHTML = 'Los estudiantes pueden acceder a consultas médicas, gestionar su perfil y agendar citas. Se requiere información académica y de procedencia para el mapa de Puno.';
             dniField.style.display = 'none';
             matriculaField.style.display = 'block';
+            academicSection.style.display = 'block';
             document.querySelector('input[name="dni"]').required = false;
             document.querySelector('input[name="codigo_matricula"]').required = true;
+            document.querySelector('input[name="carrera"]').required = true;
         } else {
             roleDescription.innerHTML = selectedRole === 'PROFESIONAL' ? 
                 'Los profesionales pueden atender consultas, gestionar citas y acceder al historial médico.' :
                 'Los administradores tienen acceso completo al sistema, incluyendo gestión de usuarios y reportes.';
             dniField.style.display = 'block';
             matriculaField.style.display = 'none';
+            academicSection.style.display = 'none';
             document.querySelector('input[name="dni"]').required = true;
             document.querySelector('input[name="codigo_matricula"]').required = false;
+            document.querySelector('input[name="carrera"]').required = false;
         }
     } else {
         roleInfo.style.display = 'none';
         dniField.style.display = 'block';
         matriculaField.style.display = 'none';
+        academicSection.style.display = 'none';
     }
 }
 

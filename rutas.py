@@ -340,6 +340,10 @@ def registrar_rutas(app):
                 password = request.form.get('password', '').strip()
                 confirm_password = request.form.get('confirm_password', '').strip()
                 
+                # Campos adicionales para estudiantes
+                carrera = request.form.get('carrera', '').strip()
+                procedencia = request.form.get('procedencia', '').strip()
+                
                 # Validaciones básicas
                 errores = []
                 
@@ -355,8 +359,11 @@ def registrar_rutas(app):
                     errores.append('La contraseña debe tener al menos 6 caracteres')
                 
                 # Validar campos específicos según rol
-                if rol == 'PACIENTE' and not codigo_matricula:
-                    errores.append('Código de matrícula es obligatorio para estudiantes')
+                if rol == 'PACIENTE':
+                    if not codigo_matricula:
+                        errores.append('Código de matrícula es obligatorio para estudiantes')
+                    if not carrera:
+                        errores.append('Carrera es obligatoria para estudiantes')
                 if rol in ['PROFESIONAL', 'ADMINISTRADOR'] and not dni:
                     errores.append('DNI es obligatorio para profesionales y administradores')
                 
@@ -379,6 +386,15 @@ def registrar_rutas(app):
                     'codigo_matricula': codigo_matricula if codigo_matricula else None,
                     'password': password
                 })
+                
+                # Si es estudiante, crear perfil de paciente con información académica
+                if rol == 'PACIENTE':
+                    from datetime import date
+                    paciente = ServicioPaciente.crear_paciente(usuario.id, {
+                        'carrera': carrera,
+                        'procedencia': procedencia if procedencia else None,
+                        'fecha_nacimiento': date(2000, 1, 1)  # Fecha placeholder, se puede actualizar después
+                    })
                 
                 flash(f'Usuario {usuario.nombre} creado exitosamente y guardado en CSV', 'success')
                 return redirect(url_for('reportes.gestion_usuarios'))
