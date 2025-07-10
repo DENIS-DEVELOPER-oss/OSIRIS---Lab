@@ -238,6 +238,26 @@ El proyecto está preparado para ser subido a GitHub con:
   - Diseño responsivo para dispositivos móviles
   - Iconos Boxicons consistentes en toda la interfaz
 
+### July 10, 2025 - Corrección de Gráficos y Validación de Login
+- ✅ **Gráficos estadísticos con datos reales implementados:**
+  - Dashboard administrativo actualizado con datos reales de la base de datos
+  - Gráfico de líneas muestra tendencia mensual real de citas
+  - Gráfico de dona muestra distribución real por tipo de consulta
+  - Eliminados valores ficticios y datos hardcodeados
+  - Variables JavaScript corregidas para evitar errores de serialización
+
+- ✅ **Validación de matrícula y login mejorada:**
+  - Código de matrícula actualizado a exactamente 6 dígitos
+  - Modelo de base de datos actualizado (String(6))
+  - Formulario de login con validación específica para 6 dígitos (matrícula) y 8 dígitos (DNI)
+  - JavaScript para formateo automático en tiempo real
+  - Botón "Volver al Inicio" agregado en página de login
+
+- ✅ **Corrección de errores de dashboard:**
+  - Variables undefined corregidas en templates
+  - Dashboard funcional para todos los roles (admin, profesional, paciente)
+  - Datos de estadísticas pasados correctamente desde el backend
+
 ### July 10, 2025 - Limpieza y Optimización Completa del Sistema
 - ✅ **Eliminación de código duplicado y archivos innecesarios:**
   - Eliminación de archivos CSS redundantes (estilos.css, login.css, modern-home.css, modern-login.css)

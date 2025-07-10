@@ -23,7 +23,7 @@ class FormularioLogin(FlaskForm):
     # Campo identificador: Acepta DNI o código de matrícula según el rol del usuario
     identificador = StringField('Identificador', validators=[
         DataRequired(message='Este campo es obligatorio'),  # Campo obligatorio
-        Length(min=4, max=20, message='Debe tener entre 4 y 20 caracteres')  # Validación de longitud
+        Length(min=6, max=8, message='Debe tener 6 dígitos (matrícula) o 8 dígitos (DNI)')  # Validación de longitud
     ], render_kw={'placeholder': 'DNI o Código de Matrícula'})  # Texto de ayuda para el usuario
     
     # Campo contraseña: Contraseña del usuario con validación de longitud mínima
@@ -48,11 +48,16 @@ class FormularioLogin(FlaskForm):
         """
         usuario = None  # Inicializar variable para el usuario encontrado
         
-        # Estrategia 1: Si el identificador es completamente numérico, buscar por DNI
+        # Estrategia 1: Si el identificador es completamente numérico
         if field.data.isdigit():
-            usuario = Usuario.query.filter_by(dni=field.data).first()
+            # Si son 8 dígitos, buscar por DNI
+            if len(field.data) == 8:
+                usuario = Usuario.query.filter_by(dni=field.data).first()
+            # Si son 6 dígitos, buscar por código de matrícula  
+            elif len(field.data) == 6:
+                usuario = Usuario.query.filter_by(codigo_matricula=field.data).first()
         
-        # Estrategia 2: Si no se encontró por DNI, buscar por código de matrícula
+        # Estrategia 2: Si no se encontró aún, buscar por código de matrícula (por compatibilidad)
         if not usuario:
             usuario = Usuario.query.filter_by(codigo_matricula=field.data).first()
         
