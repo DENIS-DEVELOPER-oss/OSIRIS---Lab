@@ -77,7 +77,12 @@ def registrar_rutas(app):
         """Página principal"""
         if current_user.is_authenticated:
             return redirect(url_for('main.dashboard'))
-        return redirect(url_for('auth.login'))
+        return render_template('index.html')
+    
+    @main_bp.route('/inicio')
+    def inicio():
+        """Página de inicio moderna"""
+        return render_template('index.html')
     
     @main_bp.route('/dashboard')
     @login_required

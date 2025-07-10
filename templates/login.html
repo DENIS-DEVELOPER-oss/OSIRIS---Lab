@@ -1,84 +1,109 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - OSIRIS</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="{{ url_for('main.dashboard') }}" class="logo">
+            <img src="{{ url_for('static', filename='images/osiris.png') }}" alt="OSIRIS" height="40">
+            OSIRIS
+        </a>
+    </header>
 
-{% block title %}Iniciar Sesión - {{ super() }}{% endblock %}
-
-{% block content %}
-<div class="row justify-content-center mt-5">
-    <div class="col-md-6 col-lg-4">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white text-center">
-                <h4 class="mb-0">
-                    <i class="fas fa-sign-in-alt me-2"></i>
-                    Iniciar Sesión
-                </h4>
-            </div>
-            <div class="card-body">
-                <form method="POST" class="needs-validation" novalidate>
-                    {{ form.hidden_tag() }}
-                    
-                    <div class="mb-3">
-                        {{ form.identificador.label(class="form-label") }}
-                        {{ form.identificador(class="form-control" + (" is-invalid" if form.identificador.errors else "")) }}
-                        {% if form.identificador.errors %}
-                            <div class="invalid-feedback">
-                                {% for error in form.identificador.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                        <div class="form-text">
-                            <i class="fas fa-info-circle me-1"></i>
-                            Estudiantes: usar código de matrícula. Profesionales/Admin: usar DNI.
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        {{ form.password.label(class="form-label") }}
-                        {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
-                        {% if form.password.errors %}
-                            <div class="invalid-feedback">
-                                {% for error in form.password.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="d-grid mb-3">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-sign-in-alt me-2"></i>
-                            Iniciar Sesión
-                        </button>
-                    </div>
-                    
-                    <div class="text-center">
-                        <p class="mb-0">
-                            ¿No tienes cuenta? 
-                            <a href="{{ url_for('auth.registro') }}" class="text-decoration-none">
-                                Regístrate aquí
-                            </a>
-                        </p>
-                    </div>
-                </form>
-            </div>
+    <!-- Container principal -->
+    <div class="login-container">
+        <!-- Contenido izquierdo -->
+        <div class="login-content">
+            <h3>Bienestar universitario con</h3>
+            <h1>TECNOLOGÍA INTELIGENTE</h1>
+            <h3>Conecta con nuestros especialistas en salud <span class="highlight multiple-text"></span></h3>
+            <p class="welcome-message">
+                Bienvenido a OSIRIS, una plataforma inteligente de gestión médica diseñada para brindar 
+                atención eficiente, segura y oportuna a la comunidad universitaria.
+            </p>
         </div>
-        
-        <!-- Información de acceso por defecto -->
-        <div class="card mt-3">
-            <div class="card-header bg-info text-white">
-                <h6 class="mb-0">
-                    <i class="fas fa-info-circle me-2"></i>
+
+        <!-- Formulario de login -->
+        <div class="login-form">
+            <h2>Iniciar Sesión</h2>
+            
+            <!-- Mostrar mensajes flash -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                
+                <div class="form-group">
+                    {{ form.identificador.label() }}
+                    {{ form.identificador(placeholder="DNI o Código de Matrícula", class="form-control") }}
+                    {% if form.identificador.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {% for error in form.identificador.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.password.label() }}
+                    {{ form.password(placeholder="Ingresa tu contraseña", class="form-control") }}
+                    {% if form.password.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {% for error in form.password.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <button type="submit" class="btn-login">
+                    <i class='bx bx-log-in'></i>
+                    Iniciar Sesión
+                </button>
+                
+                <div class="login-links">
+                    <a href="{{ url_for('auth.registro') }}">¿No tienes cuenta? Regístrate</a>
+                </div>
+            </form>
+            
+            <!-- Información de acceso de demostración -->
+            <div class="demo-info" style="margin-top: 25px; padding: 15px; background: rgba(0, 238, 255, 0.1); border-radius: 10px; border: 1px solid rgba(0, 238, 255, 0.3);">
+                <h6 style="color: #0ef; margin-bottom: 10px;">
+                    <i class='bx bx-info-circle'></i>
                     Acceso de Demostración
                 </h6>
-            </div>
-            <div class="card-body">
-                <p class="mb-2"><strong>Administrador:</strong></p>
-                <ul class="list-unstyled mb-0">
-                    <li><i class="fas fa-key me-2"></i>DNI: 12345678</li>
-                    <li><i class="fas fa-lock me-2"></i>Contraseña: admin123</li>
-                </ul>
+                <p style="margin: 0; font-size: 14px;">
+                    <strong>Administrador:</strong><br>
+                    DNI: 12345678<br>
+                    Contraseña: admin123
+                </p>
             </div>
         </div>
     </div>
-</div>
-{% endblock %}
+
+    <!-- Imagen lateral -->
+    <div class="login-image">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="OSIRIS Medical Platform">
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+</body>
+</html>
