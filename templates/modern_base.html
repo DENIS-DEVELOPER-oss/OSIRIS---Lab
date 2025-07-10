@@ -40,10 +40,10 @@
                             <a href="{{ url_for('reportes.estadisticas_detalladas') }}" class="nav-link">
                                 <i class='bx bx-bar-chart-alt-2'></i> Estadísticas
                             </a>
-                            <a href="{{ url_for('reportes.respaldo_csv') }}" class="nav-link">
+                            <a href="{{ url_for('reportes.gestion_respaldo_csv') }}" class="nav-link">
                                 <i class='bx bx-file-export'></i> Respaldo CSV
                             </a>
-                            <a href="{{ url_for('reportes.configuracion') }}" class="nav-link">
+                            <a href="{{ url_for('reportes.configuracion_sistema') }}" class="nav-link">
                                 <i class='bx bx-cog'></i> Configuración
                             </a>
                         {% elif current_user.es_profesional() %}
