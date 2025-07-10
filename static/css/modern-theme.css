@@ -2163,20 +2163,21 @@ h1, h2, h3, h4, h5, h6 {
    ESTILOS ESPECÍFICOS PARA PÁGINA DE INICIO
    ======================================== */
 
-/* Header de página de inicio */
+/* Header de página de inicio - PANTALLA COMPLETA */
 .header {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    padding: 20px 100px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    width: 100vw;
+    padding: 20px 5%;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border-bottom: 2px solid rgba(6, 182, 212, 0.2);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 100;
+    z-index: 1000;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .logo {
@@ -2186,7 +2187,26 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
+}
+
+.logo-img {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    object-fit: contain;
+    background: white;
+    padding: 3px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.logo-text {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
+    letter-spacing: 1px;
 }
 
 .logo-icon {
@@ -2232,20 +2252,31 @@ h1, h2, h3, h4, h5, h6 {
     width: 100%;
 }
 
-/* Contenido principal de inicio */
+/* Contenido principal de inicio - PANTALLA COMPLETA */
 .main-content {
     position: relative;
-    width: 100%;
+    width: 100vw;
     height: 100vh;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 150px 100px 0;
-    background: var(--bg-primary);
+    padding: 120px 5% 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 25%, #cbd5e1 50%, #94a3b8 75%, #64748b 100%);
+    background-size: 200% 200%;
+    animation: gradientShift 15s ease infinite;
+    overflow: hidden;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .content-left {
-    max-width: 600px;
+    max-width: 50%;
+    flex: 1;
+    padding-right: 50px;
 }
 
 .content-left h3 {
@@ -2334,14 +2365,15 @@ h1, h2, h3, h4, h5, h6 {
     filter: brightness(1.1);
 }
 
-/* Contenido derecho - Ilustración médica */
+/* Contenido derecho - Ilustración médica - RESPONSIVE */
 .content-right {
     position: relative;
-    width: 600px;
-    height: 600px;
+    width: 45%;
+    height: 70vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .medical-illustration {
@@ -2490,59 +2522,70 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
-/* Responsive para página de inicio */
+/* Responsive para página de inicio - PANTALLA COMPLETA */
 @media (max-width: 1200px) {
     .header {
-        padding: 20px 50px;
+        padding: 20px 3%;
     }
     
     .main-content {
-        padding: 150px 50px 0;
+        padding: 120px 3% 0;
     }
 }
 
 @media (max-width: 768px) {
     .header {
-        padding: 15px 20px;
+        padding: 15px 2%;
     }
     
     .logo {
         font-size: 24px;
     }
     
-    .navbar a {
-        font-size: 16px;
-        margin-left: 20px;
+    .logo-img {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .navbar {
+        display: none; /* Ocultar en móvil por simplicidad */
     }
     
     .main-content {
         flex-direction: column;
-        padding: 100px 20px 0;
-        height: auto;
-        min-height: 100vh;
+        padding: 80px 2% 20px;
+        height: 100vh;
+        justify-content: center;
     }
     
     .content-left {
+        max-width: 100%;
         text-align: center;
-        margin-bottom: 50px;
+        margin-bottom: 30px;
+        padding-right: 0;
     }
     
     .content-left h1 {
         font-size: 36px;
+        margin: 10px 0;
     }
     
     .content-left h3 {
         font-size: 24px;
     }
     
+    .content-left h2 {
+        font-size: 18px;
+    }
+    
     .content-right {
-        width: 400px;
-        height: 400px;
+        width: 90%;
+        height: 350px;
     }
     
     .brain-stethoscope {
-        width: 300px;
-        height: 300px;
+        width: 250px;
+        height: 250px;
     }
 }
 

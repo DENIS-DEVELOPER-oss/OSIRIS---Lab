@@ -11,10 +11,8 @@
 <body>
     <header class="header">
         <a href="{{ url_for('main.index') }}" class="logo">
-            <div class="logo-icon">
-                <i class='bx bx-plus-medical'></i>
-            </div>
-            OSIRIS
+            <img src="{{ url_for('static', filename='images/osiris.png') }}" alt="OSIRIS" class="logo-img">
+            <span class="logo-text">OSIRIS</span>
         </a>
 
         <nav class="navbar">
