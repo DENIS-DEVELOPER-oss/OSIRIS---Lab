@@ -8,19 +8,42 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-theme.css') }}">
     <style>
-        /* Asegurar pantalla completa sin margins */
+        /* Reset completo para pantalla completa absoluta */
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            margin: 0 !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
         }
         
         html, body {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
+            width: 100vw !important;
+            height: 100vh !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow-x: hidden !important;
+            position: relative !important;
+        }
+        
+        /* Forzar que todo el contenido use el ancho completo */
+        .main-content {
+            width: 100vw !important;
+            max-width: 100vw !important;
+            margin: 0 !important;
+            padding: 120px 0 0 0 !important;
+        }
+        
+        .content-left, .content-right {
+            width: 50vw !important;
+            max-width: 50vw !important;
+            margin: 0 !important;
+        }
+        
+        .content-left {
+            padding: 0 3vw 0 4vw !important;
+        }
+        
+        .content-right {
+            padding: 120px 0 0 0 !important;
         }
     </style>
 </head>
