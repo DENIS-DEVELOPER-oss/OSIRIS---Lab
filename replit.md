@@ -552,6 +552,34 @@ El proyecto está preparado para ser subido a GitHub con:
   - Simplificación del menú de reportes manteniendo solo Estadísticas y Configuración
   - Navegación más limpia y enfocada en funciones principales
 
+### July 10, 2025 - Limpieza y Optimización del Proyecto
+- ✅ **Eliminación de archivos innecesarios:**
+  - Carpeta attached_assets/ con imágenes temporales eliminada
+  - Archivos JavaScript no utilizados: dashboard.js, login.js
+  - Archivos de respaldo CSV: usuarios_respaldo.csv, exportacion_procedencia_*.csv
+  - Scripts Python temporales: respaldo_usuarios.py
+  - Simplificación estructura de carpetas static/
+  
+- ✅ **Reemplazo completo de página de inicio:**
+  - Nuevo archivo home-style.css con diseño oscuro (#1f242d)
+  - Nuevo archivo home-script.js para animaciones typed.js
+  - Página index.html completamente reescrita con diseño minimalista
+  - Integración de efectos de animación slideRight, slideLeft, slideTop, slideBottom
+  - Efecto de texto animado "Agenda tus citas, y mantente al día, con tu salud"
+  
+- ✅ **Estructura de archivos optimizada:**
+  - CSS: modern-theme.css (sistema), admin-dashboard.css (admin), home-style.css (inicio)
+  - JS: home-script.js para página de inicio
+  - Imágenes: osiris.png (logo header), logo.png (imagen principal)
+  - Eliminación de código duplicado y archivos temporales
+
+### July 10, 2025 - Eliminación de Opción de Respaldo CSV
+- ✅ **Limpieza de navegación administrativa:**
+  - Eliminación de opción "Respaldo CSV" del sidebar de administradores
+  - Actualización de templates modern_base.html y admin_base.html
+  - Simplificación del menú de reportes manteniendo solo Estadísticas y Configuración
+  - Navegación más limpia y enfocada en funciones principales
+
 ### July 10, 2025 - Rediseño Completo del Footer
 - ✅ **Footer moderno y profesional implementado:**
   - Diseño completamente renovado con gradiente oscuro profesional
