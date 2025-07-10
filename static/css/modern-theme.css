@@ -263,6 +263,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
 /* Header moderno - Tema Claro */
@@ -362,6 +363,8 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
+    overflow-x: hidden;
+    word-wrap: break-word;
 }
 
 /* Tarjetas modernas */
@@ -1479,10 +1482,14 @@ body {
     flex-direction: column;
     min-height: 100vh;
     transition: margin-left 0.3s ease;
+    width: calc(100% - 280px);
+    position: relative;
+    z-index: 1;
 }
 
 .main-wrapper.sidebar-collapsed {
     margin-left: 70px;
+    width: calc(100% - 70px);
 }
 
 .top-header {
@@ -1534,6 +1541,8 @@ body {
     flex: 1;
     padding: 1.5rem;
     background: var(--bg-primary);
+    overflow-x: hidden;
+    word-wrap: break-word;
 }
 
 .main-footer {
@@ -1727,10 +1736,12 @@ body {
     
     .main-wrapper {
         margin-left: 0;
+        width: 100%;
     }
     
     .main-wrapper.sidebar-collapsed {
-        margin-left: 70px;
+        margin-left: 0;
+        width: 100%;
     }
     
     .dashboard-stats {
@@ -1772,6 +1783,75 @@ body {
     
     .footer-social {
         justify-content: center;
+    }
+}
+
+/* ========================================
+   CORRECIÓN DE SOLAPAMIENTO SIDEBAR
+   ======================================== */
+
+/* Asegurar que todo el contenido esté correctamente posicionado */
+body {
+    overflow-x: hidden;
+}
+
+.app-container {
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Corregir problemas de texto cortado */
+.main-wrapper * {
+    box-sizing: border-box;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Asegurar que los elementos no se salgan del contenedor */
+.page-content * {
+    max-width: 100%;
+}
+
+/* Corregir headers que podrían estar mal posicionados */
+.header-title,
+.dashboard-title,
+h1, h2, h3, h4, h5, h6 {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+}
+
+/* Corregir contenido que se extiende más allá del viewport */
+.content-area,
+.main-content-area,
+.dashboard-content {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+/* Media queries adicionales para tablet/móvil */
+@media (max-width: 1200px) {
+    .main-wrapper {
+        margin-left: 280px;
+        width: calc(100% - 280px);
+    }
+}
+
+@media (max-width: 1024px) {
+    .main-wrapper {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    .sidebar {
+        transform: translateX(-100%);
+        z-index: 1001;
+    }
+    
+    .sidebar.show {
+        transform: translateX(0);
     }
 }
 
