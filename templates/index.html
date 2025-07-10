@@ -7,6 +7,22 @@
     <title>OSIRIS - Gestión Médica Universitaria</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-theme.css') }}">
+    <style>
+        /* Asegurar pantalla completa sin margins */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+    </style>
 </head>
 <body>
     <header class="header">

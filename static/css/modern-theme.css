@@ -2176,7 +2176,7 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 1000;
+    z-index: 1001;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
@@ -2254,7 +2254,9 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Contenido principal de inicio - PANTALLA COMPLETA */
 .main-content {
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -2265,6 +2267,8 @@ h1, h2, h3, h4, h5, h6 {
     background-size: 200% 200%;
     animation: gradientShift 15s ease infinite;
     overflow: hidden;
+    margin: 0;
+    z-index: 1;
 }
 
 @keyframes gradientShift {
