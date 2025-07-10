@@ -2228,15 +2228,23 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 18px;
     color: var(--text-secondary);
     text-decoration: none;
-    font-weight: 500;
-    margin-left: 35px;
+    font-weight: 600;
+    margin-left: 25px;
+    padding: 12px 18px;
+    border-radius: 12px;
     transition: var(--transition-normal);
     position: relative;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(6, 182, 212, 0.2);
 }
 
 .navbar a:hover,
 .navbar a.active {
-    color: var(--primary-color);
+    color: white;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(6, 182, 212, 0.3);
 }
 
 .navbar a::before {
@@ -2289,30 +2297,32 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .content-left h3 {
-    font-size: 32px;
+    font-size: 36px;
     color: var(--text-secondary);
     line-height: 1.2;
     font-weight: 600;
+    margin-bottom: 10px;
 }
 
 .content-left h1 {
-    font-size: 56px;
+    font-size: 68px;
     color: var(--text-primary);
-    line-height: 1.2;
-    font-weight: 700;
-    margin: 15px 0;
+    line-height: 1.1;
+    font-weight: 800;
+    margin: 20px 0;
     background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    letter-spacing: -1px;
 }
 
 .content-left h2 {
-    font-size: 22px;
+    font-size: 26px;
     color: var(--text-secondary);
     line-height: 1.4;
     font-weight: 500;
-    margin: 15px 0 30px;
+    margin: 20px 0 35px;
 }
 
 .highlight {
@@ -2322,8 +2332,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .content-left p {
     color: var(--text-muted);
-    font-size: 16px;
-    margin: 30px 0;
+    font-size: 18px;
+    margin: 35px 0;
     line-height: 1.6;
 }
 
@@ -2334,17 +2344,18 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .social-icon {
-    width: 40px;
-    height: 40px;
-    background: rgba(52, 152, 219, 0.1);
-    border-radius: 10px;
+    width: 48px;
+    height: 48px;
+    background: rgba(6, 182, 212, 0.1);
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--primary-color);
     text-decoration: none;
-    font-size: 20px;
+    font-size: 24px;
     transition: var(--transition-normal);
+    border: 1px solid rgba(6, 182, 212, 0.2);
 }
 
 .social-icon:hover {
@@ -2356,16 +2367,17 @@ h1, h2, h3, h4, h5, h6 {
 
 .cta-button {
     display: inline-block;
-    padding: 15px 35px;
+    padding: 18px 45px;
     background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
     color: white;
     text-decoration: none;
     border-radius: 50px;
-    font-weight: 600;
-    font-size: 16px;
-    margin-top: 20px;
+    font-weight: 700;
+    font-size: 20px;
+    margin-top: 25px;
     transition: var(--transition-normal);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 8px 25px rgba(6, 182, 212, 0.3);
+    letter-spacing: 0.5px;
 }
 
 .cta-button:hover {
