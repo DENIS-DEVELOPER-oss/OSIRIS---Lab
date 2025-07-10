@@ -1,114 +1,108 @@
-{% extends "base.html" %}
+{% extends "modern_base.html" %}
 
 {% block title %}Registro - {{ super() }}{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center mt-4">
-    <div class="col-md-8 col-lg-6">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white text-center">
-                <h4 class="mb-0">
-                    <i class="fas fa-user-plus me-2"></i>
-                    Registro de Usuario
-                </h4>
-            </div>
-            <div class="card-body">
-                <form method="POST" class="needs-validation" novalidate>
-                    {{ form.hidden_tag() }}
-                    
-                    <div class="mb-3">
-                        {{ form.nombre.label(class="form-label") }}
-                        {{ form.nombre(class="form-control" + (" is-invalid" if form.nombre.errors else "")) }}
-                        {% if form.nombre.errors %}
-                            <div class="invalid-feedback">
-                                {% for error in form.nombre.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="mb-3">
-                        {{ form.rol.label(class="form-label") }}
-                        {{ form.rol(class="form-select" + (" is-invalid" if form.rol.errors else ""), id="rolSelect") }}
-                        {% if form.rol.errors %}
-                            <div class="invalid-feedback">
-                                {% for error in form.rol.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="mb-3" id="dniField">
-                        {{ form.dni.label(class="form-label") }}
-                        {{ form.dni(class="form-control" + (" is-invalid" if form.dni.errors else "")) }}
-                        {% if form.dni.errors %}
-                            <div class="invalid-feedback">
-                                {% for error in form.dni.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="mb-3" id="matriculaField" style="display: none;">
-                        {{ form.codigo_matricula.label(class="form-label") }}
-                        {{ form.codigo_matricula(class="form-control" + (" is-invalid" if form.codigo_matricula.errors else "")) }}
-                        {% if form.codigo_matricula.errors %}
-                            <div class="invalid-feedback">
-                                {% for error in form.codigo_matricula.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="mb-3">
-                        {{ form.password.label(class="form-label") }}
-                        {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
-                        {% if form.password.errors %}
-                            <div class="invalid-feedback">
-                                {% for error in form.password.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="mb-3">
-                        {{ form.confirm_password.label(class="form-label") }}
-                        {{ form.confirm_password(class="form-control" + (" is-invalid" if form.confirm_password.errors else "")) }}
-                        {% if form.confirm_password.errors %}
-                            <div class="invalid-feedback">
-                                {% for error in form.confirm_password.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="d-grid mb-3">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-user-plus me-2"></i>
-                            Registrarse
-                        </button>
-                    </div>
-                    
-                    <div class="text-center">
-                        <p class="mb-0">
-                            ¿Ya tienes cuenta? 
-                            <a href="{{ url_for('auth.login') }}" class="text-decoration-none">
-                                Inicia sesión aquí
-                            </a>
-                        </p>
-                    </div>
-                </form>
-            </div>
-        </div>
+<div class="modern-card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <i class='bx bx-user-plus'></i>
+            Registro de Usuario
+        </h2>
     </div>
+    
+    <form method="POST" class="modern-form">
+        {{ form.hidden_tag() }}
+        
+        <div class="form-group">
+            <label class="form-label">{{ form.nombre.label.text }}</label>
+            {{ form.nombre(class="form-input" + (" error" if form.nombre.errors else "")) }}
+            {% if form.nombre.errors %}
+                <div class="error-message">
+                    {% for error in form.nombre.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">{{ form.rol.label.text }}</label>
+            {{ form.rol(class="form-select" + (" error" if form.rol.errors else ""), id="rolSelect") }}
+            {% if form.rol.errors %}
+                <div class="error-message">
+                    {% for error in form.rol.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group" id="dniField">
+            <label class="form-label">{{ form.dni.label.text }}</label>
+            {{ form.dni(class="form-input" + (" error" if form.dni.errors else "")) }}
+            {% if form.dni.errors %}
+                <div class="error-message">
+                    {% for error in form.dni.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group" id="matriculaField" style="display: none;">
+            <label class="form-label">{{ form.codigo_matricula.label.text }}</label>
+            {{ form.codigo_matricula(class="form-input" + (" error" if form.codigo_matricula.errors else "")) }}
+            {% if form.codigo_matricula.errors %}
+                <div class="error-message">
+                    {% for error in form.codigo_matricula.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">{{ form.password.label.text }}</label>
+            {{ form.password(class="form-input" + (" error" if form.password.errors else "")) }}
+            {% if form.password.errors %}
+                <div class="error-message">
+                    {% for error in form.password.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">{{ form.confirm_password.label.text }}</label>
+            {{ form.confirm_password(class="form-input" + (" error" if form.confirm_password.errors else "")) }}
+            {% if form.confirm_password.errors %}
+                <div class="error-message">
+                    {% for error in form.confirm_password.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <button type="submit" class="modern-btn btn-primary w-full">
+            <i class='bx bx-user-plus'></i>
+            Registrarse
+        </button>
+        
+        <div class="text-center mt-3">
+            <p class="mb-0">
+                ¿Ya tienes cuenta? 
+                <a href="{{ url_for('auth.login') }}" class="nav-link" style="display: inline; color: var(--primary-color);">
+                    Inicia sesión aquí
+                </a>
+            </p>
+        </div>
+    </form>
 </div>
 
+{% block extra_js %}
 <script>
 // Mostrar/ocultar campos según el rol seleccionado
 document.getElementById('rolSelect').addEventListener('change', function() {
@@ -124,4 +118,5 @@ document.getElementById('rolSelect').addEventListener('change', function() {
     }
 });
 </script>
+{% endblock %}
 {% endblock %}

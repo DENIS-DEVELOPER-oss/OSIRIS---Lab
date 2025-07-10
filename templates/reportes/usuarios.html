@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "modern_base.html" %}
 
 {% block title %}Gestión de Usuarios - Sistema Médico Universitario{% endblock %}
 
@@ -12,72 +12,76 @@
         align-items: center;
         justify-content: center;
         font-weight: bold;
-        color: white;
+        color: var(--text-dark);
         margin-right: 10px;
+        background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
     }
     .role-badge {
         font-size: 0.75rem;
         padding: 0.25rem 0.5rem;
+        border-radius: 15px;
     }
     .status-active {
-        color: #28a745;
+        color: var(--success-color);
     }
     .status-inactive {
-        color: #dc3545;
+        color: var(--danger-color);
     }
     .table-actions {
         min-width: 120px;
     }
     .user-card {
         transition: all 0.3s ease;
-        border: 1px solid #e0e0e0;
+        border: var(--border-primary);
+        background: var(--bg-card);
+        backdrop-filter: blur(10px);
+        border-radius: var(--border-radius);
+        padding: 20px;
+        margin-bottom: 15px;
     }
     .user-card:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        box-shadow: var(--shadow-md);
         transform: translateY(-2px);
-    }
-    .stats-summary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 10px;
-        padding: 20px;
-        margin-bottom: 30px;
+        border-color: var(--primary-color);
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <!-- Header -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h2 class="mb-0">Gestión de Usuarios</h2>
-                    <p class="text-muted">Administrar usuarios del sistema médico universitario</p>
-                </div>
-                <div>
-                    <a href="{{ url_for('reportes.crear_usuario_directo') }}" class="btn btn-primary">
-                        <i class="fas fa-user-plus"></i> Nuevo Usuario
-                    </a>
-                </div>
-            </div>
-        </div>
+<div class="modern-card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <i class='bx bx-users'></i>
+            Gestión de Usuarios
+        </h2>
+        <a href="{{ url_for('reportes.crear_usuario_directo') }}" class="modern-btn btn-primary">
+            <i class='bx bx-user-plus'></i> Nuevo Usuario
+        </a>
     </div>
 
     <!-- Resumen de Estadísticas -->
-    <div class="stats-summary">
-        <div class="row">
-            <div class="col-md-3 text-center">
-                <h3 class="mb-0">{{ usuarios|selectattr('activo')|list|length }}</h3>
-                <small>Usuarios Activos</small>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class='bx bx-user-check'></i>
             </div>
-            <div class="col-md-3 text-center">
-                <h3 class="mb-0">{{ usuarios|selectattr('rol', 'equalto', 'PACIENTE')|list|length }}</h3>
-                <small>Estudiantes</small>
+            <div class="stat-number">{{ usuarios|selectattr('activo')|list|length }}</div>
+            <div class="stat-label">Usuarios Activos</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class='bx bx-user'></i>
             </div>
-            <div class="col-md-3 text-center">
-                <h3 class="mb-0">{{ usuarios|selectattr('rol', 'equalto', 'PROFESIONAL')|list|length }}</h3>
+            <div class="stat-number">{{ usuarios|selectattr('rol', 'equalto', 'PACIENTE')|list|length }}</div>
+            <div class="stat-label">Estudiantes</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class='bx bx-user-voice'></i>
+            </div>
+            <div class="stat-number">{{ usuarios|selectattr('rol', 'equalto', 'PROFESIONAL')|list|length }}</div>
                 <small>Profesionales</small>
             </div>
             <div class="col-md-3 text-center">
