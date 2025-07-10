@@ -62,7 +62,7 @@
     <!-- Acciones rápidas para profesionales -->
     <div class="dashboard-actions">
         <div class="actions-header">
-            <h3>Acciones Rápidas - Profesional</h3>
+            <h3>Mis Funciones - Profesional Médico</h3>
         </div>
         <div class="actions-grid">
             <a href="{{ url_for('citas.lista_profesional') }}" class="action-card primary">
@@ -70,8 +70,8 @@
                     <i class='bx bx-calendar'></i>
                 </div>
                 <div class="action-content">
-                    <div class="action-title">Mis Citas</div>
-                    <div class="action-description">Ver mis citas asignadas</div>
+                    <div class="action-title">Mis Citas Asignadas</div>
+                    <div class="action-description">Citas programadas para atender</div>
                 </div>
             </a>
             
@@ -80,18 +80,8 @@
                     <i class='bx bx-clipboard'></i>
                 </div>
                 <div class="action-content">
-                    <div class="action-title">Consultas</div>
-                    <div class="action-description">Registrar consultas médicas</div>
-                </div>
-            </a>
-            
-            <a href="{{ url_for('pacientes.lista') }}" class="action-card info">
-                <div class="action-icon">
-                    <i class='bx bx-users'></i>
-                </div>
-                <div class="action-content">
-                    <div class="action-title">Mis Pacientes</div>
-                    <div class="action-description">Ver pacientes asignados</div>
+                    <div class="action-title">Registrar Consulta</div>
+                    <div class="action-description">Documentar consulta médica</div>
                 </div>
             </a>
         </div>
@@ -179,34 +169,66 @@
     </div>
 {% endif %}
 
-<!-- Información adicional -->
+{% if current_user.es_profesional() %}
+<!-- Información para profesionales -->
 <div class="dashboard-info">
     <div class="info-section">
-        <h3>Información del Sistema</h3>
+        <h3>Herramientas Profesionales</h3>
         <div class="info-grid">
+            <div class="info-item">
+                <i class='bx bx-calendar-check'></i>
+                <div class="info-content">
+                    <div class="info-title">Agenda Médica</div>
+                    <div class="info-description">Gestiona tus citas asignadas</div>
+                </div>
+            </div>
+            <div class="info-item">
+                <i class='bx bx-health'></i>
+                <div class="info-content">
+                    <div class="info-title">Consultas Médicas</div>
+                    <div class="info-description">Registro de diagnósticos</div>
+                </div>
+            </div>
             <div class="info-item">
                 <i class='bx bx-shield-check'></i>
                 <div class="info-content">
-                    <div class="info-title">Sistema Seguro</div>
-                    <div class="info-description">Plataforma médica universitaria</div>
+                    <div class="info-title">Confidencialidad</div>
+                    <div class="info-description">Datos protegidos por HIPAA</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<!-- Información para estudiantes -->
+<div class="dashboard-info">
+    <div class="info-section">
+        <h3>Servicios Estudiantiles</h3>
+        <div class="info-grid">
+            <div class="info-item">
+                <i class='bx bx-calendar-heart'></i>
+                <div class="info-content">
+                    <div class="info-title">Atención Médica</div>
+                    <div class="info-description">Servicios de salud universitaria</div>
+                </div>
+            </div>
+            <div class="info-item">
+                <i class='bx bx-user-check'></i>
+                <div class="info-content">
+                    <div class="info-title">Perfil Estudiantil</div>
+                    <div class="info-description">Información académica y personal</div>
                 </div>
             </div>
             <div class="info-item">
                 <i class='bx bx-time'></i>
                 <div class="info-content">
                     <div class="info-title">Disponible 24/7</div>
-                    <div class="info-description">Acceso las 24 horas</div>
-                </div>
-            </div>
-            <div class="info-item">
-                <i class='bx bx-support'></i>
-                <div class="info-content">
-                    <div class="info-title">Soporte Técnico</div>
-                    <div class="info-description">Asistencia especializada</div>
+                    <div class="info-description">Acceso continuo al sistema</div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{% endif %}
 
 {% endblock %}
