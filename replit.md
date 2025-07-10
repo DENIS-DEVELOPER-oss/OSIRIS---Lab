@@ -375,6 +375,35 @@ El proyecto está preparado para ser subido a GitHub con:
   - Logo y texto se adaptan a tamaños menores
   - Mantiene funcionalidad completa en todos los dispositivos
 
+### July 10, 2025 - Mejora Completa del Formulario de Creación de Usuarios
+- ✅ **Formulario wizard moderno implementado:**
+  - Diseño wizard con header animado con partículas flotantes
+  - Indicador de pasos visual (Datos Generales → Identificación → Credenciales)
+  - Secciones organizadas con iconos y efectos visuales modernos
+  - Header con gradiente azul y animación de puntos flotantes
+  - Transiciones suaves entre campos con efectos fade-in/fade-out
+  
+- ✅ **Funcionalidades avanzadas:**
+  - Vista previa dinámica del rol con descripción detallada y permisos
+  - Validación en tiempo real de contraseñas con indicadores visuales
+  - Campos condicionales que aparecen/desaparecen según el rol seleccionado
+  - Formateo automático de DNI (solo números, máximo 8 dígitos)
+  - Formateo automático de matrícula (solo números, máximo 10 dígitos)
+  - Efectos hover y focus en todos los elementos del formulario
+  
+- ✅ **Experiencia de usuario mejorada:**
+  - Emojis en selector de roles para mejor identificación visual
+  - Mensajes de ayuda contextuales con iconos específicos
+  - Validación de fortaleza de contraseña (letras + números)
+  - Estados visuales: success (verde), warning (amarillo), error (rojo)
+  - Botón de envío con animación de carga y loader
+  - Diseño completamente responsivo para móviles y tablets
+  
+- ✅ **Corrección de templates:**
+  - Actualizados todos los templates pendientes para usar modern_base.html o admin_base.html
+  - Eliminadas referencias obsoletas a base.html en toda la aplicación
+  - Consistencia visual completa en todo el sistema administrativo
+
 ### July 10, 2025 - Análisis Avanzado: Segmentación y Predicción
 - ✅ **Implementación completa de análisis avanzados:**
   - Nuevo servicio `ServicioReporte.obtener_datos_segmentacion()` - Análisis de segmentación de pacientes

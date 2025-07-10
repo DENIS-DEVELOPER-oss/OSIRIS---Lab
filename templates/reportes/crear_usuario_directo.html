@@ -4,27 +4,319 @@
 
 {% block extra_css %}
 <style>
-    .form-section {
+    .form-wizard {
         background: var(--bg-card);
-        border-radius: var(--border-radius);
-        padding: 25px;
-        border-left: 4px solid var(--primary-color);
-        margin-bottom: 20px;
-        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
         border: var(--border-primary);
     }
-    .help-text {
-        color: var(--text-muted);
-        font-size: 0.875rem;
-        margin-top: 5px;
+    
+    .form-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        color: white;
+        padding: 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
     }
-    .section-title {
+    
+    .form-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+        background-size: 20px 20px;
+        animation: dots 20s linear infinite;
+    }
+    
+    @keyframes dots {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(20px, 20px); }
+    }
+    
+    .form-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .form-header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin: 10px 0 0 0;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .form-body {
+        padding: 40px;
+    }
+    
+    .step-indicator {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+        padding: 0 20px;
+    }
+    
+    .step {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        max-width: 200px;
+        position: relative;
+    }
+    
+    .step:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 20px;
+        right: -50%;
+        width: 100%;
+        height: 2px;
+        background: #e1e5e9;
+        z-index: 1;
+    }
+    
+    .step.active:not(:last-child)::after {
+        background: var(--primary-color);
+    }
+    
+    .step-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #e1e5e9;
+        color: #6c757d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        position: relative;
+        z-index: 2;
+        transition: all 0.3s ease;
+    }
+    
+    .step.active .step-circle {
+        background: var(--primary-color);
+        color: white;
+        transform: scale(1.1);
+    }
+    
+    .step-label {
+        margin-left: 10px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #6c757d;
+    }
+    
+    .step.active .step-label {
         color: var(--primary-color);
         font-weight: 600;
-        margin-bottom: 15px;
+    }
+    
+    .form-section {
+        background: rgba(248, 249, 250, 0.8);
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 25px;
+        border: 1px solid rgba(52, 152, 219, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .form-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    }
+    
+    .section-title {
+        color: var(--primary-color);
+        font-weight: 700;
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .section-title i {
+        font-size: 1.5rem;
+        padding: 8px;
+        background: rgba(52, 152, 219, 0.1);
+        border-radius: 8px;
+    }
+    
+    .form-group {
+        margin-bottom: 25px;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 8px;
         display: flex;
         align-items: center;
         gap: 8px;
+    }
+    
+    .form-input,
+    .form-select {
+        width: 100%;
+        padding: 15px 20px;
+        border: 2px solid #e1e5e9;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+    }
+    
+    .form-input:focus,
+    .form-select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        transform: translateY(-1px);
+    }
+    
+    .form-input.is-valid {
+        border-color: var(--success-color);
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2327ae60' d='m2.3 6.73.26.15c.2.12.44.12.64 0l5.6-3.3c.2-.12.32-.33.32-.56 0-.23-.12-.44-.32-.56l-.26-.15c-.2-.12-.44-.12-.64 0l-5.6 3.3c-.2.12-.32.33-.32.56 0 .23.12.44.32.56z'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 15px center;
+        background-size: 16px;
+    }
+    
+    .form-input.is-invalid {
+        border-color: var(--danger-color);
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3e%3cpath fill='%23e74c3c' d='M6 0c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6 2.69-6 6-6zM3.35 3.35l-.71.71L5.29 6.71l-2.65 2.64.71.71L6 7.41l2.64 2.65.71-.71L6.71 6.71l2.64-2.65-.71-.71L6 5.29 3.35 3.35z'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 15px center;
+        background-size: 16px;
+    }
+    
+    .help-text {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .help-text.success {
+        color: var(--success-color);
+    }
+    
+    .help-text.error {
+        color: var(--danger-color);
+    }
+    
+    .help-text.warning {
+        color: var(--warning-color);
+    }
+    
+    .role-preview {
+        background: rgba(52, 152, 219, 0.05);
+        border: 1px solid rgba(52, 152, 219, 0.2);
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+    }
+    
+    .role-preview h6 {
+        color: var(--primary-color);
+        font-weight: 600;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .btn-group-modern {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+    }
+    
+    .btn-modern {
+        flex: 1;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .btn-primary-modern {
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        color: white;
+    }
+    
+    .btn-primary-modern:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+        filter: brightness(1.1);
+    }
+    
+    .btn-secondary-modern {
+        background: #6c757d;
+        color: white;
+    }
+    
+    .btn-secondary-modern:hover {
+        background: #5a6268;
+        transform: translateY(-1px);
+    }
+    
+    .field-hidden {
+        opacity: 0;
+        transform: translateY(-10px);
+        pointer-events: none;
+        transition: all 0.3s ease;
+    }
+    
+    .field-visible {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: all;
+        transition: all 0.3s ease;
+    }
+    
+    @media (max-width: 768px) {
+        .form-body {
+            padding: 20px;
+        }
+        
+        .step-indicator {
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .step:not(:last-child)::after {
+            display: none;
+        }
+        
+        .btn-group-modern {
+            flex-direction: column;
+        }
     }
 </style>
 {% endblock %}
@@ -32,119 +324,166 @@
 {% block page_title %}Crear Nuevo Usuario{% endblock %}
 
 {% block content %}
-<div class="admin-table-container">
-    <div class="admin-table-header">
-        <div class="admin-table-title">
-            <i class='bx bx-user-plus'></i>
-            Crear Nuevo Usuario
-        </div>
+<div class="admin-container">
+    <!-- Botón volver -->
+    <div class="mb-4">
         <a href="{{ url_for('reportes.gestion_usuarios') }}" class="admin-btn admin-btn-secondary">
             <i class='bx bx-arrow-back'></i> Volver a Usuarios
         </a>
     </div>
     
-    <div style="padding: 25px;">
-        <form method="POST" autocomplete="off">
-        <div class="form-section">
-            <h6 class="section-title">
-                <i class='bx bx-user'></i> Datos Generales
-            </h6>
-            
-            <div class="d-flex gap-2">
-                <div class="form-group flex-1">
-                    <label class="form-label">Nombre Completo *</label>
-                    <input type="text" class="form-input" id="nombre" name="nombre" required 
-                           placeholder="Ej: Juan Pérez García">
-                    <div class="help-text">
-                        <i class='bx bx-info-circle'></i> Nombre completo del usuario
-                    </div>
+    <!-- Formulario wizard moderno -->
+    <div class="form-wizard">
+        <!-- Header con animación -->
+        <div class="form-header">
+            <h1><i class='bx bx-user-plus'></i> Crear Usuario</h1>
+            <p>Sistema Médico Universitario OSIRIS</p>
+        </div>
+        
+        <!-- Cuerpo del formulario -->
+        <div class="form-body">
+            <!-- Indicador de pasos -->
+            <div class="step-indicator">
+                <div class="step active">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">Datos Generales</div>
                 </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Rol *</label>
-                    <select class="form-select" id="rol" name="rol" required>
-                        <option value="">Seleccionar...</option>
-                        <option value="PACIENTE">Estudiante</option>
-                        <option value="PROFESIONAL">Profesional</option>
-                        <option value="ADMINISTRADOR">Administrador</option>
-                    </select>
-                    <div class="help-text">
-                                        <i class="fas fa-user-tag"></i> Tipo de usuario
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-section">
-                            <h6 class="mb-3"><i class="fas fa-id-card"></i> Identificación</h6>
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-3" id="dniField">
-                                    <label for="dni" class="form-label fw-bold">DNI</label>
-                                    <input type="text" class="form-control" id="dni" name="dni" 
-                                           placeholder="Ej: 12345678">
-                                    <div class="help-text">
-                                        <i class="fas fa-id-badge"></i> Para profesionales y administradores
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-6 mb-3" id="matriculaField">
-                                    <label for="codigo_matricula" class="form-label fw-bold">Código de Matrícula</label>
-                                    <input type="text" class="form-control" id="codigo_matricula" name="codigo_matricula" 
-                                           placeholder="Ej: 20240001">
-                                    <div class="help-text">
-                                        <i class="fas fa-graduation-cap"></i> Para estudiantes
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-section">
-                            <h6 class="mb-3"><i class="fas fa-key"></i> Credenciales de Acceso</h6>
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="password" class="form-label fw-bold">Contraseña *</label>
-                                    <input type="password" class="form-control" id="password" name="password" 
-                                           required minlength="6" placeholder="Mínimo 6 caracteres">
-                                    <div class="help-text">
-                                        <i class="fas fa-shield-alt"></i> <span id="passwordHelp">Mínimo 6 caracteres</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-6 mb-3">
-                                    <label for="confirm_password" class="form-label fw-bold">Confirmar Contraseña *</label>
-                                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
-                                           required minlength="6" placeholder="Repetir contraseña">
-                                    <div class="help-text">
-                                        <i class="fas fa-check-double"></i> <span id="confirmHelp">Debe coincidir</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Información dinámica -->
-                        <div class="alert alert-info" id="infoRol">
-                            <i class="fas fa-info-circle"></i>
-                            <strong>Seleccione un rol</strong> para ver los requisitos de identificación.
-                        </div>
-
-                        <!-- Botones -->
-                        <div class="row">
-                            <div class="col-md-6">
-                                <button type="submit" class="btn btn-success btn-lg w-100" id="submitBtn">
-                                    <i class="fas fa-user-plus"></i> Crear Usuario
-                                </button>
-                            </div>
-                            <div class="col-md-6">
-                                <a href="{{ url_for('reportes.gestion_usuarios') }}" class="btn btn-secondary btn-lg w-100">
-                                    <i class="fas fa-times"></i> Cancelar
-                                </a>
-                            </div>
-                        </div>
-                    </form>
+                <div class="step active">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">Identificación</div>
+                </div>
+                <div class="step active">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">Credenciales</div>
                 </div>
             </div>
+            
+            <form method="POST" autocomplete="off" id="userForm">
+                <!-- Sección 1: Datos Generales -->
+                <div class="form-section">
+                    <h6 class="section-title">
+                        <i class='bx bx-user'></i> Datos Generales
+                    </h6>
+                    
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class='bx bx-edit'></i> Nombre Completo *
+                                </label>
+                                <input type="text" class="form-input" id="nombre" name="nombre" required 
+                                       placeholder="Ej: Dr. Juan Pérez García">
+                                <div class="help-text">
+                                    <i class='bx bx-info-circle'></i> Ingrese el nombre completo del usuario
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class='bx bx-group'></i> Rol del Usuario *
+                                </label>
+                                <select class="form-select" id="rol" name="rol" required>
+                                    <option value="">Seleccionar rol...</option>
+                                    <option value="PACIENTE">🎓 Estudiante</option>
+                                    <option value="PROFESIONAL">👩‍⚕️ Profesional Médico</option>
+                                    <option value="ADMINISTRADOR">👑 Administrador</option>
+                                </select>
+                                <div class="help-text">
+                                    <i class='bx bx-shield-alt'></i> Determina los permisos de acceso
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Vista previa del rol -->
+                    <div class="role-preview" id="rolePreview" style="display: none;">
+                        <h6><i class='bx bx-info-circle'></i> Información del Rol</h6>
+                        <p id="roleDescription"></p>
+                    </div>
+                </div>
+
+                <!-- Sección 2: Identificación -->
+                <div class="form-section">
+                    <h6 class="section-title">
+                        <i class='bx bx-id-card'></i> Identificación
+                    </h6>
+                    
+                    <div class="row">
+                        <div class="col-md-6 field-hidden" id="dniField">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class='bx bx-card'></i> Documento Nacional de Identidad
+                                </label>
+                                <input type="text" class="form-input" id="dni" name="dni" 
+                                       placeholder="Ej: 12345678" maxlength="8">
+                                <div class="help-text">
+                                    <i class='bx bx-badge-check'></i> Para profesionales y administradores
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 field-hidden" id="matriculaField">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class='bx bx-graduation'></i> Código de Matrícula
+                                </label>
+                                <input type="text" class="form-input" id="codigo_matricula" name="codigo_matricula" 
+                                       placeholder="Ej: 20240001" maxlength="10">
+                                <div class="help-text">
+                                    <i class='bx bx-book'></i> Para estudiantes universitarios
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección 3: Credenciales -->
+                <div class="form-section">
+                    <h6 class="section-title">
+                        <i class='bx bx-key'></i> Credenciales de Acceso
+                    </h6>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class='bx bx-lock'></i> Contraseña *
+                                </label>
+                                <input type="password" class="form-input" id="password" name="password" 
+                                       required minlength="6" placeholder="Mínimo 6 caracteres">
+                                <div class="help-text" id="passwordHelp">
+                                    <i class='bx bx-shield'></i> Mínimo 6 caracteres, incluye letras y números
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class='bx bx-check-double'></i> Confirmar Contraseña *
+                                </label>
+                                <input type="password" class="form-input" id="confirm_password" name="confirm_password" 
+                                       required minlength="6" placeholder="Repetir la contraseña">
+                                <div class="help-text" id="confirmHelp">
+                                    <i class='bx bx-check'></i> Debe coincidir con la contraseña anterior
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="btn-group-modern">
+                    <button type="submit" class="btn-modern btn-primary-modern" id="submitBtn">
+                        <i class='bx bx-user-plus'></i> Crear Usuario
+                    </button>
+                    <a href="{{ url_for('reportes.gestion_usuarios') }}" class="btn-modern btn-secondary-modern">
+                        <i class='bx bx-x'></i> Cancelar
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -155,17 +494,23 @@
 // Configuración de roles
 const rolesConfig = {
     'PACIENTE': {
-        info: '<strong>Estudiante:</strong> Necesita código de matrícula para acceder al sistema.',
+        title: '🎓 Estudiante',
+        description: 'Los estudiantes pueden acceder a consultas médicas, gestionar su perfil académico y programar citas. Requieren código de matrícula universitaria para identificación.',
+        permissions: ['Ver perfil', 'Agendar citas', 'Consultar historial médico'],
         dniRequerido: false,
         matriculaRequerida: true
     },
     'PROFESIONAL': {
-        info: '<strong>Profesional Médico:</strong> Necesita DNI para gestionar consultas.',
+        title: '👩‍⚕️ Profesional Médico',
+        description: 'Los profesionales pueden atender consultas, gestionar pacientes y acceder a herramientas clínicas avanzadas. Requieren DNI para verificación profesional.',
+        permissions: ['Atender consultas', 'Gestionar pacientes', 'Generar reportes'],
         dniRequerido: true,
         matriculaRequerida: false
     },
     'ADMINISTRADOR': {
-        info: '<strong>Administrador:</strong> Necesita DNI para acceso completo al sistema.',
+        title: '👑 Administrador',
+        description: 'Los administradores tienen acceso completo al sistema, pueden gestionar usuarios, configurar el sistema y acceder a todas las estadísticas. Requieren DNI para máxima seguridad.',
+        permissions: ['Gestión completa', 'Administrar usuarios', 'Configurar sistema', 'Acceso a estadísticas'],
         dniRequerido: true,
         matriculaRequerida: false
     }
@@ -177,7 +522,8 @@ const dniField = document.getElementById('dniField');
 const matriculaField = document.getElementById('matriculaField');
 const dniInput = document.getElementById('dni');
 const matriculaInput = document.getElementById('codigo_matricula');
-const infoRol = document.getElementById('infoRol');
+const rolePreview = document.getElementById('rolePreview');
+const roleDescription = document.getElementById('roleDescription');
 const passwordInput = document.getElementById('password');
 const confirmInput = document.getElementById('confirm_password');
 const passwordHelp = document.getElementById('passwordHelp');
@@ -188,9 +534,11 @@ function actualizarRol() {
     const rol = rolSelect.value;
     
     if (!rol) {
-        infoRol.innerHTML = '<i class="fas fa-info-circle"></i> <strong>Seleccione un rol</strong> para ver los requisitos de identificación.';
-        dniField.style.display = 'block';
-        matriculaField.style.display = 'block';
+        rolePreview.style.display = 'none';
+        dniField.classList.add('field-hidden');
+        dniField.classList.remove('field-visible');
+        matriculaField.classList.add('field-hidden');
+        matriculaField.classList.remove('field-visible');
         dniInput.required = false;
         matriculaInput.required = false;
         return;
@@ -199,55 +547,91 @@ function actualizarRol() {
     const config = rolesConfig[rol];
     if (!config) return;
     
-    // Actualizar información
-    infoRol.innerHTML = '<i class="fas fa-info-circle"></i> ' + config.info;
+    // Mostrar información del rol
+    rolePreview.style.display = 'block';
+    roleDescription.innerHTML = `
+        <strong>${config.title}</strong><br>
+        ${config.description}<br><br>
+        <strong>Permisos incluidos:</strong>
+        <ul style="margin: 10px 0 0 20px;">
+            ${config.permissions.map(p => `<li>${p}</li>`).join('')}
+        </ul>
+    `;
     
-    // Mostrar/ocultar campos
-    dniField.style.display = config.dniRequerido ? 'block' : 'none';
-    matriculaField.style.display = config.matriculaRequerida ? 'block' : 'none';
-    
-    // Configurar campos requeridos
-    dniInput.required = config.dniRequerido;
-    matriculaInput.required = config.matriculaRequerida;
-    
-    // Limpiar campos no utilizados
-    if (!config.dniRequerido) dniInput.value = '';
-    if (!config.matriculaRequerida) matriculaInput.value = '';
+    // Animar campos de identificación
+    setTimeout(() => {
+        if (config.dniRequerido) {
+            dniField.classList.remove('field-hidden');
+            dniField.classList.add('field-visible');
+            dniInput.required = true;
+        } else {
+            dniField.classList.add('field-hidden');
+            dniField.classList.remove('field-visible');
+            dniInput.required = false;
+            dniInput.value = '';
+        }
+        
+        if (config.matriculaRequerida) {
+            matriculaField.classList.remove('field-hidden');
+            matriculaField.classList.add('field-visible');
+            matriculaInput.required = true;
+        } else {
+            matriculaField.classList.add('field-hidden');
+            matriculaField.classList.remove('field-visible');
+            matriculaInput.required = false;
+            matriculaInput.value = '';
+        }
+    }, 100);
 }
 
-// Validar contraseñas
+// Validar contraseñas en tiempo real
 function validarPassword() {
     const password = passwordInput.value;
     const confirm = confirmInput.value;
     
-    // Validar longitud
-    if (password.length < 6) {
-        passwordHelp.innerHTML = '<span class="text-warning">Mínimo 6 caracteres</span>';
+    // Validar fortaleza de contraseña
+    if (password.length === 0) {
+        passwordHelp.innerHTML = '<i class="bx bx-shield"></i> Mínimo 6 caracteres, incluye letras y números';
+        passwordHelp.className = 'help-text';
+        passwordInput.classList.remove('is-valid', 'is-invalid');
+    } else if (password.length < 6) {
+        passwordHelp.innerHTML = '<i class="bx bx-x-circle"></i> Contraseña muy corta';
+        passwordHelp.className = 'help-text error';
         passwordInput.classList.remove('is-valid');
         passwordInput.classList.add('is-invalid');
+    } else if (!/(?=.*[a-zA-Z])(?=.*\d)/.test(password)) {
+        passwordHelp.innerHTML = '<i class="bx bx-info-circle"></i> Incluye letras y números para mayor seguridad';
+        passwordHelp.className = 'help-text warning';
+        passwordInput.classList.remove('is-invalid');
+        passwordInput.classList.add('is-valid');
     } else {
-        passwordHelp.innerHTML = '<span class="text-success">Contraseña válida</span>';
+        passwordHelp.innerHTML = '<i class="bx bx-check-circle"></i> Contraseña segura';
+        passwordHelp.className = 'help-text success';
         passwordInput.classList.remove('is-invalid');
         passwordInput.classList.add('is-valid');
     }
     
     // Validar coincidencia
-    if (confirm && password !== confirm) {
-        confirmHelp.innerHTML = '<span class="text-danger">No coincide</span>';
+    if (confirm.length === 0) {
+        confirmHelp.innerHTML = '<i class="bx bx-check"></i> Debe coincidir con la contraseña anterior';
+        confirmHelp.className = 'help-text';
+        confirmInput.classList.remove('is-valid', 'is-invalid');
+    } else if (password !== confirm) {
+        confirmHelp.innerHTML = '<i class="bx bx-x-circle"></i> Las contraseñas no coinciden';
+        confirmHelp.className = 'help-text error';
         confirmInput.classList.remove('is-valid');
         confirmInput.classList.add('is-invalid');
-    } else if (confirm && password === confirm) {
-        confirmHelp.innerHTML = '<span class="text-success">Coincide</span>';
+    } else {
+        confirmHelp.innerHTML = '<i class="bx bx-check-circle"></i> Las contraseñas coinciden';
+        confirmHelp.className = 'help-text success';
         confirmInput.classList.remove('is-invalid');
         confirmInput.classList.add('is-valid');
-    } else {
-        confirmHelp.innerHTML = 'Debe coincidir';
-        confirmInput.classList.remove('is-valid', 'is-invalid');
     }
 }
 
 // Validar formulario antes del envío
 function validarFormulario(e) {
+    const nombre = document.getElementById('nombre').value.trim();
     const rol = rolSelect.value;
     const dni = dniInput.value.trim();
     const matricula = matriculaInput.value.trim();
@@ -256,7 +640,8 @@ function validarFormulario(e) {
     
     let errores = [];
     
-    // Validar rol
+    // Validaciones
+    if (!nombre) errores.push('El nombre es obligatorio');
     if (!rol) errores.push('Debe seleccionar un rol');
     
     // Validar identificación según rol
@@ -267,33 +652,78 @@ function validarFormulario(e) {
         errores.push('DNI es obligatorio para profesionales y administradores');
     }
     
+    // Validar DNI formato
+    if (dni && !/^\d{8}$/.test(dni)) {
+        errores.push('DNI debe tener exactamente 8 dígitos');
+    }
+    
     // Validar contraseñas
     if (password.length < 6) errores.push('Contraseña debe tener al menos 6 caracteres');
     if (password !== confirm) errores.push('Las contraseñas no coinciden');
     
     if (errores.length > 0) {
         e.preventDefault();
-        alert('Errores encontrados:\n- ' + errores.join('\n- '));
+        // Mostrar errores de forma elegante
+        const errorMsg = errores.map(error => `• ${error}`).join('\n');
+        alert(`Por favor corrige los siguientes errores:\n\n${errorMsg}`);
         return false;
     }
     
-    // Mostrar indicador de carga
+    // Mostrar indicador de carga con animación
     const submitBtn = document.getElementById('submitBtn');
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando...';
+    submitBtn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Creando usuario...';
     submitBtn.disabled = true;
+    submitBtn.style.opacity = '0.8';
     
     return true;
+}
+
+// Formatear campos automáticamente
+function formatearDNI(input) {
+    // Solo permitir números
+    input.value = input.value.replace(/\D/g, '');
+    
+    // Limitar a 8 dígitos
+    if (input.value.length > 8) {
+        input.value = input.value.substring(0, 8);
+    }
+}
+
+function formatearMatricula(input) {
+    // Solo permitir números
+    input.value = input.value.replace(/\D/g, '');
+    
+    // Limitar a 10 dígitos
+    if (input.value.length > 10) {
+        input.value = input.value.substring(0, 10);
+    }
 }
 
 // Event listeners
 rolSelect.addEventListener('change', actualizarRol);
 passwordInput.addEventListener('input', validarPassword);
 confirmInput.addEventListener('input', validarPassword);
-document.querySelector('form').addEventListener('submit', validarFormulario);
+dniInput.addEventListener('input', function() { formatearDNI(this); });
+matriculaInput.addEventListener('input', function() { formatearMatricula(this); });
+document.getElementById('userForm').addEventListener('submit', validarFormulario);
 
-// Inicializar
+// Inicializar al cargar
 document.addEventListener('DOMContentLoaded', function() {
     actualizarRol();
+    
+    // Añadir efectos focus a los inputs
+    const inputs = document.querySelectorAll('.form-input, .form-select');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.style.transform = 'translateY(-1px)';
+            this.style.boxShadow = '0 4px 12px rgba(52, 152, 219, 0.15)';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '0 0 0 3px rgba(52, 152, 219, 0.1)';
+        });
+    });
 });
 </script>
 {% endblock %}
