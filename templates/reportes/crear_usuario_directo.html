@@ -2,402 +2,196 @@
 
 {% block title %}Crear Usuario - Sistema Médico Universitario{% endblock %}
 
-{% block extra_css %}
-<style>
-    .form-wizard {
-        background: var(--bg-card);
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: var(--shadow-lg);
-        border: var(--border-primary);
-    }
-    
-    .form-header {
-        background: linear-gradient(135deg, #2c3e50, #3498db);
-        color: white;
-        padding: 30px;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .form-header::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-        background-size: 20px 20px;
-        animation: dots 20s linear infinite;
-    }
-    
-    @keyframes dots {
-        0% { transform: translate(0, 0); }
-        100% { transform: translate(20px, 20px); }
-    }
-    
-    .form-header h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin: 0;
-        position: relative;
-        z-index: 2;
-    }
-    
-    .form-header p {
-        font-size: 1.1rem;
-        opacity: 0.9;
-        margin: 10px 0 0 0;
-        position: relative;
-        z-index: 2;
-    }
-    
-    .form-body {
-        padding: 40px;
-    }
-    
-    .step-indicator {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 30px;
-        padding: 0 20px;
-    }
-    
-    .step {
-        display: flex;
-        align-items: center;
-        flex: 1;
-        max-width: 200px;
-        position: relative;
-    }
-    
-    .step:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        top: 20px;
-        right: -50%;
-        width: 100%;
-        height: 2px;
-        background: #e1e5e9;
-        z-index: 1;
-    }
-    
-    .step.active:not(:last-child)::after {
-        background: #3498db;
-    }
-    
-    .step-circle {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: #e1e5e9;
-        color: #6c757d;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        position: relative;
-        z-index: 2;
-        transition: all 0.3s ease;
-    }
-    
-    .step.active .step-circle {
-        background: #3498db;
-        color: white;
-        transform: scale(1.1);
-    }
-    
-    .step-label {
-        margin-left: 10px;
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: #6c757d;
-    }
-    
-    .step.active .step-label {
-        color: #2c3e50;
-        font-weight: 600;
-    }
-    
-    .form-section {
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 15px;
-        padding: 35px;
-        margin-bottom: 30px;
-        border: 1px solid rgba(52, 152, 219, 0.15);
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    }
-    
-    .form-section::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 5px;
-        height: 100%;
-        background: linear-gradient(135deg, #3498db, #2980b9);
-    }
-    
-    .section-title {
-        color: #2c3e50;
-        font-weight: 700;
-        font-size: 1.4rem;
-        margin-bottom: 25px;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-    
-    .section-title i {
-        font-size: 1.6rem;
-        padding: 10px;
-        background: rgba(52, 152, 219, 0.12);
-        border-radius: 10px;
-        color: #3498db;
-    }
-    
-    .form-group {
-        margin-bottom: 25px;
-    }
-    
-    .form-label {
-        font-weight: 600;
-        color: #2c3e50;
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 0.95rem;
-    }
-    
-    .form-input,
-    .form-select {
-        width: 100%;
-        padding: 15px 20px;
-        border: 2px solid #e1e5e9;
-        border-radius: 10px;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-        background: white;
-    }
-    
-    .form-input:focus,
-    .form-select:focus {
-        outline: none;
-        border-color: #3498db;
-        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
-        transform: translateY(-1px);
-    }
-    
-    .form-input.is-valid {
-        border-color: #27ae60;
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2327ae60' d='m2.3 6.73.26.15c.2.12.44.12.64 0l5.6-3.3c.2-.12.32-.33.32-.56 0-.23-.12-.44-.32-.56l-.26-.15c-.2-.12-.44-.12-.64 0l-5.6 3.3c-.2.12-.32.33-.32.56 0 .23.12.44.32.56z'/%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right 15px center;
-        background-size: 16px;
-        box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
-    }
-    
-    .form-input.is-invalid {
-        border-color: #e74c3c;
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3e%3cpath fill='%23e74c3c' d='M6 0c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6 2.69-6 6-6zM3.35 3.35l-.71.71L5.29 6.71l-2.65 2.64.71.71L6 7.41l2.64 2.65.71-.71L6.71 6.71l2.64-2.65-.71-.71L6 5.29 3.35 3.35z'/%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right 15px center;
-        background-size: 16px;
-        box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
-    }
-    
-    .help-text {
-        color: #7f8c8d;
-        font-size: 0.875rem;
-        margin-top: 8px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-    
-    .help-text.success {
-        color: #27ae60;
-    }
-    
-    .help-text.error {
-        color: #e74c3c;
-    }
-    
-    .help-text.warning {
-        color: #f39c12;
-    }
-    
-    .role-preview {
-        background: rgba(52, 152, 219, 0.06);
-        border: 1px solid rgba(52, 152, 219, 0.2);
-        border-radius: 12px;
-        padding: 25px;
-        margin-top: 25px;
-    }
-    
-    .role-preview h6 {
-        color: #2c3e50;
-        font-weight: 600;
-        margin-bottom: 12px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .btn-group-modern {
-        display: flex;
-        gap: 15px;
-        margin-top: 30px;
-    }
-    
-    .btn-modern {
-        flex: 1;
-        padding: 15px 30px;
-        border: none;
-        border-radius: 10px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-    }
-    
-    .btn-primary-modern {
-        background: linear-gradient(135deg, #3498db, #2980b9);
-        color: white;
-    }
-    
-    .btn-primary-modern:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
-        filter: brightness(1.1);
-    }
-    
-    .btn-secondary-modern {
-        background: #6c757d;
-        color: white;
-    }
-    
-    .btn-secondary-modern:hover {
-        background: #5a6268;
-        transform: translateY(-1px);
-    }
-    
-    .field-hidden {
-        opacity: 0;
-        transform: translateY(-10px);
-        pointer-events: none;
-        transition: all 0.3s ease;
-    }
-    
-    .field-visible {
-        opacity: 1;
-        transform: translateY(0);
-        pointer-events: all;
-        transition: all 0.3s ease;
-    }
-    
-    @media (max-width: 768px) {
-        .admin-container {
-            padding: 10px !important;
-            max-width: 100% !important;
-        }
-        
-        .form-body {
-            padding: 20px;
-        }
-        
-        .form-section {
-            padding: 25px 20px;
-        }
-        
-        .step-indicator {
-            flex-direction: column;
-            gap: 15px;
-            padding: 0 10px;
-        }
-        
-        .step:not(:last-child)::after {
-            display: none;
-        }
-        
-        .btn-group-modern {
-            flex-direction: column;
-        }
-        
-        .row .col-md-6,
-        .row .col-md-7,
-        .row .col-md-5,
-        .row .col-md-8 {
-            margin-bottom: 15px;
-        }
-    }
-</style>
-{% endblock %}
-
-{% block page_title %}Crear Nuevo Usuario{% endblock %}
-
 {% block content %}
-<div class="admin-container" style="max-width: 900px; margin: 0 auto; padding: 20px;">
-    <!-- Botón volver -->
-    <div class="mb-4 text-center">
+<!-- Dashboard Header -->
+<div class="admin-header">
+    <div>
+        <h1 class="admin-header-title">Crear Nuevo Usuario</h1>
+        <p class="admin-header-subtitle">Formulario para registrar usuarios en el sistema médico</p>
+        <small class="admin-status">Administración de usuarios del sistema</small>
+    </div>
+    <div class="admin-header-actions">
         <a href="{{ url_for('reportes.gestion_usuarios') }}" class="admin-btn admin-btn-secondary">
-            <i class='bx bx-arrow-back'></i> Volver a Usuarios
+            <i class='bx bx-arrow-back'></i>
+            Volver a Usuarios
         </a>
     </div>
-    
-    <!-- Formulario wizard moderno centrado -->
-    <div class="form-wizard" style="margin: 0 auto;">
-        <!-- Header con animación -->
-        <div class="form-header">
-            <h1><i class='bx bx-user-plus'></i> Crear Usuario</h1>
-            <p>Sistema Médico Universitario OSIRIS</p>
+</div>
+
+<!-- Formulario de Usuario -->
+<div class="admin-table-container">
+    <div class="admin-table-header">
+        <div class="admin-table-title">Información del Usuario</div>
+        <div style="color: var(--admin-text-secondary); font-size: 14px;">
+            Complete todos los campos para registrar un nuevo usuario
         </div>
-        
-        <!-- Cuerpo del formulario -->
-        <div class="form-body">
-            <!-- Indicador de pasos -->
-            <div class="step-indicator">
-                <div class="step active">
-                    <div class="step-circle">1</div>
-                    <div class="step-label">Datos Generales</div>
-                </div>
-                <div class="step active">
-                    <div class="step-circle">2</div>
-                    <div class="step-label">Identificación</div>
-                </div>
-                <div class="step active">
-                    <div class="step-circle">3</div>
-                    <div class="step-label">Credenciales</div>
+    </div>
+    <div style="padding: 30px;">
+        <form method="POST" autocomplete="off">
+            {{ form.hidden_tag() if form else '' }}
+            
+            <!-- Datos Generales -->
+            <div style="margin-bottom: 30px;">
+                <h5 style="color: var(--admin-text-primary); margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+                    <i class='bx bx-user'></i> Datos Generales
+                </h5>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">
+                            <i class='bx bx-edit'></i> Nombre Completo *
+                        </label>
+                        <input type="text" name="nombre" required 
+                               style="width: 100%; padding: 12px; border: 1px solid var(--admin-border); border-radius: 6px; background: var(--admin-bg);"
+                               placeholder="Ej: Dr. Juan Pérez García">
+                        <small style="color: var(--admin-text-secondary); font-size: 12px;">Ingrese el nombre completo del usuario</small>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">
+                            <i class='bx bx-user-check'></i> Rol del Usuario *
+                        </label>
+                        <select name="rol" required id="rolSelect" onchange="toggleFields()"
+                                style="width: 100%; padding: 12px; border: 1px solid var(--admin-border); border-radius: 6px; background: var(--admin-bg);">
+                            <option value="">Seleccionar rol</option>
+                            <option value="PACIENTE">👨‍🎓 Estudiante</option>
+                            <option value="PROFESIONAL">👨‍⚕️ Profesional</option>
+                            <option value="ADMINISTRADOR">👨‍💼 Administrador</option>
+                        </select>
+                        <small style="color: var(--admin-text-secondary); font-size: 12px;">Seleccione los permisos de acceso</small>
+                    </div>
                 </div>
             </div>
             
-            <form method="POST" autocomplete="off" id="userForm">
-                <!-- Sección 1: Datos Generales -->
-                <div class="form-section">
-                    <h6 class="section-title">
-                        <i class='bx bx-user'></i> Datos Generales
-                    </h6>
+            <!-- Información del Rol -->
+            <div id="roleInfo" style="display: none; margin-bottom: 30px; background: var(--admin-secondary); padding: 20px; border-radius: 8px; border-left: 4px solid var(--admin-primary);">
+                <h6 style="color: var(--admin-text-primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                    <i class='bx bx-info-circle'></i> Información del Rol
+                </h6>
+                <div id="roleDescription" style="color: var(--admin-text-secondary); font-size: 14px;"></div>
+            </div>
+            
+            <!-- Identificación -->
+            <div style="margin-bottom: 30px;">
+                <h5 style="color: var(--admin-text-primary); margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+                    <i class='bx bx-id-card'></i> Identificación
+                </h5>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div id="dniField">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">
+                            <i class='bx bx-card'></i> DNI
+                        </label>
+                        <input type="text" name="dni" maxlength="8" pattern="[0-9]{8}"
+                               style="width: 100%; padding: 12px; border: 1px solid var(--admin-border); border-radius: 6px; background: var(--admin-bg);"
+                               placeholder="Ej: 12345678">
+                        <small style="color: var(--admin-text-secondary); font-size: 12px;">Solo números, 8 dígitos</small>
+                    </div>
                     
-                    <div class="row justify-content-center">
-                        <div class="col-md-7">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class='bx bx-edit'></i> Nombre Completo *
-                                </label>
-                                <input type="text" class="form-input" id="nombre" name="nombre" required 
-                                       placeholder="Ej: Dr. Juan Pérez García">
-                                <div class="help-text">
-                                    <i class='bx bx-info-circle'></i> Ingrese el nombre completo del usuario
-                                </div>
+                    <div id="matriculaField" style="display: none;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">
+                            <i class='bx bx-bookmark'></i> Código de Matrícula
+                        </label>
+                        <input type="text" name="codigo_matricula" maxlength="10" pattern="[0-9]{10}"
+                               style="width: 100%; padding: 12px; border: 1px solid var(--admin-border); border-radius: 6px; background: var(--admin-bg);"
+                               placeholder="Ej: 1234567890">
+                        <small style="color: var(--admin-text-secondary); font-size: 12px;">Solo números, hasta 10 dígitos</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Credenciales -->
+            <div style="margin-bottom: 30px;">
+                <h5 style="color: var(--admin-text-primary); margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+                    <i class='bx bx-lock'></i> Credenciales de Acceso
+                </h5>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">
+                            <i class='bx bx-key'></i> Contraseña *
+                        </label>
+                        <input type="password" name="password" required id="password"
+                               style="width: 100%; padding: 12px; border: 1px solid var(--admin-border); border-radius: 6px; background: var(--admin-bg);"
+                               placeholder="Mínimo 6 caracteres">
+                        <small style="color: var(--admin-text-secondary); font-size: 12px;">Debe contener letras y números</small>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">
+                            <i class='bx bx-lock-open'></i> Confirmar Contraseña *
+                        </label>
+                        <input type="password" name="confirm_password" required id="confirmPassword"
+                               style="width: 100%; padding: 12px; border: 1px solid var(--admin-border); border-radius: 6px; background: var(--admin-bg);"
+                               placeholder="Repita la contraseña">
+                        <small style="color: var(--admin-text-secondary); font-size: 12px;">Debe coincidir con la contraseña anterior</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Botones de Acción -->
+            <div style="display: flex; justify-content: center; gap: 15px; margin-top: 30px;">
+                <a href="{{ url_for('reportes.gestion_usuarios') }}" class="admin-btn admin-btn-secondary">
+                    <i class='bx bx-x'></i> Cancelar
+                </a>
+                <button type="submit" class="admin-btn admin-btn-success">
+                    <i class='bx bx-check-circle'></i> Crear Usuario
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function toggleFields() {
+    const rolSelect = document.getElementById('rolSelect');
+    const roleInfo = document.getElementById('roleInfo');
+    const roleDescription = document.getElementById('roleDescription');
+    const dniField = document.getElementById('dniField');
+    const matriculaField = document.getElementById('matriculaField');
+    
+    const selectedRole = rolSelect.value;
+    
+    if (selectedRole) {
+        roleInfo.style.display = 'block';
+        
+        if (selectedRole === 'PACIENTE') {
+            roleDescription.innerHTML = 'Los estudiantes pueden acceder a consultas médicas, gestionar su perfil y agendar citas.';
+            dniField.style.display = 'none';
+            matriculaField.style.display = 'block';
+            document.querySelector('input[name="dni"]').required = false;
+            document.querySelector('input[name="codigo_matricula"]').required = true;
+        } else {
+            roleDescription.innerHTML = selectedRole === 'PROFESIONAL' ? 
+                'Los profesionales pueden atender consultas, gestionar citas y acceder al historial médico.' :
+                'Los administradores tienen acceso completo al sistema, incluyendo gestión de usuarios y reportes.';
+            dniField.style.display = 'block';
+            matriculaField.style.display = 'none';
+            document.querySelector('input[name="dni"]').required = true;
+            document.querySelector('input[name="codigo_matricula"]').required = false;
+        }
+    } else {
+        roleInfo.style.display = 'none';
+        dniField.style.display = 'block';
+        matriculaField.style.display = 'none';
+    }
+}
+
+// Validación de contraseñas
+document.addEventListener('DOMContentLoaded', function() {
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
+    
+    function validatePasswords() {
+        if (password.value !== confirmPassword.value) {
+            confirmPassword.setCustomValidity('Las contraseñas no coinciden');
+        } else {
+            confirmPassword.setCustomValidity('');
+        }
+    }
+    
+    password.addEventListener('change', validatePasswords);
+    confirmPassword.addEventListener('keyup', validatePasswords);
+});
+</script>
+{% endblock %}
                             </div>
                         </div>
                         
