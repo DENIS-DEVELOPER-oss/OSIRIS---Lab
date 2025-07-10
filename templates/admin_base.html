@@ -13,8 +13,13 @@
 </head>
 <body>
     <div class="admin-container">
+        <!-- Botón de toggle para móvil -->
+        <button class="admin-menu-toggle" onclick="toggleSidebar()">
+            <i class='bx bx-menu'></i>
+        </button>
+        
         <!-- Sidebar -->
-        <aside class="admin-sidebar">
+        <aside class="admin-sidebar" id="adminSidebar">
             <div class="admin-logo">
                 <div class="admin-logo-icon">
                     <i class='bx bx-plus-medical'></i>
@@ -148,6 +153,30 @@
                 console.log('Buscando:', searchTerm);
             });
         }
+        
+        // Toggle sidebar para móvil
+        function toggleSidebar() {
+            const sidebar = document.getElementById('adminSidebar');
+            sidebar.classList.toggle('open');
+        }
+        
+        // Cerrar sidebar al hacer clic fuera (móvil)
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('adminSidebar');
+            const toggle = document.querySelector('.admin-menu-toggle');
+            
+            if (window.innerWidth <= 768 && !sidebar.contains(e.target) && !toggle.contains(e.target)) {
+                sidebar.classList.remove('open');
+            }
+        });
+        
+        // Manejar redimensionamiento de ventana
+        window.addEventListener('resize', function() {
+            const sidebar = document.getElementById('adminSidebar');
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('open');
+            }
+        });
     </script>
     
     {% block extra_js %}{% endblock %}
