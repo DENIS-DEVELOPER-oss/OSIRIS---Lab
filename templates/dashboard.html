@@ -216,7 +216,7 @@ const consultasChart = new Chart(consultasCtx, {
                         <i class='bx bx-calendar-alt'></i>
                     </div>
                     <div class="stat-info">
-                        <div class="stat-number">{{ resumen.mis_citas if resumen else 0 }}</div>
+                        <div class="stat-number">{{ resumen.total_citas if resumen else 0 }}</div>
                         <div class="stat-label">Mis Citas</div>
                     </div>
                 </div>
@@ -229,7 +229,7 @@ const consultasChart = new Chart(consultasCtx, {
                         <i class='bx bx-clipboard'></i>
                     </div>
                     <div class="stat-info">
-                        <div class="stat-number">{{ resumen.mis_consultas if resumen else 0 }}</div>
+                        <div class="stat-number">{{ resumen.total_consultas if resumen else 0 }}</div>
                         <div class="stat-label">Consultas</div>
                     </div>
                 </div>
@@ -242,7 +242,7 @@ const consultasChart = new Chart(consultasCtx, {
                         <i class='bx bx-user-check'></i>
                     </div>
                     <div class="stat-info">
-                        <div class="stat-number">{{ resumen.mis_pacientes if resumen else 0 }}</div>
+                        <div class="stat-number">{{ resumen.total_pacientes if resumen else 0 }}</div>
                         <div class="stat-label">Pacientes</div>
                     </div>
                 </div>
@@ -284,7 +284,7 @@ const consultasChart = new Chart(consultasCtx, {
                         <i class='bx bx-calendar-alt'></i>
                     </div>
                     <div class="stat-info">
-                        <div class="stat-number">{{ resumen.mis_citas if resumen else 0 }}</div>
+                        <div class="stat-number">{{ resumen.citas_mes if resumen else 0 }}</div>
                         <div class="stat-label">Mis Citas</div>
                     </div>
                 </div>
@@ -297,7 +297,7 @@ const consultasChart = new Chart(consultasCtx, {
                         <i class='bx bx-clipboard'></i>
                     </div>
                     <div class="stat-info">
-                        <div class="stat-number">{{ resumen.mis_consultas if resumen else 0 }}</div>
+                        <div class="stat-number">{{ resumen.total_consultas if resumen else 0 }}</div>
                         <div class="stat-label">Consultas</div>
                     </div>
                 </div>

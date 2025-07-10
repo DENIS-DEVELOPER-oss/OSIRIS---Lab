@@ -91,9 +91,13 @@ def registrar_rutas(app):
         if current_user.es_administrador():
             return redirect(url_for('reportes.dashboard_admin'))
         elif current_user.es_profesional():
-            return redirect(url_for('citas.lista_profesional'))
+            # Obtener resumen para profesionales
+            resumen = ServicioReporte.obtener_resumen_dashboard()
+            return render_template('dashboard.html', resumen=resumen)
         else:  # Paciente
-            return redirect(url_for('citas.lista_paciente'))
+            # Obtener resumen para pacientes
+            resumen = ServicioReporte.obtener_resumen_dashboard()
+            return render_template('dashboard.html', resumen=resumen)
     
     # Blueprint para pacientes
     pacientes_bp = Blueprint('pacientes', __name__, url_prefix='/pacientes')
