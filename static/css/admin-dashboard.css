@@ -513,6 +513,18 @@ body {
     border: 1px solid rgba(52, 152, 219, 0.3);
 }
 
+.admin-btn-warning {
+    background: linear-gradient(135deg, var(--admin-warning), #f97316);
+    color: white;
+}
+
+.admin-btn-warning:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--admin-shadow-lg);
+    color: white;
+    text-decoration: none;
+}
+
 /* Diseño Responsivo Completo para Admin */
 
 /* Tablet grande (1024px y menos) */

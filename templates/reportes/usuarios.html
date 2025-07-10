@@ -2,54 +2,22 @@
 
 {% block title %}Gestión de Usuarios - Sistema Médico Universitario{% endblock %}
 
-{% block extra_css %}
-<style>
-    .user-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        color: var(--text-dark);
-        margin-right: 10px;
-        background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
-    }
-    .role-badge {
-        font-size: 0.75rem;
-        padding: 0.25rem 0.5rem;
-        border-radius: 15px;
-    }
-    .status-active {
-        color: var(--success-color);
-    }
-    .status-inactive {
-        color: var(--danger-color);
-    }
-    .table-actions {
-        min-width: 120px;
-    }
-    .user-card {
-        transition: all 0.3s ease;
-        border: var(--border-primary);
-        background: var(--bg-card);
-        backdrop-filter: blur(10px);
-        border-radius: var(--border-radius);
-        padding: 20px;
-        margin-bottom: 15px;
-    }
-    .user-card:hover {
-        box-shadow: var(--shadow-md);
-        transform: translateY(-2px);
-        border-color: var(--primary-color);
-    }
-</style>
-{% endblock %}
-
-{% block page_title %}Gestión de Usuarios{% endblock %}
-
 {% block content %}
+<!-- Dashboard Header -->
+<div class="admin-header">
+    <div>
+        <h1 class="admin-header-title">Gestión de Usuarios</h1>
+        <p class="admin-header-subtitle">Administrar usuarios del sistema médico universitario</p>
+        <small class="admin-status">{{ usuarios|length }} usuarios registrados</small>
+    </div>
+    <div class="admin-header-actions">
+        <a href="{{ url_for('reportes.crear_usuario_directo') }}" class="admin-btn admin-btn-primary">
+            <i class='bx bx-user-plus'></i>
+            Crear Usuario
+        </a>
+    </div>
+</div>
+
 <!-- Resumen de Estadísticas -->
 <div class="admin-stats-grid">
     <div class="admin-stat-card success">
@@ -82,164 +50,140 @@
             </div>
         </div>
         <div class="admin-stat-value">{{ usuarios|selectattr('rol', 'equalto', 'PROFESIONAL')|list|length }}</div>
-                <small>Profesionales</small>
-            </div>
-            <div class="col-md-3 text-center">
-                <h3 class="mb-0">{{ usuarios|selectattr('rol', 'equalto', 'ADMINISTRADOR')|list|length }}</h3>
-                <small>Administradores</small>
+        <div class="admin-stat-label">Profesionales médicos</div>
+    </div>
+    
+    <div class="admin-stat-card danger">
+        <div class="admin-stat-header">
+            <div class="admin-stat-title">Administradores</div>
+            <div class="admin-stat-icon">
+                <i class='bx bx-shield-check'></i>
             </div>
         </div>
+        <div class="admin-stat-value">{{ usuarios|selectattr('rol', 'equalto', 'ADMINISTRADOR')|list|length }}</div>
+        <div class="admin-stat-label">Administradores</div>
     </div>
+</div>
 
-    <!-- Filtros -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="filtroRol">Filtrar por Rol:</label>
-                                <select id="filtroRol" class="form-control">
-                                    <option value="">Todos los roles</option>
-                                    <option value="PACIENTE">Estudiantes</option>
-                                    <option value="PROFESIONAL">Profesionales</option>
-                                    <option value="ADMINISTRADOR">Administradores</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="filtroEstado">Filtrar por Estado:</label>
-                                <select id="filtroEstado" class="form-control">
-                                    <option value="">Todos los estados</option>
-                                    <option value="activo">Activos</option>
-                                    <option value="inactivo">Inactivos</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="buscarUsuario">Buscar Usuario:</label>
-                                <input type="text" id="buscarUsuario" class="form-control" placeholder="Buscar por nombre o DNI...">
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>&nbsp;</label>
-                                <button type="button" class="btn btn-secondary btn-block" onclick="limpiarFiltros()">
-                                    <i class="fas fa-undo"></i> Limpiar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<!-- Filtros -->
+<div class="admin-table-container" style="margin-bottom: 20px;">
+    <div class="admin-table-header">
+        <div class="admin-table-title">Filtros de Búsqueda</div>
+    </div>
+    <div style="padding: 25px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">Filtrar por Rol:</label>
+                <select id="filtroRol" style="width: 100%; padding: 10px; border: 1px solid var(--admin-border); border-radius: 6px;">
+                    <option value="">Todos los roles</option>
+                    <option value="PACIENTE">Estudiantes</option>
+                    <option value="PROFESIONAL">Profesionales</option>
+                    <option value="ADMINISTRADOR">Administradores</option>
+                </select>
             </div>
-        </div>
-    </div>
-
-    <!-- Lista de Usuarios -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Lista de Usuarios</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover" id="tablaUsuarios">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th>Usuario</th>
-                                    <th>Rol</th>
-                                    <th>Identificación</th>
-                                    <th>Estado</th>
-                                    <th>Fecha Registro</th>
-                                    <th class="table-actions">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for usuario in usuarios %}
-                                <tr class="usuario-row" 
-                                    data-rol="{{ usuario.rol }}" 
-                                    data-estado="{{ 'activo' if usuario.activo else 'inactivo' }}"
-                                    data-busqueda="{{ usuario.nombre.lower() }} {{ usuario.dni or '' }} {{ usuario.codigo_matricula or '' }}">
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="user-avatar" style="background-color: {% if usuario.rol.name == 'ADMINISTRADOR' %}#dc3545{% elif usuario.rol.name == 'PROFESIONAL' %}#007bff{% else %}#28a745{% endif %};">
-                                                {{ usuario.nombre[0].upper() }}
-                                            </div>
-                                            <div>
-                                                <div class="font-weight-medium">{{ usuario.nombre }}</div>
-                                                <small class="text-muted">ID: {{ usuario.id }}</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="badge role-badge {% if usuario.rol.name == 'ADMINISTRADOR' %}badge-danger{% elif usuario.rol.name == 'PROFESIONAL' %}badge-primary{% else %}badge-success{% endif %}">
-                                            {% if usuario.rol.name == 'PACIENTE' %}Estudiante
-                                            {% elif usuario.rol.name == 'PROFESIONAL' %}Profesional
-                                            {% else %}Administrador{% endif %}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        {% if usuario.dni %}
-                                            <strong>DNI:</strong> {{ usuario.dni }}
-                                        {% elif usuario.codigo_matricula %}
-                                            <strong>Matrícula:</strong> {{ usuario.codigo_matricula }}
-                                        {% else %}
-                                            <span class="text-muted">No disponible</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <span class="{% if usuario.activo %}status-active{% else %}status-inactive{% endif %}">
-                                            <i class="fas fa-circle fa-xs"></i>
-                                            {{ 'Activo' if usuario.activo else 'Inactivo' }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        {{ usuario.fecha_creacion.strftime('%d/%m/%Y') if usuario.fecha_creacion else 'N/A' }}
-                                    </td>
-                                    <td class="table-actions">
-                                        <div class="btn-group btn-group-sm" role="group">
-                                            <a href="{{ url_for('reportes.toggle_usuario_activo', usuario_id=usuario.id) }}" 
-                                               class="btn btn-{{ 'warning' if usuario.activo else 'success' }}"
-                                               onclick="return confirm('¿Está seguro de {{ 'desactivar' if usuario.activo else 'activar' }} este usuario?')">
-                                                <i class="fas fa-{{ 'pause' if usuario.activo else 'play' }}"></i>
-                                                {{ 'Desactivar' if usuario.activo else 'Activar' }}
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">Filtrar por Estado:</label>
+                <select id="filtroEstado" style="width: 100%; padding: 10px; border: 1px solid var(--admin-border); border-radius: 6px;">
+                    <option value="">Todos los estados</option>
+                    <option value="activo">Activos</option>
+                    <option value="inactivo">Inactivos</option>
+                </select>
             </div>
-        </div>
-    </div>
-
-    <!-- Modal para detalles del usuario -->
-    <div class="modal fade" id="modalDetalleUsuario" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Detalles del Usuario</h5>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- El contenido se cargará dinámicamente -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                </div>
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">Buscar Usuario:</label>
+                <input type="text" id="buscarUsuario" style="width: 100%; padding: 10px; border: 1px solid var(--admin-border); border-radius: 6px;" placeholder="Buscar por nombre o DNI...">
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: transparent;">Acciones:</label>
+                <button type="button" class="admin-btn admin-btn-secondary" onclick="limpiarFiltros()" style="width: 100%;">
+                    <i class='bx bx-refresh'></i> Limpiar
+                </button>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Lista de Usuarios -->
+<div class="admin-table-container">
+    <div class="admin-table-header">
+        <div class="admin-table-title">Lista de Usuarios</div>
+        <div style="color: var(--admin-text-secondary); font-size: 14px;">
+            {{ usuarios|length }} usuarios registrados
+        </div>
+    </div>
+    <div style="overflow-x: auto;">
+        <table class="admin-table" id="tablaUsuarios">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Rol</th>
+                    <th>Identificación</th>
+                    <th>Estado</th>
+                    <th>Fecha Registro</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in usuarios %}
+                <tr class="usuario-row" 
+                    data-rol="{{ usuario.rol }}" 
+                    data-estado="{{ 'activo' if usuario.activo else 'inactivo' }}"
+                    data-busqueda="{{ usuario.nombre.lower() }} {{ usuario.dni or '' }} {{ usuario.codigo_matricula or '' }}">
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; color: white; background: {% if usuario.rol.name == 'ADMINISTRADOR' %}var(--admin-danger){% elif usuario.rol.name == 'PROFESIONAL' %}var(--admin-primary){% else %}var(--admin-success){% endif %};">
+                                {{ usuario.nombre[0].upper() }}
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; color: var(--admin-text-primary);">{{ usuario.nombre }}</div>
+                                <small style="color: var(--admin-text-secondary);">ID: {{ usuario.id }}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="admin-badge admin-badge-{% if usuario.rol.name == 'ADMINISTRADOR' %}danger{% elif usuario.rol.name == 'PROFESIONAL' %}info{% else %}success{% endif %}">
+                            {% if usuario.rol.name == 'PACIENTE' %}Estudiante
+                            {% elif usuario.rol.name == 'PROFESIONAL' %}Profesional
+                            {% else %}Administrador{% endif %}
+                        </span>
+                    </td>
+                    <td>
+                        {% if usuario.dni %}
+                            <strong>DNI:</strong> {{ usuario.dni }}
+                        {% elif usuario.codigo_matricula %}
+                            <strong>Matrícula:</strong> {{ usuario.codigo_matricula }}
+                        {% else %}
+                            <span style="color: var(--admin-text-secondary);">No disponible</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <div style="width: 8px; height: 8px; border-radius: 50%; background: {% if usuario.activo %}var(--admin-success){% else %}var(--admin-danger){% endif %};"></div>
+                            <span style="color: {% if usuario.activo %}var(--admin-success){% else %}var(--admin-danger){% endif %}; font-weight: 600;">
+                                {{ 'Activo' if usuario.activo else 'Inactivo' }}
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        {{ usuario.fecha_creacion.strftime('%d/%m/%Y') if usuario.fecha_creacion else 'N/A' }}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('reportes.toggle_usuario_activo', usuario_id=usuario.id) }}" 
+                           class="admin-btn admin-btn-{% if usuario.activo %}warning{% else %}success{% endif %}"
+                           onclick="return confirm('¿Está seguro de {{ 'desactivar' if usuario.activo else 'activar' }} este usuario?')"
+                           style="padding: 6px 12px; font-size: 12px;">
+                            <i class='bx bx-{{ 'pause' if usuario.activo else 'play' }}'></i>
+                            {{ 'Desactivar' if usuario.activo else 'Activar' }}
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
 {% endblock %}
 
 {% block extra_js %}
@@ -290,7 +234,7 @@ function filtrarUsuarios() {
     if (filasVisibles === 0) {
         const mensaje = document.createElement('tr');
         mensaje.className = 'mensaje-sin-resultados';
-        mensaje.innerHTML = '<td colspan="6" class="text-center text-muted py-4">No se encontraron usuarios que coincidan con los criterios de búsqueda.</td>';
+        mensaje.innerHTML = '<td colspan="6" style="text-align: center; color: var(--admin-text-secondary); padding: 40px;">No se encontraron usuarios que coincidan con los criterios de búsqueda.</td>';
         tbody.appendChild(mensaje);
     }
 }
