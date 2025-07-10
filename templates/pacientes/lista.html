@@ -1,77 +1,93 @@
-{% extends "modern_base.html" %}
+{% extends "admin_base.html" %}
 
 {% block title %}Pacientes - {{ super() }}{% endblock %}
 
 {% block content %}
-<div class="modern-card">
-    <div class="card-header">
-        <h2 class="card-title">
+<!-- Dashboard Header -->
+<div class="admin-header">
+    <div>
+        <h1 class="admin-header-title">Lista de Pacientes</h1>
+        <p class="admin-header-subtitle">Gestión y administración de pacientes del sistema</p>
+        <small class="admin-status">{{ pacientes|length if pacientes else 0 }} pacientes registrados</small>
+    </div>
+    <div class="admin-header-actions">
+        <a href="{{ url_for('auth.registro') }}" class="admin-btn admin-btn-primary">
             <i class='bx bx-user-plus'></i>
-            Lista de Pacientes
-        </h2>
-        <a href="{{ url_for('auth.registro') }}" class="modern-btn btn-primary">
-            <i class='bx bx-user-plus'></i>Nuevo Paciente
+            Nuevo Paciente
         </a>
     </div>
-    
-    {% if pacientes %}
-        <div class="table-responsive">
-            <table class="modern-table">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Código Matrícula</th>
-                        <th>Carrera</th>
-                        <th>Edad</th>
-                        <th>Teléfono</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for paciente in pacientes %}
-                                    <tr>
-                                        <td>
-                                            <i class="fas fa-user-circle me-2 text-primary"></i>
-                                            {{ paciente.usuario.nombre }}
-                                        </td>
-                                        <td>
-                                            <code>{{ paciente.usuario.codigo_matricula }}</code>
-                                        </td>
-                                        <td>{{ paciente.carrera }}</td>
-                                        <td>
-                                            <span class="badge bg-secondary">{{ paciente.edad() }} años</span>
-                                        </td>
-                                        <td>{{ paciente.telefono or 'No registrado' }}</td>
-                                        <td>
-                                            <div class="btn-group" role="group">
-                                                <a href="{{ url_for('pacientes.perfil', paciente_id=paciente.id) }}" 
-                                                   class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-eye me-1"></i>Ver
-                                                </a>
-                                                <a href="{{ url_for('citas.crear', paciente_id=paciente.id) }}" 
-                                                   class="btn btn-sm btn-outline-primary">
-                                                    <i class="fas fa-calendar-plus me-1"></i>Cita
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% else %}
-                        <div class="text-center py-5">
-                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">No hay pacientes registrados</h5>
-                            <p class="text-muted">Registra el primer paciente para comenzar.</p>
-                            <a href="{{ url_for('auth.registro') }}" class="btn btn-primary">
-                                <i class="fas fa-user-plus me-2"></i>Registrar Paciente
-                            </a>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
+</div>
+{% if pacientes %}
+<!-- Tabla de Pacientes -->
+<div class="admin-table-container">
+    <div class="admin-table-header">
+        <div class="admin-table-title">Listado de Pacientes Registrados</div>
+        <div style="color: var(--admin-text-secondary); font-size: 14px;">
+            Información completa de todos los pacientes del sistema
         </div>
     </div>
+    <div class="admin-table-content">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Código Matrícula</th>
+                    <th>Carrera</th>
+                    <th>Edad</th>
+                    <th>Teléfono</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for paciente in pacientes %}
+                <tr>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i class='bx bx-user-circle' style="color: var(--admin-primary); font-size: 18px;"></i>
+                            <span style="font-weight: 500;">{{ paciente.usuario.nombre }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <code style="background: var(--admin-secondary); padding: 4px 8px; border-radius: 4px; font-size: 12px;">
+                            {{ paciente.usuario.codigo_matricula }}
+                        </code>
+                    </td>
+                    <td>{{ paciente.carrera }}</td>
+                    <td>
+                        <span class="admin-badge admin-badge-info">{{ paciente.edad() }} años</span>
+                    </td>
+                    <td>{{ paciente.telefono or 'No registrado' }}</td>
+                    <td>
+                        <div style="display: flex; gap: 8px;">
+                            <a href="{{ url_for('pacientes.perfil', paciente_id=paciente.id) }}" 
+                               class="admin-btn admin-btn-sm admin-btn-info">
+                                <i class='bx bx-show'></i> Ver
+                            </a>
+                            <a href="{{ url_for('citas.crear', paciente_id=paciente.id) }}" 
+                               class="admin-btn admin-btn-sm admin-btn-primary">
+                                <i class='bx bx-calendar-plus'></i> Cita
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
+{% else %}
+<!-- Estado Vacío -->
+<div class="admin-empty-state">
+    <div class="admin-empty-icon">
+        <i class='bx bx-user-x'></i>
+    </div>
+    <div class="admin-empty-title">No hay pacientes registrados</div>
+    <div class="admin-empty-description">Registra el primer paciente para comenzar a gestionar citas médicas</div>
+    <div class="admin-empty-actions">
+        <a href="{{ url_for('auth.registro') }}" class="admin-btn admin-btn-primary">
+            <i class='bx bx-user-plus'></i> Registrar Primer Paciente
+        </a>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
