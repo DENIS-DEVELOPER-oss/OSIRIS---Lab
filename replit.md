@@ -182,6 +182,33 @@ El proyecto está preparado para ser subido a GitHub con:
   - Diseño dark mode profesional con efectos de backdrop blur
   - Iconos Boxicons integrados en toda la aplicación
 
+### July 10, 2025 - Mapa Geográfico de Procedencia en Puno
+- ✅ **Implementación completa del sistema de mapeo geográfico:**
+  - Agregado campo `procedencia` al modelo Paciente con 22 localidades de Puno
+  - Nuevo servicio `ServicioReporte.obtener_datos_geograficos()` con coordenadas reales
+  - Template `mapa_procedencia.html` con mapa interactivo usando Leaflet
+  - Integración en formulario de pacientes con selector de procedencia
+  - Migración de base de datos con nueva columna procedencia
+
+- ✅ **Características del mapa interactivo:**
+  - Mapa centrado en la región de Puno con coordenadas reales
+  - Marcadores circulares con tamaños y colores según cantidad de pacientes
+  - Tooltips y popups informativos para cada localidad
+  - Leyenda visual con rangos de colores (1-5, 6-10, 11-20, 21+ pacientes)
+  - Tabla de detalles con estadísticas por localidad
+  
+- ✅ **Localidades incluidas en el sistema:**
+  - 22 distritos y provincias principales de Puno
+  - Coordenadas geográficas precisas para cada localidad
+  - Opción "Otro lugar" para casos especiales
+  - Estadísticas automáticas de distribución geográfica
+
+- ✅ **Navegación y accesibilidad:**
+  - Nueva opción "Mapa Puno" en sidebar administrativo
+  - Acceso directo desde panel de estadísticas  
+  - Integración con análisis de segmentación y predicción
+  - Diseño responsivo compatible con dispositivos móviles
+
 ### July 10, 2025 - Análisis Avanzado: Segmentación y Predicción
 - ✅ **Implementación completa de análisis avanzados:**
   - Nuevo servicio `ServicioReporte.obtener_datos_segmentacion()` - Análisis de segmentación de pacientes

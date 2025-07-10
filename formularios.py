@@ -202,6 +202,34 @@ class FormularioPaciente(FlaskForm):
         Length(max=20, message='Máximo 20 caracteres')  # Límite de caracteres para teléfono
     ])
     
+    procedencia = SelectField('Procedencia', choices=[
+        ('', 'Seleccione una opción'),
+        ('Puno', 'Puno (Ciudad)'),
+        ('Juliaca', 'Juliaca'),
+        ('Ilave', 'Ilave'),
+        ('Yunguyo', 'Yunguyo'),
+        ('Desaguadero', 'Desaguadero'),
+        ('Ayaviri', 'Ayaviri'),
+        ('Putina', 'Putina'),
+        ('Sandia', 'Sandia'),
+        ('Macusani', 'Macusani'),
+        ('Crucero', 'Crucero'),
+        ('Azángaro', 'Azángaro'),
+        ('Lampa', 'Lampa'),
+        ('Juli', 'Juli'),
+        ('Pomata', 'Pomata'),
+        ('Zepita', 'Zepita'),
+        ('Pilcuyo', 'Pilcuyo'),
+        ('Huancané', 'Huancané'),
+        ('Moho', 'Moho'),
+        ('Conima', 'Conima'),
+        ('Tilali', 'Tilali'),
+        ('Taraco', 'Taraco'),
+        ('Otro', 'Otro lugar')
+    ], validators=[
+        Length(max=100, message='Máximo 100 caracteres')
+    ])
+    
     def validate_fecha_nacimiento(self, field):
         """
         Validación personalizada de la fecha de nacimiento.

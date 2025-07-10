@@ -208,6 +208,10 @@ class Paciente(db.Model):
     # Número para contactar en situaciones de emergencia
     telefono_emergencia = Column(String(20))
     
+    # Campo procedencia: Distrito o provincia de origen del paciente
+    # Campo opcional para análisis geográfico y estadísticas de procedencia
+    procedencia = Column(String(100), nullable=True)
+    
     # === RELACIONES CON OTROS MODELOS ===
     
     # Relación uno-a-uno inversa con el modelo Usuario

@@ -169,6 +169,7 @@ class ServicioPaciente:
         paciente.direccion = datos_paciente.get('direccion')  # Dirección opcional
         paciente.contacto_emergencia = datos_paciente.get('contacto_emergencia')  # Contacto opcional
         paciente.telefono_emergencia = datos_paciente.get('telefono_emergencia')  # Teléfono de emergencia opcional
+        paciente.procedencia = datos_paciente.get('procedencia') if datos_paciente.get('procedencia') else None  # Procedencia opcional
         
         # Guardar el paciente en la base de datos
         db.session.add(paciente)  # Agregar a la sesión de SQLAlchemy
@@ -897,6 +898,77 @@ class ServicioReporte:
         }
         
         return prediccion
+    
+    @staticmethod
+    def obtener_datos_geograficos():
+        """
+        Obtiene datos geográficos de procedencia de pacientes para visualización en mapa.
+        
+        Returns:
+            dict: Datos de procedencia con coordenadas para mapa de Puno
+        """
+        # Definir coordenadas aproximadas para localidades de Puno
+        coordenadas_puno = {
+            'Puno': {'lat': -15.8422, 'lng': -70.0199, 'zoom': 12},
+            'Juliaca': {'lat': -15.5000, 'lng': -70.1333, 'zoom': 12},
+            'Ilave': {'lat': -16.0833, 'lng': -69.6333, 'zoom': 12},
+            'Yunguyo': {'lat': -16.2500, 'lng': -69.0833, 'zoom': 12},
+            'Desaguadero': {'lat': -16.5667, 'lng': -69.0333, 'zoom': 12},
+            'Ayaviri': {'lat': -14.8833, 'lng': -70.5833, 'zoom': 12},
+            'Putina': {'lat': -14.9167, 'lng': -69.8667, 'zoom': 12},
+            'Sandia': {'lat': -14.2833, 'lng': -69.4167, 'zoom': 12},
+            'Macusani': {'lat': -14.0667, 'lng': -70.4333, 'zoom': 12},
+            'Crucero': {'lat': -14.3583, 'lng': -70.0250, 'zoom': 12},
+            'Azángaro': {'lat': -14.9083, 'lng': -70.1917, 'zoom': 12},
+            'Lampa': {'lat': -15.3667, 'lng': -70.3667, 'zoom': 12},
+            'Juli': {'lat': -16.2167, 'lng': -69.4667, 'zoom': 12},
+            'Pomata': {'lat': -16.2667, 'lng': -69.2833, 'zoom': 12},
+            'Zepita': {'lat': -16.4833, 'lng': -69.1000, 'zoom': 12},
+            'Pilcuyo': {'lat': -16.3333, 'lng': -69.2667, 'zoom': 12},
+            'Huancané': {'lat': -15.2000, 'lng': -69.7667, 'zoom': 12},
+            'Moho': {'lat': -15.3833, 'lng': -69.4833, 'zoom': 12},
+            'Conima': {'lat': -15.4167, 'lng': -69.5333, 'zoom': 12},
+            'Tilali': {'lat': -15.2833, 'lng': -69.6833, 'zoom': 12},
+            'Taraco': {'lat': -15.3167, 'lng': -69.9833, 'zoom': 12},
+            'Otro': {'lat': -15.8422, 'lng': -70.0199, 'zoom': 8}  # Centro de Puno como referencia
+        }
+        
+        # Obtener datos de procedencia de la base de datos
+        procedencias = db.session.query(
+            Paciente.procedencia,
+            func.count(Paciente.id).label('cantidad')
+        ).filter(
+            Paciente.procedencia.isnot(None),
+            Paciente.procedencia != ''
+        ).group_by(Paciente.procedencia).all()
+        
+        # Preparar datos para el mapa
+        datos_mapa = []
+        total_pacientes = 0
+        
+        for procedencia, cantidad in procedencias:
+            if procedencia in coordenadas_puno:
+                datos_mapa.append({
+                    'nombre': procedencia,
+                    'cantidad': cantidad,
+                    'lat': coordenadas_puno[procedencia]['lat'],
+                    'lng': coordenadas_puno[procedencia]['lng'],
+                    'zoom': coordenadas_puno[procedencia]['zoom']
+                })
+                total_pacientes += cantidad
+        
+        # Estadísticas adicionales
+        estadisticas = {
+            'total_pacientes': total_pacientes,
+            'total_localidades': len(datos_mapa),
+            'localidad_principal': max(datos_mapa, key=lambda x: x['cantidad']) if datos_mapa else None
+        }
+        
+        return {
+            'datos_mapa': datos_mapa,
+            'estadisticas': estadisticas,
+            'centro_mapa': {'lat': -15.8422, 'lng': -70.0199, 'zoom': 9}  # Centro de Puno
+        }
     
     @staticmethod
     def obtener_configuracion_sistema():

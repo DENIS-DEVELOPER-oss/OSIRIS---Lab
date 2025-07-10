@@ -78,6 +78,12 @@
                         </a>
                     </li>
                     <li class="admin-nav-item">
+                        <a href="{{ url_for('reportes.mapa_procedencia') }}" class="admin-nav-link {% if request.endpoint == 'reportes.mapa_procedencia' %}active{% endif %}">
+                            <i class='bx bx-map admin-nav-icon'></i>
+                            Mapa Puno
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
                         <a href="{{ url_for('reportes.gestion_respaldo_csv') }}" class="admin-nav-link {% if request.endpoint == 'reportes.gestion_respaldo_csv' %}active{% endif %}">
                             <i class='bx bx-file-export admin-nav-icon'></i>
                             Respaldo CSV

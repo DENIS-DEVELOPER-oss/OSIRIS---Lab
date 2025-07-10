@@ -1,0 +1,252 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Mapa de Procedencia - Sistema Médico Universitario{% endblock %}
+
+{% block extra_css %}
+<style>
+    .map-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: var(--border-radius-lg);
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    .map-container {
+        background: var(--bg-card);
+        border-radius: var(--border-radius-lg);
+        padding: 25px;
+        margin-bottom: 30px;
+        backdrop-filter: blur(10px);
+        border: var(--border-primary);
+        height: 600px;
+    }
+    .map-stats {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        padding: 20px;
+        border-radius: var(--border-radius);
+        margin-bottom: 20px;
+    }
+    .stat-item {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: var(--border-radius);
+        padding: 15px;
+        margin-bottom: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        text-align: center;
+    }
+    .stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: white;
+    }
+    .stat-label {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.8);
+    }
+    .legend {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: var(--border-radius);
+        margin-top: 20px;
+    }
+    .legend-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+    .legend-color {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin-right: 10px;
+        border: 2px solid #333;
+    }
+    #map {
+        width: 100%;
+        height: 500px;
+        border-radius: var(--border-radius);
+    }
+</style>
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+{% endblock %}
+
+{% block page_title %}Mapa de Procedencia{% endblock %}
+
+{% block content %}
+<div class="map-header">
+    <h1><i class='bx bx-map'></i> Mapa de Procedencia de Pacientes</h1>
+    <p>Visualización geográfica de la procedencia de pacientes en la región de Puno</p>
+</div>
+
+<!-- Estadísticas del Mapa -->
+<div class="map-stats">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="stat-item">
+                <div class="stat-value">{{ datos.estadisticas.total_pacientes }}</div>
+                <div class="stat-label">Total Pacientes</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-item">
+                <div class="stat-value">{{ datos.estadisticas.total_localidades }}</div>
+                <div class="stat-label">Localidades</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-item">
+                <div class="stat-value">{{ datos.estadisticas.localidad_principal.nombre if datos.estadisticas.localidad_principal else 'N/A' }}</div>
+                <div class="stat-label">Principal Procedencia</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-item">
+                <div class="stat-value">{{ datos.estadisticas.localidad_principal.cantidad if datos.estadisticas.localidad_principal else 0 }}</div>
+                <div class="stat-label">Pacientes Principales</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contenedor del Mapa -->
+<div class="map-container">
+    <h4><i class='bx bx-current-location'></i> Mapa Interactivo de Puno</h4>
+    <div id="map"></div>
+    
+    <!-- Leyenda -->
+    <div class="legend">
+        <h6><i class='bx bx-info-circle'></i> Leyenda</h6>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #28a745;"></div>
+            <span>1-5 pacientes</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #ffc107;"></div>
+            <span>6-10 pacientes</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #fd7e14;"></div>
+            <span>11-20 pacientes</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #dc3545;"></div>
+            <span>21+ pacientes</span>
+        </div>
+    </div>
+</div>
+
+<!-- Tabla de Datos -->
+<div class="map-container">
+    <h4><i class='bx bx-table'></i> Detalles por Localidad</h4>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Localidad</th>
+                    <th>Cantidad de Pacientes</th>
+                    <th>Porcentaje</th>
+                    <th>Coordenadas</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for localidad in datos.datos_mapa %}
+                <tr>
+                    <td><strong>{{ localidad.nombre }}</strong></td>
+                    <td>{{ localidad.cantidad }}</td>
+                    <td>{{ "%.1f"|format((localidad.cantidad / datos.estadisticas.total_pacientes * 100) if datos.estadisticas.total_pacientes > 0 else 0) }}%</td>
+                    <td>{{ "%.4f"|format(localidad.lat) }}, {{ "%.4f"|format(localidad.lng) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Botones de Acción -->
+<div class="text-center mt-4">
+    <a href="{{ url_for('reportes.analisis_segmentacion') }}" class="btn btn-primary btn-lg">
+        <i class='bx bx-pie-chart-alt-2'></i> Ver Análisis de Segmentación
+    </a>
+    <a href="{{ url_for('reportes.estadisticas_detalladas') }}" class="btn btn-secondary btn-lg">
+        <i class='bx bx-bar-chart-alt-2'></i> Estadísticas Generales
+    </a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Leaflet JavaScript -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // Configuración del mapa
+    const centroMapa = [{{ datos.centro_mapa.lat }}, {{ datos.centro_mapa.lng }}];
+    const map = L.map('map').setView(centroMapa, {{ datos.centro_mapa.zoom }});
+    
+    // Añadir capa de OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    
+    // Función para determinar color según cantidad
+    function getColor(cantidad) {
+        if (cantidad >= 21) return '#dc3545';
+        if (cantidad >= 11) return '#fd7e14';
+        if (cantidad >= 6) return '#ffc107';
+        return '#28a745';
+    }
+    
+    // Función para determinar tamaño según cantidad
+    function getSize(cantidad) {
+        if (cantidad >= 21) return 25;
+        if (cantidad >= 11) return 20;
+        if (cantidad >= 6) return 15;
+        return 10;
+    }
+    
+    // Añadir marcadores para cada localidad
+    const datosMapa = {{ datos.datos_mapa | tojson }};
+    
+    datosMapa.forEach(function(localidad) {
+        const marker = L.circleMarker([localidad.lat, localidad.lng], {
+            color: getColor(localidad.cantidad),
+            fillColor: getColor(localidad.cantidad),
+            fillOpacity: 0.7,
+            radius: getSize(localidad.cantidad),
+            weight: 2
+        }).addTo(map);
+        
+        // Popup con información
+        marker.bindPopup(`
+            <div style="text-align: center;">
+                <h6><strong>${localidad.nombre}</strong></h6>
+                <p>Pacientes: <strong>${localidad.cantidad}</strong></p>
+                <p>Porcentaje: <strong>${((localidad.cantidad / {{ datos.estadisticas.total_pacientes or 1 }}) * 100).toFixed(1)}%</strong></p>
+            </div>
+        `);
+        
+        // Tooltip con nombre
+        marker.bindTooltip(localidad.nombre, {
+            permanent: false,
+            direction: 'top',
+            offset: [0, -10]
+        });
+    });
+    
+    // Añadir control de escala
+    L.control.scale({
+        imperial: false,
+        metric: true
+    }).addTo(map);
+    
+    // Añadir marcador especial para Puno (capital)
+    L.marker([-15.8422, -70.0199], {
+        icon: L.divIcon({
+            html: '<i class="bx bx-map-pin" style="font-size: 24px; color: #007bff;"></i>',
+            iconSize: [30, 30],
+            className: 'custom-div-icon'
+        })
+    }).addTo(map).bindPopup('<div style="text-align: center;"><h6><strong>Puno</strong></h6><p>Capital del Departamento</p></div>');
+</script>
+{% endblock %}

@@ -858,6 +858,15 @@ def registrar_rutas(app):
                              graficos=graficos, 
                              datos=datos)
     
+    @reportes_bp.route('/mapa/procedencia')
+    @requiere_administrador
+    def mapa_procedencia():
+        """Mapa geográfico de procedencia de pacientes en Puno"""
+        datos_geograficos = ServicioReporte.obtener_datos_geograficos()
+        
+        return render_template('reportes/mapa_procedencia.html', 
+                             datos=datos_geograficos)
+    
     # Registrar blueprints
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)

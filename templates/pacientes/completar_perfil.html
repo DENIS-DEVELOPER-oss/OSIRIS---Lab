@@ -74,6 +74,21 @@
                             </div>
                         </div>
                         
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                {{ form.procedencia.label(class="form-label") }}
+                                {{ form.procedencia(class="form-control" + (" is-invalid" if form.procedencia.errors else "")) }}
+                                {% if form.procedencia.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.procedencia.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">Seleccione su distrito o provincia de procedencia en Puno</div>
+                            </div>
+                        </div>
+                        
                         <hr class="my-4">
                         
                         <h5 class="mb-3">
