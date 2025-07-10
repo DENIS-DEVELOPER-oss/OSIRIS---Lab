@@ -1578,3 +1578,427 @@ body {
         justify-content: center;
     }
 }
+
+/* ========================================
+   ESTILOS ESPECÍFICOS PARA PÁGINA DE INICIO
+   ======================================== */
+
+/* Header de página de inicio */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 100px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 32px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+}
+
+.navbar a {
+    font-size: 18px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 35px;
+    transition: var(--transition-normal);
+    position: relative;
+}
+
+.navbar a:hover,
+.navbar a.active {
+    color: var(--primary-color);
+}
+
+.navbar a::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-color);
+    transition: var(--transition-normal);
+}
+
+.navbar a:hover::before,
+.navbar a.active::before {
+    width: 100%;
+}
+
+/* Contenido principal de inicio */
+.main-content {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 150px 100px 0;
+    background: var(--bg-primary);
+}
+
+.content-left {
+    max-width: 600px;
+}
+
+.content-left h3 {
+    font-size: 32px;
+    color: var(--text-secondary);
+    line-height: 1.2;
+    font-weight: 600;
+}
+
+.content-left h1 {
+    font-size: 56px;
+    color: var(--text-primary);
+    line-height: 1.2;
+    font-weight: 700;
+    margin: 15px 0;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.content-left h2 {
+    font-size: 22px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    font-weight: 500;
+    margin: 15px 0 30px;
+}
+
+.highlight {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.content-left p {
+    color: var(--text-muted);
+    font-size: 16px;
+    margin: 30px 0;
+    line-height: 1.6;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+    margin: 30px 0;
+}
+
+.social-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(52, 152, 219, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 20px;
+    transition: var(--transition-normal);
+}
+
+.social-icon:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 15px 35px;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 16px;
+    margin-top: 20px;
+    transition: var(--transition-normal);
+    box-shadow: var(--shadow-md);
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    filter: brightness(1.1);
+}
+
+/* Contenido derecho - Ilustración médica */
+.content-right {
+    position: relative;
+    width: 600px;
+    height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.medical-illustration {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brain-stethoscope {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(2deg); }
+}
+
+.brain-svg {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    width: 150px;
+    height: 150px;
+    z-index: 2;
+}
+
+.brain-path {
+    fill: none;
+    stroke: var(--primary-color);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: drawPath 3s ease-in-out infinite alternate;
+}
+
+@keyframes drawPath {
+    to { stroke-dashoffset: 0; }
+}
+
+.stethoscope-svg {
+    position: absolute;
+    top: 100px;
+    right: 50px;
+    width: 120px;
+    height: 200px;
+    z-index: 1;
+}
+
+.stethoscope-path {
+    fill: none;
+    stroke: var(--accent-color);
+    stroke-width: 4;
+    stroke-linecap: round;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.7; stroke-width: 4; }
+    50% { opacity: 1; stroke-width: 6; }
+}
+
+.medical-cross {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--danger-color), #ff6b6b);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 30px;
+    box-shadow: var(--shadow-md);
+    animation: bounce 3s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    25% { transform: translateY(-10px); }
+    75% { transform: translateY(-5px); }
+}
+
+/* Partículas flotantes */
+.particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: particleFloat 8s linear infinite;
+}
+
+.particle:nth-child(1) {
+    top: 20%;
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.particle:nth-child(2) {
+    top: 80%;
+    left: 80%;
+    animation-delay: 2s;
+    background: var(--accent-color);
+}
+
+.particle:nth-child(3) {
+    top: 60%;
+    left: 10%;
+    animation-delay: 4s;
+    background: var(--warning-color);
+}
+
+.particle:nth-child(4) {
+    top: 30%;
+    left: 90%;
+    animation-delay: 6s;
+    background: var(--danger-color);
+}
+
+@keyframes particleFloat {
+    0%, 100% { 
+        transform: translateY(0px) translateX(0px) scale(1);
+        opacity: 0.6;
+    }
+    25% { 
+        transform: translateY(-20px) translateX(10px) scale(1.2);
+        opacity: 1;
+    }
+    50% { 
+        transform: translateY(-10px) translateX(-15px) scale(0.8);
+        opacity: 0.8;
+    }
+    75% { 
+        transform: translateY(-30px) translateX(5px) scale(1.1);
+        opacity: 0.9;
+    }
+}
+
+/* Responsive para página de inicio */
+@media (max-width: 1200px) {
+    .header {
+        padding: 20px 50px;
+    }
+    
+    .main-content {
+        padding: 150px 50px 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 15px 20px;
+    }
+    
+    .logo {
+        font-size: 24px;
+    }
+    
+    .navbar a {
+        font-size: 16px;
+        margin-left: 20px;
+    }
+    
+    .main-content {
+        flex-direction: column;
+        padding: 100px 20px 0;
+        height: auto;
+        min-height: 100vh;
+    }
+    
+    .content-left {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+    
+    .content-left h1 {
+        font-size: 36px;
+    }
+    
+    .content-left h3 {
+        font-size: 24px;
+    }
+    
+    .content-right {
+        width: 400px;
+        height: 400px;
+    }
+    
+    .brain-stethoscope {
+        width: 300px;
+        height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 15px;
+    }
+    
+    .navbar a {
+        margin-left: 15px;
+        font-size: 14px;
+    }
+    
+    .main-content {
+        padding: 80px 15px 0;
+    }
+    
+    .content-left h1 {
+        font-size: 28px;
+    }
+    
+    .content-left h3 {
+        font-size: 20px;
+    }
+    
+    .content-left h2 {
+        font-size: 18px;
+    }
+    
+    .content-right {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .brain-stethoscope {
+        width: 250px;
+        height: 250px;
+    }
+}
