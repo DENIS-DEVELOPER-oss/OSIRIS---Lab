@@ -165,6 +165,49 @@
     </div>
 </div>
 
+<!-- Gestión de Datos CSV -->
+<div class="map-container">
+    <h4><i class='bx bx-file-export'></i> Gestión de Datos CSV</h4>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5><i class='bx bx-download'></i> Exportar Datos</h5>
+                    <p>Descargar datos actuales de procedencia en formato CSV</p>
+                    <a href="{{ url_for('reportes.exportar_procedencia_csv') }}" class="btn btn-success">
+                        <i class='bx bx-download'></i> Descargar CSV
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5><i class='bx bx-upload'></i> Importar Datos</h5>
+                    <p>Cargar datos de procedencia desde archivo CSV</p>
+                    <form method="POST" action="{{ url_for('reportes.importar_procedencia_csv') }}" enctype="multipart/form-data">
+                        <div class="input-group">
+                            <input type="file" name="archivo_csv" accept=".csv" class="form-control" required>
+                            <button type="submit" class="btn btn-primary">
+                                <i class='bx bx-upload'></i> Importar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="alert alert-info mt-3">
+        <h6><i class='bx bx-info-circle'></i> Formato CSV para Importación</h6>
+        <p>El archivo CSV debe contener las siguientes columnas:</p>
+        <ul>
+            <li><strong>nombre</strong> o <strong>codigo_matricula</strong>: Identificador del paciente</li>
+            <li><strong>procedencia</strong>: Localidad de procedencia</li>
+        </ul>
+    </div>
+</div>
+
 <!-- Botones de Acción -->
 <div class="text-center mt-4">
     <a href="{{ url_for('reportes.analisis_segmentacion') }}" class="btn btn-primary btn-lg">

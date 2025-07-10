@@ -209,6 +209,13 @@ El proyecto está preparado para ser subido a GitHub con:
   - Integración con análisis de segmentación y predicción
   - Diseño responsivo compatible con dispositivos móviles
 
+- ✅ **Gestión de datos CSV:**
+  - Coordenadas geográficas cargadas desde `datos_procedencia.csv`
+  - Exportación de datos de procedencia a CSV con estadísticas
+  - Importación masiva de datos desde archivos CSV
+  - Archivo de ejemplo `ejemplo_importacion_procedencia.csv`
+  - Interfaz web para carga/descarga de archivos CSV
+
 ### July 10, 2025 - Análisis Avanzado: Segmentación y Predicción
 - ✅ **Implementación completa de análisis avanzados:**
   - Nuevo servicio `ServicioReporte.obtener_datos_segmentacion()` - Análisis de segmentación de pacientes

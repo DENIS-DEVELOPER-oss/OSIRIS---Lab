@@ -900,6 +900,42 @@ class ServicioReporte:
         return prediccion
     
     @staticmethod
+    def cargar_coordenadas_desde_csv():
+        """
+        Carga coordenadas geográficas desde archivo CSV.
+        
+        Returns:
+            dict: Diccionario con coordenadas por localidad
+        """
+        import csv
+        import os
+        
+        coordenadas = {}
+        archivo_csv = 'datos_procedencia.csv'
+        
+        try:
+            if os.path.exists(archivo_csv):
+                with open(archivo_csv, 'r', encoding='utf-8') as archivo:
+                    reader = csv.DictReader(archivo)
+                    for fila in reader:
+                        coordenadas[fila['localidad']] = {
+                            'lat': float(fila['lat']),
+                            'lng': float(fila['lng']),
+                            'zoom': 12,
+                            'descripcion': fila['descripcion']
+                        }
+        except Exception as e:
+            print(f"Error al cargar coordenadas CSV: {e}")
+            # Fallback a coordenadas por defecto
+            coordenadas = {
+                'Puno': {'lat': -15.8422, 'lng': -70.0199, 'zoom': 12, 'descripcion': 'Capital del departamento'},
+                'Juliaca': {'lat': -15.5000, 'lng': -70.1333, 'zoom': 12, 'descripcion': 'Ciudad comercial'},
+                'Otro': {'lat': -15.8422, 'lng': -70.0199, 'zoom': 8, 'descripcion': 'Otras localidades'}
+            }
+        
+        return coordenadas
+    
+    @staticmethod
     def obtener_datos_geograficos():
         """
         Obtiene datos geográficos de procedencia de pacientes para visualización en mapa.
@@ -907,31 +943,8 @@ class ServicioReporte:
         Returns:
             dict: Datos de procedencia con coordenadas para mapa de Puno
         """
-        # Definir coordenadas aproximadas para localidades de Puno
-        coordenadas_puno = {
-            'Puno': {'lat': -15.8422, 'lng': -70.0199, 'zoom': 12},
-            'Juliaca': {'lat': -15.5000, 'lng': -70.1333, 'zoom': 12},
-            'Ilave': {'lat': -16.0833, 'lng': -69.6333, 'zoom': 12},
-            'Yunguyo': {'lat': -16.2500, 'lng': -69.0833, 'zoom': 12},
-            'Desaguadero': {'lat': -16.5667, 'lng': -69.0333, 'zoom': 12},
-            'Ayaviri': {'lat': -14.8833, 'lng': -70.5833, 'zoom': 12},
-            'Putina': {'lat': -14.9167, 'lng': -69.8667, 'zoom': 12},
-            'Sandia': {'lat': -14.2833, 'lng': -69.4167, 'zoom': 12},
-            'Macusani': {'lat': -14.0667, 'lng': -70.4333, 'zoom': 12},
-            'Crucero': {'lat': -14.3583, 'lng': -70.0250, 'zoom': 12},
-            'Azángaro': {'lat': -14.9083, 'lng': -70.1917, 'zoom': 12},
-            'Lampa': {'lat': -15.3667, 'lng': -70.3667, 'zoom': 12},
-            'Juli': {'lat': -16.2167, 'lng': -69.4667, 'zoom': 12},
-            'Pomata': {'lat': -16.2667, 'lng': -69.2833, 'zoom': 12},
-            'Zepita': {'lat': -16.4833, 'lng': -69.1000, 'zoom': 12},
-            'Pilcuyo': {'lat': -16.3333, 'lng': -69.2667, 'zoom': 12},
-            'Huancané': {'lat': -15.2000, 'lng': -69.7667, 'zoom': 12},
-            'Moho': {'lat': -15.3833, 'lng': -69.4833, 'zoom': 12},
-            'Conima': {'lat': -15.4167, 'lng': -69.5333, 'zoom': 12},
-            'Tilali': {'lat': -15.2833, 'lng': -69.6833, 'zoom': 12},
-            'Taraco': {'lat': -15.3167, 'lng': -69.9833, 'zoom': 12},
-            'Otro': {'lat': -15.8422, 'lng': -70.0199, 'zoom': 8}  # Centro de Puno como referencia
-        }
+        # Cargar coordenadas desde CSV
+        coordenadas_puno = ServicioReporte.cargar_coordenadas_desde_csv()
         
         # Obtener datos de procedencia de la base de datos
         procedencias = db.session.query(
@@ -969,6 +982,94 @@ class ServicioReporte:
             'estadisticas': estadisticas,
             'centro_mapa': {'lat': -15.8422, 'lng': -70.0199, 'zoom': 9}  # Centro de Puno
         }
+    
+    @staticmethod
+    def exportar_datos_procedencia_csv():
+        """
+        Exporta datos de procedencia de pacientes a archivo CSV.
+        
+        Returns:
+            str: Ruta del archivo CSV generado
+        """
+        import csv
+        from datetime import datetime
+        
+        # Obtener datos de procedencia
+        procedencias = db.session.query(
+            Paciente.procedencia,
+            func.count(Paciente.id).label('cantidad'),
+            func.string_agg(Usuario.nombre, ', ').label('pacientes')
+        ).join(Usuario).filter(
+            Paciente.procedencia.isnot(None),
+            Paciente.procedencia != ''
+        ).group_by(Paciente.procedencia).all()
+        
+        # Generar archivo CSV
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        archivo = f'exportacion_procedencia_{timestamp}.csv'
+        
+        with open(archivo, 'w', newline='', encoding='utf-8') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(['Procedencia', 'Cantidad_Pacientes', 'Pacientes'])
+            
+            for procedencia, cantidad, pacientes in procedencias:
+                writer.writerow([procedencia, cantidad, pacientes or ''])
+        
+        return archivo
+    
+    @staticmethod
+    def importar_datos_procedencia_csv(archivo_csv):
+        """
+        Importa datos de procedencia desde archivo CSV.
+        
+        Args:
+            archivo_csv (str): Ruta del archivo CSV a importar
+            
+        Returns:
+            dict: Resultado de la importación
+        """
+        import csv
+        
+        resultado = {
+            'exitoso': False,
+            'registros_procesados': 0,
+            'errores': []
+        }
+        
+        try:
+            with open(archivo_csv, 'r', encoding='utf-8') as archivo:
+                reader = csv.DictReader(archivo)
+                
+                for fila in reader:
+                    try:
+                        # Buscar paciente por nombre o código
+                        if 'codigo_matricula' in fila:
+                            usuario = Usuario.query.filter_by(
+                                codigo_matricula=fila['codigo_matricula']
+                            ).first()
+                        elif 'nombre' in fila:
+                            usuario = Usuario.query.filter_by(
+                                nombre=fila['nombre']
+                            ).first()
+                        else:
+                            continue
+                        
+                        if usuario and usuario.paciente and 'procedencia' in fila:
+                            ServicioPaciente.actualizar_paciente(
+                                usuario.paciente.id,
+                                {'procedencia': fila['procedencia']}
+                            )
+                            resultado['registros_procesados'] += 1
+                            
+                    except Exception as e:
+                        resultado['errores'].append(f"Error en fila {reader.line_num}: {str(e)}")
+                
+                resultado['exitoso'] = True
+                
+        except Exception as e:
+            resultado['errores'].append(f"Error al leer archivo: {str(e)}")
+        
+        return resultado
     
     @staticmethod
     def obtener_configuracion_sistema():

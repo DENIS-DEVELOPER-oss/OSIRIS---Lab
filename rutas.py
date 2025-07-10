@@ -867,6 +867,68 @@ def registrar_rutas(app):
         return render_template('reportes/mapa_procedencia.html', 
                              datos=datos_geograficos)
     
+    @reportes_bp.route('/mapa/exportar-csv')
+    @requiere_administrador
+    def exportar_procedencia_csv():
+        """Exportar datos de procedencia a CSV"""
+        try:
+            archivo = ServicioReporte.exportar_datos_procedencia_csv()
+            
+            # Enviar archivo como descarga
+            from flask import send_file
+            import os
+            
+            return send_file(
+                archivo,
+                as_attachment=True,
+                download_name=f'procedencia_pacientes_{datetime.now().strftime("%Y%m%d")}.csv',
+                mimetype='text/csv'
+            )
+        except Exception as e:
+            flash(f'Error al exportar CSV: {str(e)}', 'error')
+            return redirect(url_for('reportes.mapa_procedencia'))
+    
+    @reportes_bp.route('/mapa/importar-csv', methods=['GET', 'POST'])
+    @requiere_administrador
+    def importar_procedencia_csv():
+        """Importar datos de procedencia desde CSV"""
+        if request.method == 'POST':
+            if 'archivo_csv' not in request.files:
+                flash('No se seleccionó archivo', 'error')
+                return redirect(url_for('reportes.mapa_procedencia'))
+            
+            archivo = request.files['archivo_csv']
+            if archivo.filename == '':
+                flash('No se seleccionó archivo', 'error')
+                return redirect(url_for('reportes.mapa_procedencia'))
+            
+            if archivo and archivo.filename.endswith('.csv'):
+                # Guardar archivo temporalmente
+                import tempfile
+                import os
+                
+                with tempfile.NamedTemporaryFile(delete=False, suffix='.csv') as tmp:
+                    archivo.save(tmp.name)
+                    
+                    # Importar datos
+                    resultado = ServicioReporte.importar_datos_procedencia_csv(tmp.name)
+                    
+                    # Eliminar archivo temporal
+                    os.unlink(tmp.name)
+                    
+                    if resultado['exitoso']:
+                        flash(f'Importación exitosa: {resultado["registros_procesados"]} registros procesados', 'success')
+                        if resultado['errores']:
+                            flash(f'Advertencias: {len(resultado["errores"])} errores encontrados', 'warning')
+                    else:
+                        flash('Error en la importación', 'error')
+                        for error in resultado['errores']:
+                            flash(error, 'error')
+            else:
+                flash('El archivo debe ser formato CSV', 'error')
+        
+        return redirect(url_for('reportes.mapa_procedencia'))
+    
     # Registrar blueprints
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)
