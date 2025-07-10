@@ -160,8 +160,60 @@
 
             <!-- Footer -->
             <footer class="main-footer">
-                <div class="footer-text">
-                    &copy; 2025 Grupo de Desarrollo OSIRIS. Todos los derechos reservados.
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <div class="footer-logo">
+                            <img src="{{ url_for('static', filename='images/osiris.png') }}" alt="OSIRIS" class="footer-logo-img">
+                            <span class="footer-logo-text">OSIRIS</span>
+                        </div>
+                        <p class="footer-description">
+                            Plataforma de gestión médica universitaria
+                        </p>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4 class="footer-title">Sistema</h4>
+                        <ul class="footer-links">
+                            <li><a href="{{ url_for('main.dashboard') }}">Dashboard</a></li>
+                            {% if current_user.is_authenticated and current_user.es_administrador() %}
+                            <li><a href="{{ url_for('reportes.estadisticas_detalladas') }}">Estadísticas</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4 class="footer-title">Soporte</h4>
+                        <ul class="footer-links">
+                            <li><a href="#" onclick="return false;">Centro de Ayuda</a></li>
+                            <li><a href="#" onclick="return false;">Documentación</a></li>
+                            <li><a href="#" onclick="return false;">Contacto</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4 class="footer-title">Información</h4>
+                        <div class="footer-info">
+                            <p class="footer-version">Versión 2.0</p>
+                            <p class="footer-copyright">
+                                &copy; 2025 Grupo de Desarrollo OSIRIS<br>
+                                Todos los derechos reservados
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <div class="footer-bottom-content">
+                        <div class="footer-tech">
+                            Desarrollado con <i class='bx bx-heart'></i> usando Flask, PostgreSQL y tecnologías web modernas
+                        </div>
+                        <div class="footer-social">
+                            <span class="footer-social-text">Síguenos:</span>
+                            <a href="#" class="footer-social-link" onclick="return false;"><i class='bx bxl-github'></i></a>
+                            <a href="#" class="footer-social-link" onclick="return false;"><i class='bx bxl-twitter'></i></a>
+                            <a href="#" class="footer-social-link" onclick="return false;"><i class='bx bxl-linkedin'></i></a>
+                        </div>
+                    </div>
                 </div>
             </footer>
         </div>
