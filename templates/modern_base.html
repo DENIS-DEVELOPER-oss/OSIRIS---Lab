@@ -31,12 +31,12 @@
                             <span>Dashboard</span>
                         </a>
                         {% elif current_user.es_profesional() %}
-                        <a href="{{ url_for('citas.lista_profesional') }}" class="nav-item">
+                        <a href="{{ url_for('main.dashboard') }}" class="nav-item">
                             <i class='bx bx-dashboard'></i>
                             <span>Dashboard</span>
                         </a>
                         {% else %}
-                        <a href="{{ url_for('citas.lista_paciente') }}" class="nav-item">
+                        <a href="{{ url_for('main.dashboard') }}" class="nav-item">
                             <i class='bx bx-dashboard'></i>
                             <span>Dashboard</span>
                         </a>

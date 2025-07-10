@@ -62,16 +62,16 @@
     <!-- Acciones rápidas para profesionales -->
     <div class="dashboard-actions">
         <div class="actions-header">
-            <h3>Acciones Rápidas</h3>
+            <h3>Acciones Rápidas - Profesional</h3>
         </div>
         <div class="actions-grid">
-            <a href="{{ url_for('citas.lista') }}" class="action-card primary">
+            <a href="{{ url_for('citas.lista_profesional') }}" class="action-card primary">
                 <div class="action-icon">
                     <i class='bx bx-calendar'></i>
                 </div>
                 <div class="action-content">
                     <div class="action-title">Mis Citas</div>
-                    <div class="action-description">Ver citas programadas</div>
+                    <div class="action-description">Ver mis citas asignadas</div>
                 </div>
             </a>
             
@@ -81,7 +81,7 @@
                 </div>
                 <div class="action-content">
                     <div class="action-title">Consultas</div>
-                    <div class="action-description">Registrar consultas</div>
+                    <div class="action-description">Registrar consultas médicas</div>
                 </div>
             </a>
             
@@ -90,15 +90,15 @@
                     <i class='bx bx-users'></i>
                 </div>
                 <div class="action-content">
-                    <div class="action-title">Pacientes</div>
-                    <div class="action-description">Gestionar pacientes</div>
+                    <div class="action-title">Mis Pacientes</div>
+                    <div class="action-description">Ver pacientes asignados</div>
                 </div>
             </a>
         </div>
     </div>
 
 {% else %}
-    <!-- Dashboard Paciente -->
+    <!-- Dashboard Paciente/Estudiante -->
     <div class="dashboard-stats">
         <div class="stat-card primary">
             <div class="stat-content">
@@ -140,43 +140,73 @@
         </div>
     </div>
     
-    <!-- Acciones rápidas para pacientes -->
+    <!-- Acciones rápidas para estudiantes/pacientes -->
     <div class="dashboard-actions">
         <div class="actions-header">
-            <h3>Acciones Rápidas</h3>
+            <h3>Acciones Rápidas - Estudiante</h3>
         </div>
         <div class="actions-grid">
-            <a href="{{ url_for('citas.lista') }}" class="action-card primary">
+            <a href="{{ url_for('citas.lista_paciente') }}" class="action-card primary">
                 <div class="action-icon">
                     <i class='bx bx-calendar'></i>
                 </div>
                 <div class="action-content">
                     <div class="action-title">Mis Citas</div>
-                    <div class="action-description">Ver citas programadas</div>
+                    <div class="action-description">Ver mis citas médicas</div>
                 </div>
             </a>
             
-            <a href="{{ url_for('consultas.lista') }}" class="action-card success">
-                <div class="action-icon">
-                    <i class='bx bx-clipboard'></i>
-                </div>
-                <div class="action-content">
-                    <div class="action-title">Mis Consultas</div>
-                    <div class="action-description">Historial médico</div>
-                </div>
-            </a>
-            
-            <a href="{{ url_for('pacientes.perfil') }}" class="action-card info">
+            <a href="{{ url_for('pacientes.perfil') }}" class="action-card success">
                 <div class="action-icon">
                     <i class='bx bx-user'></i>
                 </div>
                 <div class="action-content">
                     <div class="action-title">Mi Perfil</div>
-                    <div class="action-description">Información personal</div>
+                    <div class="action-description">Ver y editar información</div>
+                </div>
+            </a>
+            
+            <a href="{{ url_for('pacientes.completar_perfil') }}" class="action-card info">
+                <div class="action-icon">
+                    <i class='bx bx-edit'></i>
+                </div>
+                <div class="action-content">
+                    <div class="action-title">Completar Perfil</div>
+                    <div class="action-description">Actualizar datos personales</div>
                 </div>
             </a>
         </div>
     </div>
 {% endif %}
+
+<!-- Información adicional -->
+<div class="dashboard-info">
+    <div class="info-section">
+        <h3>Información del Sistema</h3>
+        <div class="info-grid">
+            <div class="info-item">
+                <i class='bx bx-shield-check'></i>
+                <div class="info-content">
+                    <div class="info-title">Sistema Seguro</div>
+                    <div class="info-description">Plataforma médica universitaria</div>
+                </div>
+            </div>
+            <div class="info-item">
+                <i class='bx bx-time'></i>
+                <div class="info-content">
+                    <div class="info-title">Disponible 24/7</div>
+                    <div class="info-description">Acceso las 24 horas</div>
+                </div>
+            </div>
+            <div class="info-item">
+                <i class='bx bx-support'></i>
+                <div class="info-content">
+                    <div class="info-title">Soporte Técnico</div>
+                    <div class="info-description">Asistencia especializada</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
