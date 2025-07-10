@@ -5,34 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - OSIRIS</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-login.css') }}">
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <a href="{{ url_for('main.dashboard') }}" class="logo">
-            <img src="{{ url_for('static', filename='images/osiris.png') }}" alt="OSIRIS" height="40">
-            OSIRIS
-        </a>
-    </header>
-
-    <!-- Container principal -->
     <div class="login-container">
-        <!-- Contenido izquierdo -->
-        <div class="login-content">
-            <h3>Bienestar universitario con</h3>
-            <h1>TECNOLOGÍA INTELIGENTE</h1>
-            <h3>Conecta con nuestros especialistas en salud <span class="highlight multiple-text"></span></h3>
-            <p class="welcome-message">
-                Bienvenido a OSIRIS, una plataforma inteligente de gestión médica diseñada para brindar 
-                atención eficiente, segura y oportuna a la comunidad universitaria.
-            </p>
-        </div>
-
-        <!-- Formulario de login -->
-        <div class="login-form">
-            <h2>Iniciar Sesión</h2>
+        <!-- Sección del formulario -->
+        <div class="login-form-section">
+            <h2>Login</h2>
             
             <!-- Mostrar mensajes flash -->
             {% with messages = get_flashed_messages(with_categories=true) %}
@@ -50,7 +29,10 @@
                 
                 <div class="form-group">
                     {{ form.identificador.label() }}
-                    {{ form.identificador(placeholder="DNI o Código de Matrícula", class="form-control") }}
+                    <div style="position: relative;">
+                        <i class='bx bx-user input-icon'></i>
+                        {{ form.identificador(placeholder="DNI o Código de Matrícula", class="form-input") }}
+                    </div>
                     {% if form.identificador.errors %}
                         <div class="alert alert-danger mt-2">
                             {% for error in form.identificador.errors %}
@@ -62,7 +44,10 @@
                 
                 <div class="form-group">
                     {{ form.password.label() }}
-                    {{ form.password(placeholder="Ingresa tu contraseña", class="form-control") }}
+                    <div style="position: relative;">
+                        <i class='bx bx-lock input-icon'></i>
+                        {{ form.password(placeholder="Ingresa tu contraseña", class="form-input") }}
+                    </div>
                     {% if form.password.errors %}
                         <div class="alert alert-danger mt-2">
                             {% for error in form.password.errors %}
@@ -72,38 +57,75 @@
                     {% endif %}
                 </div>
                 
-                <button type="submit" class="btn-login">
-                    <i class='bx bx-log-in'></i>
-                    Iniciar Sesión
+                <button type="submit" class="login-btn">
+                    Login
                 </button>
                 
-                <div class="login-links">
-                    <a href="{{ url_for('auth.registro') }}">¿No tienes cuenta? Regístrate</a>
+                <div class="login-footer">
+                    <p>¿No tienes cuenta? <a href="{{ url_for('auth.registro') }}">Regístrate</a></p>
                 </div>
             </form>
             
             <!-- Información de acceso de demostración -->
-            <div class="demo-info" style="margin-top: 25px; padding: 15px; background: rgba(0, 238, 255, 0.1); border-radius: 10px; border: 1px solid rgba(0, 238, 255, 0.3);">
-                <h6 style="color: #0ef; margin-bottom: 10px;">
+            <div class="demo-info">
+                <h6>
                     <i class='bx bx-info-circle'></i>
                     Acceso de Demostración
                 </h6>
-                <p style="margin: 0; font-size: 14px;">
+                <p>
                     <strong>Administrador:</strong><br>
                     DNI: 12345678<br>
                     Contraseña: admin123
                 </p>
             </div>
         </div>
-    </div>
 
-    <!-- Imagen lateral -->
-    <div class="login-image">
-        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="OSIRIS Medical Platform">
+        <!-- Sección de bienvenida -->
+        <div class="welcome-section">
+            <div class="welcome-content">
+                <img src="{{ url_for('static', filename='images/osiris.png') }}" alt="OSIRIS" class="osiris-logo">
+                <h1>WELCOME<br>BACK!</h1>
+                <h2>We're happy to have you back!</h2>
+                <p>
+                    Inicia sesión para acceder a la plataforma OSIRIS y gestionar tu bienestar universitario. 
+                    Todo lo que necesitas está aquí para ti.
+                </p>
+            </div>
+            
+            <!-- Partículas decorativas -->
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
     </div>
 
     <!-- Scripts -->
-    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
-    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+    <script>
+        // Efecto de partículas
+        function createParticles() {
+            const particles = document.querySelectorAll('.particle');
+            particles.forEach(particle => {
+                particle.style.animationDelay = Math.random() * 4 + 's';
+            });
+        }
+        
+        // Validación visual
+        const inputs = document.querySelectorAll('.form-input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.transform = 'scale(1.02)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+        
+        // Inicializar efectos
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+        });
+    </script>
 </body>
 </html>
