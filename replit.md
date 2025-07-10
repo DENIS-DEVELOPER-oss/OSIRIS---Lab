@@ -257,6 +257,9 @@ El proyecto está preparado para ser subido a GitHub con:
   - Variables undefined corregidas en templates
   - Dashboard funcional para todos los roles (admin, profesional, paciente)
   - Datos de estadísticas pasados correctamente desde el backend
+  - Separación completa de dashboards: admin usa `templates/reportes/dashboard.html` y usuarios generales usan `templates/usuario_dashboard.html`
+  - Eliminación de errores JavaScript para usuarios no administradores
+  - Gráficos Chart.js solo se renderizan para administradores
 
 ### July 10, 2025 - Limpieza y Optimización Completa del Sistema
 - ✅ **Eliminación de código duplicado y archivos innecesarios:**

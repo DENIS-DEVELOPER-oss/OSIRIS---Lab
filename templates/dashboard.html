@@ -120,6 +120,7 @@
     </div>
 
 {% block extra_js %}
+{% if current_user.es_administrador() %}
 <script>
 // Preparar datos reales desde el backend
 const tendenciaMensual = {{ tendencia_mensual | tojson }};
@@ -135,9 +136,14 @@ const mesesLabels = tendenciaMensual.meses.length > 0 ?
     }) : ['Sin datos'];
 const totalesCitas = tendenciaMensual.totales.length > 0 ? tendenciaMensual.totales : [0];
 
-// Gráfico de líneas para citas por mes (datos reales)
-const citasCtx = document.getElementById('citasChart').getContext('2d');
-const citasChart = new Chart(citasCtx, {
+// Verificar que los elementos existen antes de crear gráficos
+const citasElement = document.getElementById('citasChart');
+const consultasElement = document.getElementById('consultasChart');
+
+if (citasElement && consultasElement) {
+    // Gráfico de líneas para citas por mes (datos reales)
+    const citasCtx = citasElement.getContext('2d');
+    const citasChart = new Chart(citasCtx, {
     type: 'line',
     data: {
         labels: mesesLabels,
@@ -201,33 +207,35 @@ if (labelsCitas.length === 0) {
     datosCitas.push(1);
 }
 
-// Gráfico de dona para consultas por tipo (datos reales)
-const consultasCtx = document.getElementById('consultasChart').getContext('2d');
-const consultasChart = new Chart(consultasCtx, {
-    type: 'doughnut',
-    data: {
-        labels: labelsCitas,
-        datasets: [{
-            data: datosCitas,
-            backgroundColor: coloresCitas.slice(0, labelsCitas.length),
-            borderWidth: 0
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                position: 'bottom',
-                labels: {
-                    usePointStyle: true,
-                    padding: 20
+    // Gráfico de dona para consultas por tipo (datos reales)
+    const consultasCtx = consultasElement.getContext('2d');
+    const consultasChart = new Chart(consultasCtx, {
+        type: 'doughnut',
+        data: {
+            labels: labelsCitas,
+            datasets: [{
+                data: datosCitas,
+                backgroundColor: coloresCitas.slice(0, labelsCitas.length),
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 20
+                    }
                 }
             }
         }
-    }
-});
+    });
+}
 </script>
+{% endif %}
 {% endblock %}
 
 {% else %}

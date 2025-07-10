@@ -1,0 +1,182 @@
+{% extends "modern_base.html" %}
+
+{% block title %}Dashboard - Sistema Médico Universitario{% endblock %}
+
+{% block content %}
+<!-- Dashboard para Profesionales y Pacientes -->
+
+<!-- Header de bienvenida -->
+<div class="dashboard-header">
+    <div class="welcome-section">
+        <h1 class="dashboard-title">
+            <i class='bx bx-dashboard'></i>
+            Dashboard
+        </h1>
+        <p class="dashboard-subtitle">Bienvenido, {{ current_user.nombre }}</p>
+    </div>
+</div>
+
+{% if current_user.es_profesional() %}
+    <!-- Dashboard Profesional -->
+    <div class="dashboard-stats">
+        <div class="stat-card primary">
+            <div class="stat-content">
+                <div class="stat-icon">
+                    <i class='bx bx-calendar-alt'></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-number">{{ resumen.total_citas if resumen else 0 }}</div>
+                    <div class="stat-label">Mis Citas</div>
+                </div>
+            </div>
+            <div class="stat-gradient"></div>
+        </div>
+        
+        <div class="stat-card success">
+            <div class="stat-content">
+                <div class="stat-icon">
+                    <i class='bx bx-clipboard'></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-number">{{ resumen.total_consultas if resumen else 0 }}</div>
+                    <div class="stat-label">Consultas</div>
+                </div>
+            </div>
+            <div class="stat-gradient"></div>
+        </div>
+        
+        <div class="stat-card info">
+            <div class="stat-content">
+                <div class="stat-icon">
+                    <i class='bx bx-user-check'></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-number">{{ resumen.total_pacientes if resumen else 0 }}</div>
+                    <div class="stat-label">Pacientes</div>
+                </div>
+            </div>
+            <div class="stat-gradient"></div>
+        </div>
+    </div>
+    
+    <!-- Acciones rápidas para profesionales -->
+    <div class="dashboard-actions">
+        <div class="actions-header">
+            <h3>Acciones Rápidas</h3>
+        </div>
+        <div class="actions-grid">
+            <a href="{{ url_for('citas.lista') }}" class="action-card primary">
+                <div class="action-icon">
+                    <i class='bx bx-calendar'></i>
+                </div>
+                <div class="action-content">
+                    <div class="action-title">Mis Citas</div>
+                    <div class="action-description">Ver citas programadas</div>
+                </div>
+            </a>
+            
+            <a href="{{ url_for('consultas.lista') }}" class="action-card success">
+                <div class="action-icon">
+                    <i class='bx bx-clipboard'></i>
+                </div>
+                <div class="action-content">
+                    <div class="action-title">Consultas</div>
+                    <div class="action-description">Registrar consultas</div>
+                </div>
+            </a>
+            
+            <a href="{{ url_for('pacientes.lista') }}" class="action-card info">
+                <div class="action-icon">
+                    <i class='bx bx-users'></i>
+                </div>
+                <div class="action-content">
+                    <div class="action-title">Pacientes</div>
+                    <div class="action-description">Gestionar pacientes</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+{% else %}
+    <!-- Dashboard Paciente -->
+    <div class="dashboard-stats">
+        <div class="stat-card primary">
+            <div class="stat-content">
+                <div class="stat-icon">
+                    <i class='bx bx-calendar-alt'></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-number">{{ resumen.total_citas if resumen else 0 }}</div>
+                    <div class="stat-label">Mis Citas</div>
+                </div>
+            </div>
+            <div class="stat-gradient"></div>
+        </div>
+        
+        <div class="stat-card success">
+            <div class="stat-content">
+                <div class="stat-icon">
+                    <i class='bx bx-clipboard'></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-number">{{ resumen.total_consultas if resumen else 0 }}</div>
+                    <div class="stat-label">Consultas</div>
+                </div>
+            </div>
+            <div class="stat-gradient"></div>
+        </div>
+        
+        <div class="stat-card info">
+            <div class="stat-content">
+                <div class="stat-icon">
+                    <i class='bx bx-user'></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-number">1</div>
+                    <div class="stat-label">Perfil</div>
+                </div>
+            </div>
+            <div class="stat-gradient"></div>
+        </div>
+    </div>
+    
+    <!-- Acciones rápidas para pacientes -->
+    <div class="dashboard-actions">
+        <div class="actions-header">
+            <h3>Acciones Rápidas</h3>
+        </div>
+        <div class="actions-grid">
+            <a href="{{ url_for('citas.lista') }}" class="action-card primary">
+                <div class="action-icon">
+                    <i class='bx bx-calendar'></i>
+                </div>
+                <div class="action-content">
+                    <div class="action-title">Mis Citas</div>
+                    <div class="action-description">Ver citas programadas</div>
+                </div>
+            </a>
+            
+            <a href="{{ url_for('consultas.lista') }}" class="action-card success">
+                <div class="action-icon">
+                    <i class='bx bx-clipboard'></i>
+                </div>
+                <div class="action-content">
+                    <div class="action-title">Mis Consultas</div>
+                    <div class="action-description">Historial médico</div>
+                </div>
+            </a>
+            
+            <a href="{{ url_for('pacientes.perfil') }}" class="action-card info">
+                <div class="action-icon">
+                    <i class='bx bx-user'></i>
+                </div>
+                <div class="action-content">
+                    <div class="action-title">Mi Perfil</div>
+                    <div class="action-description">Información personal</div>
+                </div>
+            </a>
+        </div>
+    </div>
+{% endif %}
+
+{% endblock %}

@@ -93,19 +93,11 @@ def registrar_rutas(app):
         elif current_user.es_profesional():
             # Obtener resumen para profesionales
             resumen = ServicioReporte.obtener_resumen_dashboard()
-            return render_template('dashboard.html', 
-                                 resumen=resumen,
-                                 estadisticas_citas={},
-                                 tendencia_mensual={'meses': [], 'totales': []},
-                                 niveles_riesgo={})
+            return render_template('usuario_dashboard.html', resumen=resumen)
         else:  # Paciente
             # Obtener resumen para pacientes
             resumen = ServicioReporte.obtener_resumen_dashboard()
-            return render_template('dashboard.html', 
-                                 resumen=resumen,
-                                 estadisticas_citas={},
-                                 tendencia_mensual={'meses': [], 'totales': []},
-                                 niveles_riesgo={})
+            return render_template('usuario_dashboard.html', resumen=resumen)
     
     # Blueprint para pacientes
     pacientes_bp = Blueprint('pacientes', __name__, url_prefix='/pacientes')
