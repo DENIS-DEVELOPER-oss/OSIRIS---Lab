@@ -6,199 +6,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OSIRIS - Gestión Médica Universitaria</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-home.css') }}">
 </head>
 <body>
     <header class="header">
         <a href="{{ url_for('main.index') }}" class="logo">
-            <img src="{{ url_for('static', filename='images/osiris.png') }}" alt="OSIRIS" height="40">
+            <div class="logo-icon">
+                <i class='bx bx-plus-medical'></i>
+            </div>
             OSIRIS
         </a>
 
         <nav class="navbar">
-            <a href="{{ url_for('main.index') }}" style="--i:1;" class="active">Inicio</a>
-            <a href="#about" style="--i:2;">Nosotros</a>
-            <a href="#services" style="--i:3;">Servicios</a>
-            <a href="#contact" style="--i:4;">Contacto</a>
-            <a href="{{ url_for('auth.login') }}" style="--i:5;">Iniciar sesión</a>
+            <a href="{{ url_for('main.index') }}" class="active">Inicio</a>
+            <a href="#about">Nosotros</a>
+            <a href="#services">Soporte</a>
+            <a href="{{ url_for('auth.login') }}">Iniciar sesión</a>
         </nav>
     </header>
 
-    <section class="home">
-        <div class="home-content">
+    <main class="main-content">
+        <div class="content-left">
             <h3>Bienestar universitario con</h3>
-            <h1>TECNOLOGÍA INTELIGENTE</h1>
-            <h3>Conecta con nuestros especialistas en salud <span class="multiple-text"></span></h3>
+            <h1>TECNOLOGÍA<br>INTELIGENTE</h1>
+            <h2>Conecta con nuestros especialistas<br>en salud <span class="highlight">y mantente al día</span></h2>
             <p>
-                Bienvenido a OSIRIS, una plataforma inteligente de gestión médica diseñada para brindar 
-                atención eficiente, segura y oportuna a la comunidad universitaria. 
-                <br><br>
-                Nuestro sistema integra tecnologías avanzadas para facilitar la gestión de citas médicas, 
-                seguimiento de pacientes, y análisis de datos de salud, proporcionando una experiencia 
-                completa tanto para estudiantes como para profesionales de la salud.
+                Bienvenido a esta aplicación desarrollada por el grupo de desarrollo 
+                OSIRIS, una plataforma inteligente de gestión médica diseñada para 
+                brindar atención eficiente, segura y oportuna a la comunidad 
+                universitaria.
             </p>
 
-            <div class="social-media">
-                <a href="#" style="--i:7;"><i class='bx bxl-facebook-circle'></i></a>
-                <a href="#" style="--i:8;"><i class='bx bxl-instagram-alt'></i></a>
-                <a href="#" style="--i:9;"><i class='bx bxl-whatsapp'></i></a>
-                <a href="#" style="--i:10;"><i class='bx bxl-twitter'></i></a>
+            <div class="social-icons">
+                <a href="#" class="social-icon"><i class='bx bxl-facebook-circle'></i></a>
+                <a href="#" class="social-icon"><i class='bx bxl-instagram-alt'></i></a>
+                <a href="#" class="social-icon"><i class='bx bxl-whatsapp'></i></a>
+                <a href="#" class="social-icon"><i class='bx bxl-tiktok'></i></a>
             </div>
 
-            <a href="{{ url_for('auth.login') }}" class="btn">Iniciar sesión</a>
+            <a href="{{ url_for('auth.login') }}" class="cta-button">Iniciar sesión</a>
         </div>
 
-        <div class="home-img">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo de la plataforma OSIRIS" width="550" height="400">
-        </div>
-    </section>
-
-    <!-- Sección Nosotros -->
-    <section id="about" class="about-section">
-        <div class="container">
-            <h2>Acerca de OSIRIS</h2>
-            <div class="about-content">
-                <div class="about-text">
-                    <h3>Innovación en Salud Universitaria</h3>
-                    <p>
-                        OSIRIS representa la evolución digital en la gestión médica universitaria. 
-                        Desarrollado por el grupo de desarrollo OSIRIS, nuestra plataforma utiliza 
-                        tecnologías de vanguardia para optimizar la atención médica en instituciones educativas.
-                    </p>
-                    <div class="features">
-                        <div class="feature">
-                            <i class='bx bx-check-circle'></i>
-                            <span>Gestión inteligente de citas médicas</span>
-                        </div>
-                        <div class="feature">
-                            <i class='bx bx-check-circle'></i>
-                            <span>Seguimiento personalizado de pacientes</span>
-                        </div>
-                        <div class="feature">
-                            <i class='bx bx-check-circle'></i>
-                            <span>Análisis de datos en tiempo real</span>
-                        </div>
-                        <div class="feature">
-                            <i class='bx bx-check-circle'></i>
-                            <span>Interfaz intuitiva y responsiva</span>
-                        </div>
+        <div class="content-right">
+            <div class="medical-illustration">
+                <div class="brain-stethoscope">
+                    <!-- Brain SVG -->
+                    <svg class="brain-svg" viewBox="0 0 200 200">
+                        <path class="brain-path" d="M50,100 Q60,80 80,85 Q100,90 120,85 Q140,80 150,100 Q145,120 125,125 Q105,130 85,125 Q65,120 50,100 Z"/>
+                        <path class="brain-path" d="M70,95 Q80,90 90,95 Q100,100 110,95 Q120,90 130,95"/>
+                        <path class="brain-path" d="M75,105 Q85,110 95,105 Q105,100 115,105 Q125,110 135,105"/>
+                        <path class="brain-path" d="M80,115 Q90,120 100,115 Q110,110 120,115"/>
+                    </svg>
+                    
+                    <!-- Stethoscope SVG -->
+                    <svg class="stethoscope-svg" viewBox="0 0 180 280">
+                        <path class="stethoscope-path" d="M40,20 Q40,40 60,60 Q80,80 100,100 Q120,120 140,140 Q160,160 160,180 Q160,200 140,220 Q120,240 100,260"/>
+                        <path class="stethoscope-path" d="M100,20 Q100,40 80,60 Q60,80 40,100 Q20,120 20,140 Q20,160 40,180 Q60,200 80,220 Q100,240 120,260"/>
+                        <circle class="stethoscope-path" cx="40" cy="20" r="15" fill="none"/>
+                        <circle class="stethoscope-path" cx="100" cy="20" r="15" fill="none"/>
+                        <circle class="stethoscope-path" cx="110" cy="260" r="20" fill="none"/>
+                    </svg>
+                    
+                    <!-- Medical Cross -->
+                    <div class="medical-cross">
+                        <i class='bx bx-plus'></i>
                     </div>
                 </div>
-                <div class="about-image">
-                    <img src="{{ url_for('static', filename='images/osiris.png') }}" alt="Características OSIRIS">
-                </div>
+                
+                <!-- Floating particles -->
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
             </div>
         </div>
-    </section>
+    </main>
 
-    <!-- Sección Servicios -->
-    <section id="services" class="services-section">
-        <div class="container">
-            <h2>Nuestros Servicios</h2>
-            <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class='bx bx-calendar-plus'></i>
-                    </div>
-                    <h3>Gestión de Citas</h3>
-                    <p>Sistema avanzado para programar, modificar y gestionar citas médicas con total flexibilidad.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class='bx bx-user-check'></i>
-                    </div>
-                    <h3>Seguimiento de Pacientes</h3>
-                    <p>Herramientas completas para el seguimiento personalizado del estado de salud de cada estudiante.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class='bx bx-bar-chart-alt-2'></i>
-                    </div>
-                    <h3>Análisis de Datos</h3>
-                    <p>Dashboards interactivos con visualizaciones avanzadas para toma de decisiones informadas.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class='bx bx-shield-check'></i>
-                    </div>
-                    <h3>Seguridad y Privacidad</h3>
-                    <p>Protección total de datos médicos con los más altos estándares de seguridad.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Sección Contacto -->
-    <section id="contact" class="contact-section">
-        <div class="container">
-            <h2>Contacto</h2>
-            <div class="contact-content">
-                <div class="contact-info">
-                    <h3>Grupo de Desarrollo OSIRIS</h3>
-                    <p>Estamos aquí para ayudarte con cualquier consulta sobre nuestra plataforma.</p>
-                    <div class="contact-item">
-                        <i class='bx bx-envelope'></i>
-                        <span>contacto@osiris.edu</span>
-                    </div>
-                    <div class="contact-item">
-                        <i class='bx bx-phone'></i>
-                        <span>+1 (555) 123-4567</span>
-                    </div>
-                    <div class="contact-item">
-                        <i class='bx bx-map'></i>
-                        <span>Campus Universitario, Edificio de Salud</span>
-                    </div>
-                </div>
-                <div class="contact-form">
-                    <form>
-                        <div class="form-group">
-                            <input type="text" placeholder="Tu nombre" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" placeholder="Tu email" required>
-                        </div>
-                        <div class="form-group">
-                            <textarea placeholder="Tu mensaje" rows="5" required></textarea>
-                        </div>
-                        <button type="submit" class="btn">Enviar Mensaje</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
-    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
     <script>
-        // Navegación suave
+        // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
             });
         });
 
-        // Efecto de navegación activa
-        window.addEventListener('scroll', function() {
-            const sections = document.querySelectorAll('section');
-            const navLinks = document.querySelectorAll('.navbar a');
-            
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (pageYOffset >= sectionTop - 200) {
-                    current = section.getAttribute('id');
-                }
-            });
-
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === '#' + current) {
-                    link.classList.add('active');
-                }
+        // Particle animation enhancement
+        document.addEventListener('DOMContentLoaded', function() {
+            const particles = document.querySelectorAll('.particle');
+            particles.forEach((particle, index) => {
+                particle.style.animationDelay = `${index * 0.5}s`;
             });
         });
     </script>
