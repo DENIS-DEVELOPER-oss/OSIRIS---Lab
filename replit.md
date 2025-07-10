@@ -216,6 +216,28 @@ El proyecto está preparado para ser subido a GitHub con:
   - Archivo de ejemplo `ejemplo_importacion_procedencia.csv`
   - Interfaz web para carga/descarga de archivos CSV
 
+### July 10, 2025 - Rediseño Completo de Vistas de Citas
+- ✅ **Mejora integral del diseño de las vistas de citas:**
+  - `templates/citas/lista.html` - Lista moderna con diseño adaptativo por rol de usuario
+  - `templates/citas/crear.html` - Formulario estructurado en secciones con validación visual
+  - `templates/citas/detalle.html` - Vista detallada con información organizada y acciones contextuales
+  - Integración con templates base según rol (admin_base.html vs modern_base.html)
+
+- ✅ **Características del nuevo diseño:**
+  - Headers con gradientes temáticos y descripciones contextuales
+  - Badges de estado con colores y iconos profesionales (Programada, Completada, Cancelada)
+  - Badges de tipo de consulta diferenciados (Medicina, Psicología, Emergencia)
+  - Formularios organizados en secciones lógicas (Participantes, Programación, Detalles)
+  - Vista de detalle con información de procedencia del paciente integrada
+  - Estados vacíos informativos con call-to-action apropiados
+
+- ✅ **Mejoras en experiencia de usuario:**
+  - Navegación coherente entre vistas de citas
+  - Acciones contextuales según rol del usuario (admin, profesional, paciente)
+  - Información de consulta médica integrada en vista de detalle
+  - Diseño responsivo para dispositivos móviles
+  - Iconos Boxicons consistentes en toda la interfaz
+
 ### July 10, 2025 - Análisis Avanzado: Segmentación y Predicción
 - ✅ **Implementación completa de análisis avanzados:**
   - Nuevo servicio `ServicioReporte.obtener_datos_segmentacion()` - Análisis de segmentación de pacientes

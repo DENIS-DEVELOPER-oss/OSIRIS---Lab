@@ -1,171 +1,308 @@
-{% extends "base.html" %}
+{% if current_user.es_administrador() %}
+    {% extends "admin_base.html" %}
+{% else %}
+    {% extends "modern_base.html" %}
+{% endif %}
 
-{% block title %}Detalle de Cita - {{ super() }}{% endblock %}
+{% block title %}Detalle de Cita - Sistema Médico Universitario{% endblock %}
+
+{% block extra_css %}
+<style>
+    .detalle-header {
+        background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%);
+        color: white;
+        padding: 30px;
+        border-radius: var(--border-radius-lg);
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    .info-card {
+        background: var(--bg-card);
+        border-radius: var(--border-radius-lg);
+        padding: 25px;
+        margin-bottom: 20px;
+        backdrop-filter: blur(10px);
+        border: var(--border-primary);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+    .info-section {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 20px;
+        border-radius: var(--border-radius);
+        margin-bottom: 20px;
+        border-left: 4px solid #6f42c1;
+    }
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 15px 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+    .info-item:last-child {
+        border-bottom: none;
+    }
+    .info-label {
+        font-weight: 600;
+        color: #495057;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+    }
+    .info-value {
+        font-size: 1.1rem;
+        color: #212529;
+    }
+    .status-badge-large {
+        padding: 12px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .actions-card {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        border-radius: var(--border-radius-lg);
+        padding: 25px;
+        text-align: center;
+    }
+    .consulta-card {
+        background: linear-gradient(135deg, #17a2b8 0%, #6610f2 100%);
+        color: white;
+        border-radius: var(--border-radius-lg);
+        padding: 25px;
+    }
+    .motivo-card {
+        background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+        padding: 20px;
+        border-radius: var(--border-radius);
+        border-left: 4px solid #f39c12;
+    }
+</style>
+{% endblock %}
+
+{% block page_title %}Detalle de Cita Médica{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="h3 mb-0">
-                    <i class="fas fa-calendar-alt me-2"></i>
-                    Detalle de Cita
-                </h1>
-                <a href="{{ url_for('citas.lista') }}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left me-2"></i>Volver
-                </a>
-            </div>
-        </div>
+<div class="detalle-header">
+    <h1><i class='bx bx-calendar-check'></i> Detalle de Cita Médica</h1>
+    <p>Información completa de la consulta programada</p>
+    <div class="mt-3">
+        <a href="{{ url_for('citas.lista') }}" class="btn btn-light btn-lg">
+            <i class='bx bx-arrow-back'></i> Volver a Citas
+        </a>
     </div>
+</div>
     
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">
-                        <i class="fas fa-info-circle me-2"></i>Información de la Cita
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6><i class="fas fa-calendar me-2"></i>Fecha y Hora</h6>
-                            <p class="h5">{{ cita.fecha.strftime('%d/%m/%Y') }} - {{ cita.hora.strftime('%H:%M') }}</p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6><i class="fas fa-clipboard me-2"></i>Tipo de Cita</h6>
-                            <p>
-                                {% if cita.tipo_cita.value == 'MEDICINA' %}
-                                    <span class="badge bg-primary fs-6">Medicina</span>
-                                {% elif cita.tipo_cita.value == 'PSICOLOGIA' %}
-                                    <span class="badge bg-info fs-6">Psicología</span>
-                                {% else %}
-                                    <span class="badge bg-danger fs-6">Emergencia</span>
-                                {% endif %}
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6><i class="fas fa-user me-2"></i>Paciente</h6>
-                            <p>{{ cita.paciente.usuario.nombre }}</p>
-                            <p class="text-muted">{{ cita.paciente.carrera }}</p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6><i class="fas fa-user-md me-2"></i>Profesional</h6>
-                            <p>{{ cita.profesional.nombre }}</p>
-                            <p class="text-muted">{{ cita.profesional.rol.value }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6><i class="fas fa-flag me-2"></i>Estado</h6>
-                            <p>
-                                {% if cita.estado == 'PROGRAMADA' %}
-                                    <span class="badge bg-warning fs-6">Programada</span>
-                                {% elif cita.estado == 'COMPLETADA' %}
-                                    <span class="badge bg-success fs-6">Completada</span>
-                                {% else %}
-                                    <span class="badge bg-secondary fs-6">Cancelada</span>
-                                {% endif %}
-                            </p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6><i class="fas fa-clock me-2"></i>Creada</h6>
-                            <p class="text-muted">{{ cita.fecha_creacion.strftime('%d/%m/%Y %H:%M') }}</p>
-                        </div>
-                    </div>
-                    
-                    {% if cita.motivo %}
-                        <div class="row">
-                            <div class="col-12">
-                                <h6><i class="fas fa-comment-alt me-2"></i>Motivo</h6>
-                                <p class="bg-light p-3 rounded">{{ cita.motivo }}</p>
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Información Principal -->
+        <div class="info-card">
+            <h4><i class='bx bx-info-circle'></i> Información de la Cita</h4>
+            
+            <div class="info-section">
+                <h5><i class='bx bx-time'></i> Programación</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class='bx bx-calendar'></i> Fecha
                             </div>
+                            <div class="info-value">{{ cita.fecha.strftime('%d/%m/%Y') }}</div>
                         </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">
-                        <i class="fas fa-cog me-2"></i>Acciones
-                    </h5>
-                </div>
-                <div class="card-body">
-                    {% if current_user.es_profesional() and cita.profesional_id == current_user.id and cita.estado == 'PROGRAMADA' and not cita.consulta %}
-                        <a href="{{ url_for('consultas.crear', cita_id=cita.id) }}" class="btn btn-success w-100 mb-2">
-                            <i class="fas fa-notes-medical me-2"></i>Crear Consulta
-                        </a>
-                    {% endif %}
-                    
-                    {% if cita.consulta %}
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle me-2"></i>
-                            Esta cita ya tiene una consulta registrada.
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class='bx bx-time-five'></i> Hora
+                            </div>
+                            <div class="info-value">{{ cita.hora.strftime('%H:%M') }}</div>
                         </div>
-                    {% endif %}
-                    
-                    {% if current_user.es_administrador() %}
-                        <div class="btn-group w-100" role="group">
-                            <button type="button" class="btn btn-outline-warning">
-                                <i class="fas fa-edit me-1"></i>Editar
-                            </button>
-                            <button type="button" class="btn btn-outline-danger">
-                                <i class="fas fa-trash me-1"></i>Cancelar
-                            </button>
-                        </div>
-                    {% endif %}
+                    </div>
                 </div>
             </div>
             
-            {% if cita.consulta %}
-                <div class="card mt-3">
-                    <div class="card-header bg-success text-white">
-                        <h6 class="mb-0">
-                            <i class="fas fa-notes-medical me-2"></i>Consulta Médica
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <h6>Diagnóstico:</h6>
-                            <p class="text-muted">{{ cita.consulta.diagnostico }}</p>
-                        </div>
-                        
-                        {% if cita.consulta.tratamiento %}
-                            <div class="mb-3">
-                                <h6>Tratamiento:</h6>
-                                <p class="text-muted">{{ cita.consulta.tratamiento }}</p>
+            <div class="info-section">
+                <h5><i class='bx bx-users'></i> Participantes</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class='bx bx-user'></i> Paciente
                             </div>
-                        {% endif %}
-                        
-                        <div class="mb-3">
-                            <h6>Nivel de Riesgo:</h6>
-                            <p>
-                                {% if cita.consulta.nivel_riesgo.value == 'BAJO' %}
-                                    <span class="badge bg-success">Bajo</span>
-                                {% elif cita.consulta.nivel_riesgo.value == 'MEDIO' %}
-                                    <span class="badge bg-warning">Medio</span>
-                                {% elif cita.consulta.nivel_riesgo.value == 'ALTO' %}
-                                    <span class="badge bg-danger">Alto</span>
-                                {% else %}
-                                    <span class="badge bg-dark">Crítico</span>
-                                {% endif %}
-                            </p>
+                            <div class="info-value">{{ cita.paciente.usuario.nombre }}</div>
+                            <small class="text-muted">{{ cita.paciente.carrera }}</small>
+                            {% if cita.paciente.procedencia %}
+                                <small class="text-muted">Procedencia: {{ cita.paciente.procedencia }}</small>
+                            {% endif %}
                         </div>
-                        
-                        <div class="text-muted">
-                            <small>Registrada: {{ cita.consulta.fecha_consulta.strftime('%d/%m/%Y %H:%M') }}</small>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class='bx bx-user-check'></i> Profesional
+                            </div>
+                            <div class="info-value">{{ cita.profesional.nombre }}</div>
+                            <small class="text-muted">{{ cita.profesional.rol.value }}</small>
                         </div>
                     </div>
                 </div>
+            </div>
+            
+            <div class="info-section">
+                <h5><i class='bx bx-detail'></i> Detalles</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class='bx bx-medical'></i> Tipo de Consulta
+                            </div>
+                            <div class="info-value">
+                                {% if cita.tipo_cita.value == 'MEDICINA' %}
+                                    <span class="status-badge-large" style="background: linear-gradient(135deg, #007bff, #0056b3); color: white;">
+                                        <i class='bx bx-plus-medical'></i> Medicina General
+                                    </span>
+                                {% elif cita.tipo_cita.value == 'PSICOLOGIA' %}
+                                    <span class="status-badge-large" style="background: linear-gradient(135deg, #17a2b8, #138496); color: white;">
+                                        <i class='bx bx-brain'></i> Psicología
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge-large" style="background: linear-gradient(135deg, #dc3545, #c82333); color: white;">
+                                        <i class='bx bx-alarm'></i> Emergencia
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class='bx bx-flag'></i> Estado Actual
+                            </div>
+                            <div class="info-value">
+                                {% if cita.estado == 'PROGRAMADA' %}
+                                    <span class="status-badge-large" style="background: linear-gradient(135deg, #ffd700, #ffed4e); color: #8b6914;">
+                                        <i class='bx bx-time'></i> Programada
+                                    </span>
+                                {% elif cita.estado == 'COMPLETADA' %}
+                                    <span class="status-badge-large" style="background: linear-gradient(135deg, #28a745, #34ce57); color: white;">
+                                        <i class='bx bx-check-circle'></i> Completada
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge-large" style="background: linear-gradient(135deg, #6c757d, #868e96); color: white;">
+                                        <i class='bx bx-x-circle'></i> Cancelada
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class='bx bx-calendar-plus'></i> Fecha de Creación
+                    </div>
+                    <div class="info-value">{{ cita.fecha_creacion.strftime('%d/%m/%Y a las %H:%M') }}</div>
+                </div>
+            </div>
+            
+            {% if cita.motivo %}
+            <div class="motivo-card">
+                <h5><i class='bx bx-message-detail'></i> Motivo de la Consulta</h5>
+                <p class="mb-0">{{ cita.motivo }}</p>
+            </div>
             {% endif %}
         </div>
+    </div>
+        
+    <div class="col-lg-4">
+        <!-- Acciones Disponibles -->
+        {% if current_user.es_profesional() and cita.profesional_id == current_user.id and cita.estado == 'PROGRAMADA' and not cita.consulta %}
+        <div class="actions-card">
+            <h4><i class='bx bx-medical'></i> Acciones Médicas</h4>
+            <p>Opciones disponibles para esta cita</p>
+            <div class="d-grid gap-3">
+                <a href="{{ url_for('consultas.crear', cita_id=cita.id) }}" class="btn btn-light btn-lg">
+                    <i class='bx bx-plus-medical'></i> Registrar Consulta
+                </a>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% if cita.consulta %}
+        <div class="alert alert-success" style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); border: 1px solid #b8dacc;">
+            <h5><i class='bx bx-check-circle'></i> Consulta Registrada</h5>
+            <p class="mb-0">Esta cita ya tiene una consulta médica completada.</p>
+        </div>
+        {% endif %}
+        
+        {% if current_user.es_administrador() %}
+        <div class="info-card">
+            <h4><i class='bx bx-cog'></i> Administración</h4>
+            <div class="d-grid gap-2">
+                <button type="button" class="btn btn-outline-warning btn-lg">
+                    <i class='bx bx-edit'></i> Editar Cita
+                </button>
+                <button type="button" class="btn btn-outline-danger btn-lg">
+                    <i class='bx bx-trash'></i> Cancelar Cita
+                </button>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Consulta Médica (si existe) -->
+        {% if cita.consulta %}
+        <div class="consulta-card">
+            <h4><i class='bx bx-notepad'></i> Consulta Médica</h4>
+            
+            <div class="mb-3">
+                <h6><i class='bx bx-analyse'></i> Diagnóstico:</h6>
+                <p class="mb-0" style="background: rgba(255, 255, 255, 0.2); padding: 15px; border-radius: var(--border-radius);">
+                    {{ cita.consulta.diagnostico }}
+                </p>
+            </div>
+            
+            {% if cita.consulta.tratamiento %}
+            <div class="mb-3">
+                <h6><i class='bx bx-health'></i> Tratamiento:</h6>
+                <p class="mb-0" style="background: rgba(255, 255, 255, 0.2); padding: 15px; border-radius: var(--border-radius);">
+                    {{ cita.consulta.tratamiento }}
+                </p>
+            </div>
+            {% endif %}
+            
+            <div class="mb-3">
+                <h6><i class='bx bx-shield'></i> Nivel de Riesgo:</h6>
+                {% if cita.consulta.nivel_riesgo.value == 'BAJO' %}
+                    <span class="status-badge-large" style="background: #28a745; color: white;">
+                        <i class='bx bx-shield-check'></i> Riesgo Bajo
+                    </span>
+                {% elif cita.consulta.nivel_riesgo.value == 'MEDIO' %}
+                    <span class="status-badge-large" style="background: #ffc107; color: #212529;">
+                        <i class='bx bx-shield-alt'></i> Riesgo Medio
+                    </span>
+                {% elif cita.consulta.nivel_riesgo.value == 'ALTO' %}
+                    <span class="status-badge-large" style="background: #dc3545; color: white;">
+                        <i class='bx bx-shield-x'></i> Riesgo Alto
+                    </span>
+                {% else %}
+                    <span class="status-badge-large" style="background: #343a40; color: white;">
+                        <i class='bx bx-error'></i> Riesgo Crítico
+                    </span>
+                {% endif %}
+            </div>
+            
+            <div class="text-center">
+                <small style="opacity: 0.8;">
+                    <i class='bx bx-time'></i> Registrada: {{ cita.consulta.fecha_consulta.strftime('%d/%m/%Y a las %H:%M') }}
+                </small>
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
