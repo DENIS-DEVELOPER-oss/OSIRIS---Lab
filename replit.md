@@ -268,6 +268,28 @@ El proyecto está preparado para ser subido a GitHub con:
   - Diseño responsivo optimizado para todos los dispositivos
   - Eliminación de elementos obsoletos y mejora de la navegación
 
+### July 10, 2025 - Implementación de Sidebar Izquierdo con Logo de Imagen
+- ✅ **Migración completa de navegación superior a sidebar izquierdo:**
+  - Reemplazo del header horizontal por sidebar fijo lateral de 280px
+  - Integración del logo OSIRIS como imagen (osiris.png) en lugar de texto
+  - Navegación organizada por secciones según rol del usuario
+  - Botón toggle para colapsar/expandir sidebar (70px colapsado)
+  - Información del usuario y botón de logout en parte inferior del sidebar
+  
+- ✅ **Características del nuevo sidebar:**
+  - Logo de imagen profesional con texto "OSIRIS" en gradiente
+  - Navegación por secciones: Principal, Administración, Profesional, Estudiante, Reportes
+  - Efectos hover con gradientes y animaciones suaves
+  - Elemento activo destacado automáticamente según la página actual
+  - Diseño responsivo que se oculta en dispositivos móviles
+  
+- ✅ **Estructura de contenido actualizada:**
+  - Header superior minimalista con botón toggle y título de página
+  - Área de contenido principal con padding optimizado
+  - Footer simple en parte inferior
+  - Transiciones suaves entre estados colapsado/expandido
+  - Compatibilidad total con el diseño existente del dashboard
+
 ### July 10, 2025 - Análisis Avanzado: Segmentación y Predicción
 - ✅ **Implementación completa de análisis avanzados:**
   - Nuevo servicio `ServicioReporte.obtener_datos_segmentacion()` - Análisis de segmentación de pacientes
