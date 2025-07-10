@@ -290,6 +290,13 @@ El proyecto está preparado para ser subido a GitHub con:
   - Transiciones suaves entre estados colapsado/expandido
   - Compatibilidad total con el diseño existente del dashboard
 
+### July 10, 2025 - Eliminación de Opción de Respaldo CSV
+- ✅ **Limpieza de navegación administrativa:**
+  - Eliminación de opción "Respaldo CSV" del sidebar de administradores
+  - Actualización de templates modern_base.html y admin_base.html
+  - Simplificación del menú de reportes manteniendo solo Estadísticas y Configuración
+  - Navegación más limpia y enfocada en funciones principales
+
 ### July 10, 2025 - Análisis Avanzado: Segmentación y Predicción
 - ✅ **Implementación completa de análisis avanzados:**
   - Nuevo servicio `ServicioReporte.obtener_datos_segmentacion()` - Análisis de segmentación de pacientes
