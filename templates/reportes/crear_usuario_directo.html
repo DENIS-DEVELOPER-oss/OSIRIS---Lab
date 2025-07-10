@@ -13,7 +13,7 @@
     }
     
     .form-header {
-        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        background: linear-gradient(135deg, #2c3e50, #3498db);
         color: white;
         padding: 30px;
         text-align: center;
@@ -85,7 +85,7 @@
     }
     
     .step.active:not(:last-child)::after {
-        background: var(--primary-color);
+        background: #3498db;
     }
     
     .step-circle {
@@ -104,7 +104,7 @@
     }
     
     .step.active .step-circle {
-        background: var(--primary-color);
+        background: #3498db;
         color: white;
         transform: scale(1.1);
     }
@@ -117,18 +117,19 @@
     }
     
     .step.active .step-label {
-        color: var(--primary-color);
+        color: #2c3e50;
         font-weight: 600;
     }
     
     .form-section {
-        background: rgba(248, 249, 250, 0.8);
-        border-radius: 12px;
-        padding: 30px;
-        margin-bottom: 25px;
-        border: 1px solid rgba(52, 152, 219, 0.1);
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 35px;
+        margin-bottom: 30px;
+        border: 1px solid rgba(52, 152, 219, 0.15);
         position: relative;
         overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     }
     
     .form-section::before {
@@ -136,26 +137,27 @@
         position: absolute;
         top: 0;
         left: 0;
-        width: 4px;
+        width: 5px;
         height: 100%;
-        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        background: linear-gradient(135deg, #3498db, #2980b9);
     }
     
     .section-title {
-        color: var(--primary-color);
+        color: #2c3e50;
         font-weight: 700;
-        font-size: 1.3rem;
-        margin-bottom: 20px;
+        font-size: 1.4rem;
+        margin-bottom: 25px;
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 15px;
     }
     
     .section-title i {
-        font-size: 1.5rem;
-        padding: 8px;
-        background: rgba(52, 152, 219, 0.1);
-        border-radius: 8px;
+        font-size: 1.6rem;
+        padding: 10px;
+        background: rgba(52, 152, 219, 0.12);
+        border-radius: 10px;
+        color: #3498db;
     }
     
     .form-group {
@@ -164,11 +166,12 @@
     
     .form-label {
         font-weight: 600;
-        color: var(--text-secondary);
-        margin-bottom: 8px;
+        color: #2c3e50;
+        margin-bottom: 10px;
         display: flex;
         align-items: center;
         gap: 8px;
+        font-size: 0.95rem;
     }
     
     .form-input,
@@ -185,29 +188,31 @@
     .form-input:focus,
     .form-select:focus {
         outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        border-color: #3498db;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
         transform: translateY(-1px);
     }
     
     .form-input.is-valid {
-        border-color: var(--success-color);
+        border-color: #27ae60;
         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2327ae60' d='m2.3 6.73.26.15c.2.12.44.12.64 0l5.6-3.3c.2-.12.32-.33.32-.56 0-.23-.12-.44-.32-.56l-.26-.15c-.2-.12-.44-.12-.64 0l-5.6 3.3c-.2.12-.32.33-.32.56 0 .23.12.44.32.56z'/%3e%3c/svg%3e");
         background-repeat: no-repeat;
         background-position: right 15px center;
         background-size: 16px;
+        box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
     }
     
     .form-input.is-invalid {
-        border-color: var(--danger-color);
+        border-color: #e74c3c;
         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3e%3cpath fill='%23e74c3c' d='M6 0c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6 2.69-6 6-6zM3.35 3.35l-.71.71L5.29 6.71l-2.65 2.64.71.71L6 7.41l2.64 2.65.71-.71L6.71 6.71l2.64-2.65-.71-.71L6 5.29 3.35 3.35z'/%3e%3c/svg%3e");
         background-repeat: no-repeat;
         background-position: right 15px center;
         background-size: 16px;
+        box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
     }
     
     .help-text {
-        color: var(--text-muted);
+        color: #7f8c8d;
         font-size: 0.875rem;
         margin-top: 8px;
         display: flex;
@@ -216,29 +221,29 @@
     }
     
     .help-text.success {
-        color: var(--success-color);
+        color: #27ae60;
     }
     
     .help-text.error {
-        color: var(--danger-color);
+        color: #e74c3c;
     }
     
     .help-text.warning {
-        color: var(--warning-color);
+        color: #f39c12;
     }
     
     .role-preview {
-        background: rgba(52, 152, 219, 0.05);
+        background: rgba(52, 152, 219, 0.06);
         border: 1px solid rgba(52, 152, 219, 0.2);
-        border-radius: 10px;
-        padding: 20px;
-        margin-top: 20px;
+        border-radius: 12px;
+        padding: 25px;
+        margin-top: 25px;
     }
     
     .role-preview h6 {
-        color: var(--primary-color);
+        color: #2c3e50;
         font-weight: 600;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
         display: flex;
         align-items: center;
         gap: 8px;
@@ -266,13 +271,13 @@
     }
     
     .btn-primary-modern {
-        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        background: linear-gradient(135deg, #3498db, #2980b9);
         color: white;
     }
     
     .btn-primary-modern:hover {
         transform: translateY(-2px);
-        box-shadow: var(--shadow-lg);
+        box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
         filter: brightness(1.1);
     }
     
@@ -301,13 +306,23 @@
     }
     
     @media (max-width: 768px) {
+        .admin-container {
+            padding: 10px !important;
+            max-width: 100% !important;
+        }
+        
         .form-body {
             padding: 20px;
+        }
+        
+        .form-section {
+            padding: 25px 20px;
         }
         
         .step-indicator {
             flex-direction: column;
             gap: 15px;
+            padding: 0 10px;
         }
         
         .step:not(:last-child)::after {
@@ -317,6 +332,13 @@
         .btn-group-modern {
             flex-direction: column;
         }
+        
+        .row .col-md-6,
+        .row .col-md-7,
+        .row .col-md-5,
+        .row .col-md-8 {
+            margin-bottom: 15px;
+        }
     }
 </style>
 {% endblock %}
@@ -324,16 +346,16 @@
 {% block page_title %}Crear Nuevo Usuario{% endblock %}
 
 {% block content %}
-<div class="admin-container">
+<div class="admin-container" style="max-width: 900px; margin: 0 auto; padding: 20px;">
     <!-- Botón volver -->
-    <div class="mb-4">
+    <div class="mb-4 text-center">
         <a href="{{ url_for('reportes.gestion_usuarios') }}" class="admin-btn admin-btn-secondary">
             <i class='bx bx-arrow-back'></i> Volver a Usuarios
         </a>
     </div>
     
-    <!-- Formulario wizard moderno -->
-    <div class="form-wizard">
+    <!-- Formulario wizard moderno centrado -->
+    <div class="form-wizard" style="margin: 0 auto;">
         <!-- Header con animación -->
         <div class="form-header">
             <h1><i class='bx bx-user-plus'></i> Crear Usuario</h1>
@@ -365,8 +387,8 @@
                         <i class='bx bx-user'></i> Datos Generales
                     </h6>
                     
-                    <div class="row">
-                        <div class="col-md-8">
+                    <div class="row justify-content-center">
+                        <div class="col-md-7">
                             <div class="form-group">
                                 <label class="form-label">
                                     <i class='bx bx-edit'></i> Nombre Completo *
@@ -379,7 +401,7 @@
                             </div>
                         </div>
                         
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                             <div class="form-group">
                                 <label class="form-label">
                                     <i class='bx bx-group'></i> Rol del Usuario *
@@ -410,7 +432,7 @@
                         <i class='bx bx-id-card'></i> Identificación
                     </h6>
                     
-                    <div class="row">
+                    <div class="row justify-content-center">
                         <div class="col-md-6 field-hidden" id="dniField">
                             <div class="form-group">
                                 <label class="form-label">
@@ -445,7 +467,7 @@
                         <i class='bx bx-key'></i> Credenciales de Acceso
                     </h6>
                     
-                    <div class="row">
+                    <div class="row justify-content-center">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">
@@ -474,14 +496,18 @@
                     </div>
                 </div>
 
-                <!-- Botones de acción -->
-                <div class="btn-group-modern">
-                    <button type="submit" class="btn-modern btn-primary-modern" id="submitBtn">
-                        <i class='bx bx-user-plus'></i> Crear Usuario
-                    </button>
-                    <a href="{{ url_for('reportes.gestion_usuarios') }}" class="btn-modern btn-secondary-modern">
-                        <i class='bx bx-x'></i> Cancelar
-                    </a>
+                <!-- Botones de acción centrados -->
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="btn-group-modern">
+                            <button type="submit" class="btn-modern btn-primary-modern" id="submitBtn">
+                                <i class='bx bx-user-plus'></i> Crear Usuario
+                            </button>
+                            <a href="{{ url_for('reportes.gestion_usuarios') }}" class="btn-modern btn-secondary-modern">
+                                <i class='bx bx-x'></i> Cancelar
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
