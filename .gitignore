@@ -1,10 +1,8 @@
-# === ARCHIVOS PYTHON ===
-# Bytecode
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
-
-# Distribución / empaquetado
+*.so
 .Python
 build/
 develop-eggs/
@@ -25,7 +23,11 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# === ENTORNOS VIRTUALES ===
+# Flask
+instance/
+.webassets-cache
+
+# Environment variables
 .env
 .venv
 env/
@@ -34,27 +36,18 @@ ENV/
 env.bak/
 venv.bak/
 
-# === CONFIGURACIÓN LOCAL ===
-instance/
-.webassets-cache
-
-# === BASE DE DATOS ===
+# Database
 *.db
-*.sqlite
 *.sqlite3
 
-# === LOGS ===
-*.log
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
-# === ARCHIVOS TEMPORALES ===
-.cache/
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
-.nox/
-
-# === ARCHIVOS DEL SISTEMA ===
+# OS
 .DS_Store
 .DS_Store?
 ._*
@@ -63,43 +56,18 @@ htmlcov/
 ehthumbs.db
 Thumbs.db
 
-# === ARCHIVOS ESPECÍFICOS DE REPLIT ===
+# Replit
 .replit
-replit.nix
 .upm/
+.cache/
 .pythonlibs/
-cookies.txt
 
-# === ARCHIVOS SENSIBLES ===
-.env.local
-.env.production
-.env.development
-config_local.py
-
-# === ARCHIVOS DE RESPALDO ===
-usuarios_respaldo.csv
-usuarios_ejemplo.csv
-
-# === ARCHIVOS ADJUNTOS/TEMPORALES ===
-attached_assets/
+# Temporary files
 *.tmp
 *.bak
-
-# === ARCHIVOS DE LOGS DE APLICACIÓN ===
-logs/
-*.log.*
-
-# === ARCHIVOS DE CONFIGURACIÓN DE IDE ===
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# === CERTIFICADOS Y LLAVES ===
-*.pem
-*.key
-*.crt
-
-# === ARCHIVOS UV LOCK (ESPECÍFICO DE REPLIT) ===
-uv.lock
+*.log
+cookies.txt
+comandos_git.txt
+osiris*.tar.gz
+attached_assets/
+usuarios_ejemplo.csv

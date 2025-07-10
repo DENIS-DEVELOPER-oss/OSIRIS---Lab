@@ -4,7 +4,7 @@ import logging  # Para configurar y manejar logs de depuración
 from flask import Flask  # Framework web principal de la aplicación
 from flask_sqlalchemy import SQLAlchemy  # ORM para manejo de base de datos
 from flask_login import LoginManager  # Extensión para manejo de sesiones de usuario
-from flask_wtf.csrf import CSRFProtect  # Protección contra ataques CSRF
+
 from sqlalchemy.orm import DeclarativeBase  # Clase base para modelos de SQLAlchemy
 from werkzeug.middleware.proxy_fix import ProxyFix  # Middleware para deployment detrás de proxy
 
@@ -21,7 +21,7 @@ class Base(DeclarativeBase):
 # Inicializar las extensiones de Flask sin asociarlas aún a una aplicación específica
 db = SQLAlchemy(model_class=Base)  # Instancia de SQLAlchemy con nuestra clase base personalizada
 login_manager = LoginManager()  # Gestor de sesiones de usuario para autenticación
-csrf = CSRFProtect()  # Protección CSRF para formularios web
+
 
 def crear_app():
     """
@@ -59,7 +59,7 @@ def crear_app():
     # Asociar las extensiones previamente creadas con esta instancia de la aplicación
     db.init_app(app)  # Conectar SQLAlchemy con la aplicación
     login_manager.init_app(app)  # Configurar el gestor de login
-    # csrf.init_app(app)  # Deshabilitado temporalmente para resolver problemas de registro
+
     
     # === CONFIGURACIÓN DE FLASK-LOGIN ===
     # Definir la vista de login por defecto cuando se requiere autenticación

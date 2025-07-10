@@ -138,6 +138,24 @@ El proyecto está preparado para ser subido a GitHub con:
 
 ## Recent Changes
 
+### July 10, 2025 - Limpieza y Optimización del Proyecto
+- ✅ Eliminación de archivos innecesarios:
+  - Archivos temporales: cookies.txt, comandos_git.txt
+  - Archivos de assets no utilizados: attached_assets/
+  - Archivos comprimidos duplicados: *.tar.gz
+  - Archivos de documentación redundantes: INSTRUCCIONES_GITHUB.md, SUBIDA_SIMPLE_GITHUB.md
+  - Scripts de subida temporales: subir_a_github.sh
+  - Archivos de ejemplo: usuarios_ejemplo.csv
+- ✅ Limpieza de código:
+  - Eliminación de imports no utilizados (CSRFProtect)
+  - Actualización de dependencies.txt con versiones flexibles
+  - Limpieza de carpetas __pycache__ temporales
+- ✅ Optimización del .gitignore:
+  - Configuración completa para Python/Flask
+  - Exclusión de archivos temporales y de desarrollo
+  - Preparación para producción
+- ✅ Estructura del proyecto simplificada y optimizada
+
 ### July 03, 2025 - Sistema Completo con Gráficos Plotly
 - ✅ Problemas de CSRF resueltos completamente
 - ✅ Gráficos estadísticos interactivos implementados con Plotly:
