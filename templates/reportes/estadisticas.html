@@ -2,268 +2,195 @@
 
 {% block title %}Estadísticas Detalladas - Sistema Médico Universitario{% endblock %}
 
-{% block extra_css %}
-<style>
-    .chart-container {
-        position: relative;
-        height: 350px;
-        margin: 20px 0;
-        background: var(--bg-card);
-        border-radius: var(--border-radius);
-        padding: 20px;
-        backdrop-filter: blur(10px);
-        border: var(--border-primary);
-    }
-    .chart-card {
-        background: var(--bg-card);
-        backdrop-filter: blur(10px);
-        border: var(--border-primary);
-        border-radius: var(--border-radius-lg);
-        padding: 25px;
-        margin-bottom: 25px;
-        transition: var(--transition-normal);
-    }
-    .chart-card:hover {
-        transform: translateY(-3px);
-        box-shadow: var(--shadow-lg);
-        border-color: var(--primary-color);
-    }
-    .tab-content {
-        padding-top: 20px;
-    }
-    .nav-tabs {
-        border-bottom: 1px solid rgba(0, 255, 255, 0.2);
-        margin-bottom: 20px;
-    }
-    .nav-tabs .nav-link {
-        border: none;
-        color: var(--text-secondary);
-        font-weight: 500;
-        padding: 12px 24px;
-        margin-right: 10px;
-        border-radius: var(--border-radius);
-        transition: var(--transition-normal);
-    }
-    .nav-tabs .nav-link.active {
-        background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
-        color: var(--text-dark);
-        border-radius: var(--border-radius);
-    }
-    .filter-section {
-        background: var(--bg-card);
-        border-radius: var(--border-radius);
-        padding: 20px;
-        margin-bottom: 30px;
-        border: var(--border-primary);
-        backdrop-filter: blur(10px);
-    }
-    .export-section {
-        background: var(--bg-card);
-        border-radius: var(--border-radius);
-        padding: 15px;
-        margin-bottom: 20px;
-        border: var(--border-primary);
-        backdrop-filter: blur(10px);
-    }
-</style>
-{% endblock %}
-
-{% block page_title %}Estadísticas Detalladas{% endblock %}
-
 {% block content %}
-            </div>
+<!-- Dashboard Header -->
+<div class="admin-header">
+    <div>
+        <h1 class="admin-header-title">Estadísticas Detalladas</h1>
+        <p class="admin-header-subtitle">Análisis completo del sistema médico universitario</p>
+        <small class="admin-status">Dashboard de análisis y reportes</small>
+    </div>
+    <div class="admin-header-actions">
+        <button class="admin-btn admin-btn-secondary" onclick="exportarDatos()">
+            <i class='bx bx-download'></i>
+            Exportar Datos
+        </button>
+    </div>
+</div>
+
+<!-- Acceso Directo a Análisis Avanzado -->
+<div class="admin-stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-bottom: 30px;">
+    <div class="admin-chart-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center;">
+        <div style="padding: 30px;">
+            <i class='bx bx-pie-chart-alt-2' style="font-size: 48px; margin-bottom: 15px;"></i>
+            <h5 style="margin-bottom: 10px; font-weight: 600;">Análisis de Segmentación</h5>
+            <p style="margin-bottom: 20px; opacity: 0.9;">Segmenta pacientes por edad, tipo de consulta y nivel de riesgo</p>
+            <a href="{{ url_for('reportes.analisis_segmentacion') }}" class="admin-btn" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">
+                <i class='bx bx-right-arrow-alt'></i> Ver Análisis
+            </a>
         </div>
     </div>
-
-    <!-- Acceso Directo a Análisis Avanzado -->
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
-                <div class="card-body text-center">
-                    <i class='bx bx-pie-chart-alt-2' style="font-size: 48px; margin-bottom: 15px;"></i>
-                    <h5>Análisis de Segmentación</h5>
-                    <p>Segmenta pacientes por edad, tipo de consulta y nivel de riesgo</p>
-                    <a href="{{ url_for('reportes.analisis_segmentacion') }}" class="btn btn-light btn-sm">
-                        <i class='bx bx-right-arrow-alt'></i> Ver Análisis
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; border: none;">
-                <div class="card-body text-center">
-                    <i class='bx bx-trending-up' style="font-size: 48px; margin-bottom: 15px;"></i>
-                    <h5>Análisis Predictivo</h5>
-                    <p>Predicciones de demanda y tendencias futuras</p>
-                    <a href="{{ url_for('reportes.analisis_prediccion') }}" class="btn btn-light btn-sm">
-                        <i class='bx bx-right-arrow-alt'></i> Ver Predicción
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: white; border: none;">
-                <div class="card-body text-center">
-                    <i class='bx bx-map' style="font-size: 48px; margin-bottom: 15px;"></i>
-                    <h5>Mapa de Procedencia</h5>
-                    <p>Visualización geográfica de pacientes en Puno</p>
-                    <a href="{{ url_for('reportes.mapa_procedencia') }}" class="btn btn-light btn-sm">
-                        <i class='bx bx-right-arrow-alt'></i> Ver Mapa
-                    </a>
-                </div>
-            </div>
+    <div class="admin-chart-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; text-align: center;">
+        <div style="padding: 30px;">
+            <i class='bx bx-trending-up' style="font-size: 48px; margin-bottom: 15px;"></i>
+            <h5 style="margin-bottom: 10px; font-weight: 600;">Análisis Predictivo</h5>
+            <p style="margin-bottom: 20px; opacity: 0.9;">Predicciones de demanda y tendencias futuras</p>
+            <a href="{{ url_for('reportes.analisis_prediccion') }}" class="admin-btn" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">
+                <i class='bx bx-right-arrow-alt'></i> Ver Predicción
+            </a>
         </div>
     </div>
+    <div class="admin-chart-card" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: white; text-align: center;">
+        <div style="padding: 30px;">
+            <i class='bx bx-map' style="font-size: 48px; margin-bottom: 15px;"></i>
+            <h5 style="margin-bottom: 10px; font-weight: 600;">Mapa de Procedencia</h5>
+            <p style="margin-bottom: 20px; opacity: 0.9;">Visualización geográfica de pacientes en Puno</p>
+            <a href="{{ url_for('reportes.mapa_procedencia') }}" class="admin-btn" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">
+                <i class='bx bx-right-arrow-alt'></i> Ver Mapa
+            </a>
+        </div>
+    </div>
+</div>
 
-    <!-- Filtros y Exportación -->
-    <div class="filter-section">
-        <div class="row">
-            <div class="col-md-8">
-                <h5>Filtros de Análisis</h5>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="fechaInicio">Fecha Inicio:</label>
-                            <input type="date" id="fechaInicio" class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="fechaFin">Fecha Fin:</label>
-                            <input type="date" id="fechaFin" class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="tipoAnalisis">Tipo de Análisis:</label>
-                            <select id="tipoAnalisis" class="form-control">
-                                <option value="todos">Todos</option>
-                                <option value="medicina">Solo Medicina</option>
-                                <option value="psicologia">Solo Psicología</option>
-                                <option value="emergencia">Solo Emergencias</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+<!-- Filtros de Análisis -->
+<div class="admin-table-container" style="margin-bottom: 30px;">
+    <div class="admin-table-header">
+        <div class="admin-table-title">Filtros de Análisis</div>
+    </div>
+    <div style="padding: 25px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">Fecha Inicio:</label>
+                <input type="date" id="fechaInicio" style="width: 100%; padding: 10px; border: 1px solid var(--admin-border); border-radius: 6px;">
             </div>
-            <div class="col-md-4">
-                <h5>Exportar Datos</h5>
-                <div class="export-section">
-                    <button class="btn btn-success btn-sm btn-block mb-2" onclick="exportarExcel()">
-                        <i class="fas fa-file-excel"></i> Exportar a Excel
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">Fecha Fin:</label>
+                <input type="date" id="fechaFin" style="width: 100%; padding: 10px; border: 1px solid var(--admin-border); border-radius: 6px;">
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">Tipo de Análisis:</label>
+                <select id="tipoAnalisis" style="width: 100%; padding: 10px; border: 1px solid var(--admin-border); border-radius: 6px;">
+                    <option value="todos">Todos</option>
+                    <option value="medicina">Solo Medicina</option>
+                    <option value="psicologia">Solo Psicología</option>
+                    <option value="emergencia">Solo Emergencias</option>
+                </select>
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: transparent;">Exportar:</label>
+                <div style="display: flex; gap: 10px;">
+                    <button class="admin-btn admin-btn-success" onclick="exportarExcel()" style="flex: 1; padding: 8px 12px; font-size: 12px;">
+                        <i class='bx bx-file'></i> Excel
                     </button>
-                    <button class="btn btn-danger btn-sm btn-block" onclick="exportarPDF()">
-                        <i class="fas fa-file-pdf"></i> Exportar a PDF
+                    <button class="admin-btn admin-btn-secondary" onclick="exportarPDF()" style="flex: 1; padding: 8px 12px; font-size: 12px;">
+                        <i class='bx bx-file-pdf'></i> PDF
                     </button>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Tabs de Análisis -->
-    <ul class="nav nav-tabs" id="estadisticasTabs" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" id="general-tab" data-toggle="tab" href="#general" role="tab">
-                <i class="fas fa-chart-pie"></i> General
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="profesionales-tab" data-toggle="tab" href="#profesionales" role="tab">
-                <i class="fas fa-user-md"></i> Profesionales
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="horarios-tab" data-toggle="tab" href="#horarios" role="tab">
-                <i class="fas fa-clock"></i> Horarios
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="riesgos-tab" data-toggle="tab" href="#riesgos" role="tab">
-                <i class="fas fa-exclamation-triangle"></i> Niveles de Riesgo
-            </a>
-        </li>
-    </ul>
+<!-- Navegación de Tabs Moderna -->
+<div style="display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 1px solid var(--admin-border); padding-bottom: 15px;">
+    <button class="admin-chart-btn active" data-tab="general" onclick="cambiarTab('general', this)">
+        <i class='bx bx-pie-chart-alt'></i> General
+    </button>
+    <button class="admin-chart-btn" data-tab="profesionales" onclick="cambiarTab('profesionales', this)">
+        <i class='bx bx-user-voice'></i> Profesionales
+    </button>
+    <button class="admin-chart-btn" data-tab="horarios" onclick="cambiarTab('horarios', this)">
+        <i class='bx bx-time'></i> Horarios
+    </button>
+    <button class="admin-chart-btn" data-tab="riesgos" onclick="cambiarTab('riesgos', this)">
+        <i class='bx bx-error'></i> Niveles de Riesgo
+    </button>
+</div>
 
-    <div class="tab-content" id="estadisticasTabsContent">
-        <!-- Tab General -->
-        <div class="tab-pane fade show active" id="general" role="tabpanel">
-            <div class="row">
-                <!-- Métricas Rápidas -->
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="metric-card">
-                        <div class="metric-number" id="totalCitasMetric">0</div>
-                        <div class="metric-label">Total de Citas</div>
+<!-- Contenido de Tabs -->
+<div class="tab-content">
+    <!-- Tab General -->
+    <div class="tab-panel active" id="general">
+        <!-- Métricas Rápidas -->
+        <div class="admin-stats-grid" style="margin-bottom: 30px;">
+            <div class="admin-stat-card success">
+                <div class="admin-stat-header">
+                    <div class="admin-stat-title">Total de Citas</div>
+                    <div class="admin-stat-icon">
+                        <i class='bx bx-calendar'></i>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="metric-card">
-                        <div class="metric-number" id="totalConsultasMetric">0</div>
-                        <div class="metric-label">Total de Consultas</div>
+                <div class="admin-stat-value" id="totalCitasMetric">0</div>
+                <div class="admin-stat-label">Citas registradas</div>
+            </div>
+            <div class="admin-stat-card info">
+                <div class="admin-stat-header">
+                    <div class="admin-stat-title">Total Consultas</div>
+                    <div class="admin-stat-icon">
+                        <i class='bx bx-clipboard'></i>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="metric-card">
-                        <div class="metric-number" id="promedioDiarioMetric">0</div>
-                        <div class="metric-label">Promedio Diario</div>
+                <div class="admin-stat-value" id="totalConsultasMetric">0</div>
+                <div class="admin-stat-label">Consultas realizadas</div>
+            </div>
+            <div class="admin-stat-card warning">
+                <div class="admin-stat-header">
+                    <div class="admin-stat-title">Promedio Diario</div>
+                    <div class="admin-stat-icon">
+                        <i class='bx bx-trending-up'></i>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="metric-card">
-                        <div class="metric-number" id="tasaCompletitudMetric">0%</div>
-                        <div class="metric-label">Tasa Completitud</div>
+                <div class="admin-stat-value" id="promedioDiarioMetric">0</div>
+                <div class="admin-stat-label">Consultas por día</div>
+            </div>
+            <div class="admin-stat-card danger">
+                <div class="admin-stat-header">
+                    <div class="admin-stat-title">Tasa Completitud</div>
+                    <div class="admin-stat-icon">
+                        <i class='bx bx-check-circle'></i>
                     </div>
+                </div>
+                <div class="admin-stat-value" id="tasaCompletitudMetric">0%</div>
+                <div class="admin-stat-label">Consultas completadas</div>
+            </div>
+        </div>
+
+        <!-- Gráficos Principales -->
+        <div class="admin-charts-grid">
+            <!-- Citas por Tipo -->
+            <div class="admin-chart-card">
+                <div class="admin-chart-header">
+                    <h3 class="admin-chart-title">Distribución de Citas por Tipo</h3>
+                </div>
+                <div class="admin-chart-container">
+                    <canvas id="citasTipoChart"></canvas>
                 </div>
             </div>
 
-            <div class="row">
-                <!-- Citas por Tipo -->
-                <div class="col-lg-6 mb-4">
-                    <div class="card chart-card">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">Distribución de Citas por Tipo</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="chart-container">
-                                <canvas id="citasTipoChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Consultas por Carrera -->
+            <div class="admin-chart-card">
+                <div class="admin-chart-header">
+                    <h3 class="admin-chart-title">Consultas por Carrera Universitaria</h3>
                 </div>
-
-                <!-- Consultas por Carrera -->
-                <div class="col-lg-6 mb-4">
-                    <div class="card chart-card">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">Consultas por Carrera Universitaria</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="chart-container">
-                                <canvas id="consultasCarreraChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tendencia Mensual -->
-            <div class="row">
-                <div class="col-12 mb-4">
-                    <div class="card chart-card">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">Tendencia de Citas (Últimos 12 Meses)</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="chart-container">
-                                <canvas id="tendenciaMensualChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
+                <div class="admin-chart-container">
+                    <canvas id="consultasCarreraChart"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- Tab Profesionales -->
-        <div class="tab-pane fade" id="profesionales" role="tabpanel">
+        <!-- Tendencia Mensual -->
+        <div class="admin-chart-card" style="margin-top: 20px;">
+            <div class="admin-chart-header">
+                <h3 class="admin-chart-title">Tendencia de Citas (Últimos 12 Meses)</h3>
+            </div>
+            <div class="admin-chart-container">
+                <canvas id="tendenciaMensualChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab Profesionales -->
+    <div class="tab-panel" id="profesionales" style="display: none;">
             <div class="row">
                 <div class="col-lg-8 mb-4">
                     <div class="card chart-card">
@@ -292,8 +219,8 @@
             </div>
         </div>
 
-        <!-- Tab Horarios -->
-        <div class="tab-pane fade" id="horarios" role="tabpanel">
+    <!-- Tab Horarios -->
+    <div class="tab-panel" id="horarios" style="display: none;">
             <div class="row">
                 <div class="col-lg-8 mb-4">
                     <div class="card chart-card">
@@ -327,8 +254,8 @@
             </div>
         </div>
 
-        <!-- Tab Niveles de Riesgo -->
-        <div class="tab-pane fade" id="riesgos" role="tabpanel">
+    <!-- Tab Niveles de Riesgo -->
+    <div class="tab-panel" id="riesgos" style="display: none;">
             <div class="row">
                 <div class="col-lg-6 mb-4">
                     <div class="card chart-card">
@@ -358,6 +285,7 @@
         </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block extra_js %}
@@ -369,6 +297,37 @@ let graficos = {};
 // Configuración base para Chart.js
 Chart.defaults.font.family = 'Roboto, sans-serif';
 Chart.defaults.color = '#666';
+
+// Función para cambiar tabs
+function cambiarTab(tabId, button) {
+    // Ocultar todos los tabs
+    document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.style.display = 'none';
+    });
+    
+    // Remover active de todos los botones
+    document.querySelectorAll('.admin-chart-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Mostrar tab seleccionado
+    document.getElementById(tabId).style.display = 'block';
+    button.classList.add('active');
+}
+
+// Función para exportar datos
+function exportarDatos() {
+    // Implementar lógica de exportación
+    alert('Funcionalidad de exportación en desarrollo');
+}
+
+function exportarExcel() {
+    alert('Exportar a Excel - En desarrollo');
+}
+
+function exportarPDF() {
+    alert('Exportar a PDF - En desarrollo');
+}
 
 // Cargar datos iniciales
 document.addEventListener('DOMContentLoaded', function() {
