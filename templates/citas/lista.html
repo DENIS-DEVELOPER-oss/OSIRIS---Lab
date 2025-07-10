@@ -1,195 +1,129 @@
-{% if current_user.es_administrador() %}
-    {% extends "admin_base.html" %}
-{% else %}
-    {% extends "modern_base.html" %}
-{% endif %}
+{% extends "admin_base.html" %}
 
 {% block title %}Citas - Sistema Médico Universitario{% endblock %}
 
-{% block extra_css %}
-<style>
-    .citas-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 30px;
-        border-radius: var(--border-radius-lg);
-        margin-bottom: 30px;
-        text-align: center;
-    }
-    .citas-card {
-        background: var(--bg-card);
-        border-radius: var(--border-radius-lg);
-        padding: 25px;
-        margin-bottom: 20px;
-        backdrop-filter: blur(10px);
-        border: var(--border-primary);
-    }
-    .status-badge {
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-weight: 500;
-        font-size: 0.85rem;
-    }
-    .status-programada { background: linear-gradient(135deg, #ffd700, #ffed4e); color: #8b6914; }
-    .status-completada { background: linear-gradient(135deg, #28a745, #34ce57); color: white; }
-    .status-cancelada { background: linear-gradient(135deg, #6c757d, #868e96); color: white; }
-    .tipo-medicina { background: linear-gradient(135deg, #007bff, #0056b3); color: white; }
-    .tipo-psicologia { background: linear-gradient(135deg, #17a2b8, #138496); color: white; }
-    .tipo-emergencia { background: linear-gradient(135deg, #dc3545, #c82333); color: white; }
-    .cita-actions {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-    }
-    .cita-table th {
-        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-        border: none;
-        padding: 15px;
-        font-weight: 600;
-        color: #495057;
-    }
-    .cita-table td {
-        padding: 15px;
-        vertical-align: middle;
-        border-top: 1px solid #dee2e6;
-    }
-    .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        border-radius: var(--border-radius-lg);
-        margin: 20px 0;
-    }
-    .empty-state i {
-        font-size: 4rem;
-        color: #6c757d;
-        margin-bottom: 20px;
-    }
-</style>
-{% endblock %}
-
-{% block page_title %}
-    {% if es_profesional %}
-        Mis Citas Médicas
-    {% elif es_paciente %}
-        Mis Citas
-    {% else %}
-        Gestión de Citas
-    {% endif %}
-{% endblock %}
-
 {% block content %}
-<div class="citas-header">
-    <h1><i class='bx bx-calendar-check'></i> 
-        {% if es_profesional %}
-            Mis Citas Médicas
-        {% elif es_paciente %}
-            Mis Citas Programadas
-        {% else %}
-            Gestión de Citas Médicas
+<!-- Dashboard Header -->
+<div class="admin-header">
+    <div>
+        <h1 class="admin-header-title">
+            {% if es_profesional %}
+                Mis Citas Médicas
+            {% elif es_paciente %}
+                Mis Citas Programadas
+            {% else %}
+                Gestión de Citas Médicas
+            {% endif %}
+        </h1>
+        <p class="admin-header-subtitle">
+            {% if es_profesional %}
+                Consultas médicas programadas y pendientes
+            {% elif es_paciente %}
+                Historial y próximas citas médicas
+            {% else %}
+                Administración completa del sistema de citas
+            {% endif %}
+        </p>
+        <small class="admin-status">{{ citas|length if citas else 0 }} citas en el sistema</small>
+    </div>
+    <div class="admin-header-actions">
+        {% if current_user.es_administrador() %}
+        <a href="{{ url_for('citas.crear') }}" class="admin-btn admin-btn-primary">
+            <i class='bx bx-plus-circle'></i>
+            Nueva Cita Médica
+        </a>
         {% endif %}
-    </h1>
-    <p>
-        {% if es_profesional %}
-            Consultas médicas programadas y pendientes
-        {% elif es_paciente %}
-            Historial y próximas citas médicas
-        {% else %}
-            Administración completa del sistema de citas
-        {% endif %}
-    </p>
-    {% if current_user.es_administrador() %}
-        <div class="mt-3">
-            <a href="{{ url_for('citas.crear') }}" class="btn btn-light btn-lg">
-                <i class='bx bx-plus-circle'></i> Nueva Cita Médica
-            </a>
-        </div>
-    {% endif %}
+    </div>
 </div>
-    
 {% if citas %}
-<div class="citas-card">
-    <h4><i class='bx bx-list-ul'></i> Lista de Citas</h4>
-    <div class="table-responsive">
-        <table class="table cita-table">
+<!-- Tabla de Citas -->
+<div class="admin-table-container">
+    <div class="admin-table-header">
+        <div class="admin-table-title">Lista de Citas Médicas</div>
+        <div style="color: var(--admin-text-secondary); font-size: 14px;">
+            Gestión completa de citas programadas en el sistema
+        </div>
+    </div>
+    <div class="admin-table-content">
+        <table class="admin-table">
             <thead>
                 <tr>
-                    <th><i class='bx bx-calendar'></i> Fecha & Hora</th>
-                    <th><i class='bx bx-medical'></i> Tipo</th>
+                    <th>Fecha & Hora</th>
+                    <th>Tipo</th>
                     {% if not es_paciente %}
-                        <th><i class='bx bx-user'></i> Paciente</th>
+                        <th>Paciente</th>
                     {% endif %}
                     {% if not es_profesional %}
-                        <th><i class='bx bx-user-check'></i> Profesional</th>
+                        <th>Profesional</th>
                     {% endif %}
-                    <th><i class='bx bx-flag'></i> Estado</th>
-                    <th><i class='bx bx-cog'></i> Acciones</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {% for cita in citas %}
                 <tr>
                     <td>
-                        <div class="d-flex flex-column">
-                            <strong>{{ cita.fecha.strftime('%d/%m/%Y') }}</strong>
-                            <small class="text-muted">{{ cita.hora.strftime('%H:%M') }}</small>
+                        <div style="display: flex; flex-direction: column;">
+                            <strong style="color: var(--admin-text-primary);">{{ cita.fecha.strftime('%d/%m/%Y') }}</strong>
+                            <small style="color: var(--admin-text-secondary);">{{ cita.hora.strftime('%H:%M') }}</small>
                         </div>
                     </td>
                     <td>
                         {% if cita.tipo_cita.value == 'MEDICINA' %}
-                            <span class="status-badge tipo-medicina">
+                            <span class="admin-badge admin-badge-primary">
                                 <i class='bx bx-plus-medical'></i> Medicina
                             </span>
                         {% elif cita.tipo_cita.value == 'PSICOLOGIA' %}
-                            <span class="status-badge tipo-psicologia">
+                            <span class="admin-badge admin-badge-info">
                                 <i class='bx bx-brain'></i> Psicología
                             </span>
                         {% else %}
-                            <span class="status-badge tipo-emergencia">
+                            <span class="admin-badge admin-badge-danger">
                                 <i class='bx bx-alarm'></i> Emergencia
                             </span>
                         {% endif %}
                     </td>
                     {% if not es_paciente %}
                         <td>
-                            <div class="d-flex flex-column">
-                                <strong>{{ cita.paciente.usuario.nombre }}</strong>
-                                <small class="text-muted">{{ cita.paciente.carrera }}</small>
+                            <div style="display: flex; flex-direction: column;">
+                                <strong style="color: var(--admin-text-primary);">{{ cita.paciente.usuario.nombre }}</strong>
+                                <small style="color: var(--admin-text-secondary);">{{ cita.paciente.carrera }}</small>
                             </div>
                         </td>
                     {% endif %}
                     {% if not es_profesional %}
                         <td>
-                            <div class="d-flex flex-column">
-                                <strong>{{ cita.profesional.nombre }}</strong>
-                                <small class="text-muted">{{ cita.profesional.rol.value }}</small>
+                            <div style="display: flex; flex-direction: column;">
+                                <strong style="color: var(--admin-text-primary);">{{ cita.profesional.nombre }}</strong>
+                                <small style="color: var(--admin-text-secondary);">{{ cita.profesional.rol.value }}</small>
                             </div>
                         </td>
                     {% endif %}
                     <td>
                         {% if cita.estado == 'PROGRAMADA' %}
-                            <span class="status-badge status-programada">
+                            <span class="admin-badge admin-badge-warning">
                                 <i class='bx bx-time'></i> Programada
                             </span>
                         {% elif cita.estado == 'COMPLETADA' %}
-                            <span class="status-badge status-completada">
+                            <span class="admin-badge admin-badge-success">
                                 <i class='bx bx-check-circle'></i> Completada
                             </span>
                         {% else %}
-                            <span class="status-badge status-cancelada">
+                            <span class="admin-badge admin-badge-secondary">
                                 <i class='bx bx-x-circle'></i> Cancelada
                             </span>
                         {% endif %}
                     </td>
                     <td>
-                        <div class="cita-actions">
+                        <div style="display: flex; gap: 8px;">
                             <a href="{{ url_for('citas.detalle', cita_id=cita.id) }}" 
-                               class="btn btn-sm btn-outline-primary">
+                               class="admin-btn admin-btn-sm admin-btn-info">
                                 <i class='bx bx-show'></i> Ver
                             </a>
                             {% if current_user.es_profesional() and cita.profesional_id == current_user.id and cita.estado == 'PROGRAMADA' and not cita.consulta %}
                                 <a href="{{ url_for('consultas.crear', cita_id=cita.id) }}" 
-                                   class="btn btn-sm btn-success">
+                                   class="admin-btn admin-btn-sm admin-btn-success">
                                     <i class='bx bx-plus-medical'></i> Consulta
                                 </a>
                             {% endif %}
@@ -202,10 +136,13 @@
     </div>
 </div>
 {% else %}
-<div class="empty-state">
-    <i class='bx bx-calendar-x'></i>
-    <h4>No hay citas registradas</h4>
-    <p class="text-muted">
+<!-- Estado Vacío -->
+<div class="admin-empty-state">
+    <div class="admin-empty-icon">
+        <i class='bx bx-calendar-x'></i>
+    </div>
+    <div class="admin-empty-title">No hay citas registradas</div>
+    <div class="admin-empty-description">
         {% if es_paciente %}
             Aún no tienes citas programadas. Contacta con el personal médico para agendar una consulta.
         {% elif es_profesional %}
@@ -213,14 +150,14 @@
         {% else %}
             No hay citas en el sistema. Comienza creando la primera cita médica.
         {% endif %}
-    </p>
-    {% if current_user.es_administrador() %}
-        <div class="mt-4">
-            <a href="{{ url_for('citas.crear') }}" class="btn btn-primary btn-lg">
-                <i class='bx bx-plus-circle'></i> Crear Primera Cita
-            </a>
-        </div>
-    {% endif %}
+    </div>
+    <div class="admin-empty-actions">
+        {% if current_user.es_administrador() %}
+        <a href="{{ url_for('citas.crear') }}" class="admin-btn admin-btn-primary">
+            <i class='bx bx-plus-circle'></i> Crear Primera Cita
+        </a>
+        {% endif %}
+    </div>
 </div>
 {% endif %}
 {% endblock %}
