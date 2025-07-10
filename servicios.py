@@ -145,12 +145,8 @@ class ServicioAutenticacion:
         db.session.add(usuario)  # Agregar a la sesión de SQLAlchemy
         db.session.commit()  # Confirmar los cambios en la base de datos
         
-        # Guardar respaldo en archivo CSV
-        try:
-            from respaldo_usuarios import ServicioRespaldoCSV
-            ServicioRespaldoCSV.guardar_usuario_en_csv(usuario)
-        except Exception as e:
-            print(f"Error al guardar respaldo CSV: {e}")
+        # Nota: Respaldo CSV eliminado del sistema por limpieza de código
+        # El sistema ya no guarda respaldos automáticos en CSV
         
         return usuario  # Retornar el usuario creado
 
