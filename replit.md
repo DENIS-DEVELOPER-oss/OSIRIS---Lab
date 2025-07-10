@@ -354,6 +354,28 @@ El proyecto está preparado para ser subido a GitHub con:
   - Vista profesional muestra pacientes con citas asignadas únicamente
   - Diseño moderno con tarjetas de paciente y acciones específicas
 
+### July 10, 2025 - Rediseño Completo de Vista de Consultas Profesional
+- ✅ **Modernización completa de la vista de consultas:**
+  - Rediseño de `templates/consultas/lista.html` con diseño de tarjetas modernas
+  - Header con gradiente azul-cyan profesional consistente con panel administrativo  
+  - Reemplazo de tabla Bootstrap por tarjetas con efectos hover y sombras elegantes
+  - Badges con gradientes para tipos de consulta (Medicina, Psicología, Emergencia)
+  - Badges con gradientes para niveles de riesgo (Bajo, Medio, Alto, Crítico)
+  - Iconos Boxicons integrados para mantener consistencia visual
+
+- ✅ **Experiencia de usuario mejorada en consultas:**
+  - Vista específica por rol: profesionales ven solo sus consultas registradas
+  - Diseño de información del paciente con avatares circulares con gradiente
+  - Sección de diagnóstico destacada con borde izquierdo azul
+  - Botón "Ver Detalle Completo" con gradiente y efecto hover elevado
+  - Estado vacío informativo con mensajes específicos por rol de usuario
+  - Diseño completamente responsivo para dispositivos móviles
+
+- ✅ **Navegación corregida para profesionales:**
+  - Sidebar actualizado para que "Pacientes" dirija a vista profesional específica
+  - Eliminada referencia a vista administrativa en navegación profesional
+  - Mantiene al profesional dentro de su interfaz sin salir a vistas administrativas
+
 ### July 10, 2025 - Eliminación de Opción de Respaldo CSV
 - ✅ **Limpieza de navegación administrativa:**
   - Eliminación de opción "Respaldo CSV" del sidebar de administradores
