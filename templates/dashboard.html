@@ -194,111 +194,154 @@ const consultasChart = new Chart(consultasCtx, {
 {% endblock %}
 
 {% else %}
-    <!-- Dashboard para otros roles (conserva el diseño anterior) -->
-    <div class="modern-card">
-        <div class="card-header">
-            <h2 class="card-title">
+    <!-- Dashboard para otros roles con diseño moderno consistente -->
+    
+    <!-- Header de bienvenida -->
+    <div class="dashboard-header">
+        <div class="welcome-section">
+            <h1 class="dashboard-title">
                 <i class='bx bx-dashboard'></i>
                 Dashboard
-            </h2>
-            <div class="text-muted">
-                Bienvenido, {{ current_user.nombre }}
-            </div>
+            </h1>
+            <p class="dashboard-subtitle">Bienvenido, {{ current_user.nombre }}</p>
         </div>
-        
-    {% elif current_user.es_profesional() %}
+    </div>
+    
+    {% if current_user.es_profesional() %}
         <!-- Dashboard Profesional -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class='bx bx-calendar-alt'></i>
+        <div class="dashboard-stats">
+            <div class="stat-card primary">
+                <div class="stat-content">
+                    <div class="stat-icon">
+                        <i class='bx bx-calendar-alt'></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-number">{{ resumen.mis_citas if resumen else 0 }}</div>
+                        <div class="stat-label">Mis Citas</div>
+                    </div>
                 </div>
-                <div class="stat-number">{{ resumen.mis_citas if resumen else 0 }}</div>
-                <div class="stat-label">Mis Citas</div>
+                <div class="stat-gradient"></div>
             </div>
             
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class='bx bx-clipboard'></i>
+            <div class="stat-card success">
+                <div class="stat-content">
+                    <div class="stat-icon">
+                        <i class='bx bx-clipboard'></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-number">{{ resumen.mis_consultas if resumen else 0 }}</div>
+                        <div class="stat-label">Consultas</div>
+                    </div>
                 </div>
-                <div class="stat-number">{{ resumen.mis_consultas if resumen else 0 }}</div>
-                <div class="stat-label">Consultas</div>
+                <div class="stat-gradient"></div>
             </div>
             
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class='bx bx-user-check'></i>
+            <div class="stat-card info">
+                <div class="stat-content">
+                    <div class="stat-icon">
+                        <i class='bx bx-user-check'></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-number">{{ resumen.mis_pacientes if resumen else 0 }}</div>
+                        <div class="stat-label">Pacientes</div>
+                    </div>
                 </div>
-                <div class="stat-number">{{ resumen.mis_pacientes if resumen else 0 }}</div>
-                <div class="stat-label">Pacientes</div>
+                <div class="stat-gradient"></div>
             </div>
         </div>
         
-        <div class="modern-card">
-            <div class="card-header">
-                <h3 class="card-title">
+        <!-- Panel de acciones profesional -->
+        <div class="dashboard-card">
+            <div class="card-header-modern">
+                <h3 class="card-title-modern">
                     <i class='bx bx-briefcase-alt'></i>
                     Panel Profesional
                 </h3>
+                <div class="card-subtitle">Gestiona tus actividades médicas</div>
             </div>
-            <div class="d-flex gap-2 flex-wrap">
-                <a href="{{ url_for('citas.lista_profesional') }}" class="modern-btn btn-primary">
+            <div class="action-buttons">
+                <a href="{{ url_for('citas.lista_profesional') }}" class="action-btn primary">
                     <i class='bx bx-calendar-alt'></i>
-                    Mis Citas
+                    <span>Mis Citas</span>
                 </a>
-                <a href="{{ url_for('consultas.lista') }}" class="modern-btn btn-success">
+                <a href="{{ url_for('consultas.lista') }}" class="action-btn success">
                     <i class='bx bx-clipboard'></i>
-                    Consultas
+                    <span>Consultas</span>
                 </a>
-                <a href="{{ url_for('pacientes.lista') }}" class="modern-btn btn-info">
+                <a href="{{ url_for('pacientes.lista') }}" class="action-btn info">
                     <i class='bx bx-user-check'></i>
-                    Pacientes
+                    <span>Pacientes</span>
                 </a>
             </div>
         </div>
         
     {% else %}
-        <!-- Dashboard Paciente -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class='bx bx-calendar-alt'></i>
+        <!-- Dashboard Paciente/Estudiante -->
+        <div class="dashboard-stats">
+            <div class="stat-card primary">
+                <div class="stat-content">
+                    <div class="stat-icon">
+                        <i class='bx bx-calendar-alt'></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-number">{{ resumen.mis_citas if resumen else 0 }}</div>
+                        <div class="stat-label">Mis Citas</div>
+                    </div>
                 </div>
-                <div class="stat-number">{{ resumen.mis_citas if resumen else 0 }}</div>
-                <div class="stat-label">Mis Citas</div>
+                <div class="stat-gradient"></div>
             </div>
             
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class='bx bx-clipboard'></i>
+            <div class="stat-card success">
+                <div class="stat-content">
+                    <div class="stat-icon">
+                        <i class='bx bx-clipboard'></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-number">{{ resumen.mis_consultas if resumen else 0 }}</div>
+                        <div class="stat-label">Consultas</div>
+                    </div>
                 </div>
-                <div class="stat-number">{{ resumen.mis_consultas if resumen else 0 }}</div>
-                <div class="stat-label">Consultas</div>
+                <div class="stat-gradient"></div>
+            </div>
+            
+            <div class="stat-card info">
+                <div class="stat-content">
+                    <div class="stat-icon">
+                        <i class='bx bx-user'></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-number">1</div>
+                        <div class="stat-label">Mi Perfil</div>
+                    </div>
+                </div>
+                <div class="stat-gradient"></div>
             </div>
         </div>
         
-        <div class="modern-card">
-            <div class="card-header">
-                <h3 class="card-title">
+        <!-- Panel de acciones estudiante -->
+        <div class="dashboard-card">
+            <div class="card-header-modern">
+                <h3 class="card-title-modern">
                     <i class='bx bx-user'></i>
                     Panel de Estudiante
                 </h3>
+                <div class="card-subtitle">Accede a tus servicios médicos</div>
             </div>
-            <div class="d-flex gap-2 flex-wrap">
-                <a href="{{ url_for('pacientes.perfil') }}" class="modern-btn btn-primary">
+            <div class="action-buttons">
+                <a href="{{ url_for('pacientes.perfil') }}" class="action-btn primary">
                     <i class='bx bx-user'></i>
-                    Mi Perfil
+                    <span>Mi Perfil</span>
                 </a>
-                <a href="{{ url_for('citas.lista_paciente') }}" class="modern-btn btn-success">
+                <a href="{{ url_for('citas.lista_paciente') }}" class="action-btn success">
                     <i class='bx bx-calendar-alt'></i>
-                    Mis Citas
+                    <span>Mis Citas</span>
                 </a>
-                <a href="{{ url_for('consultas.lista') }}" class="modern-btn btn-info">
+                <a href="{{ url_for('consultas.lista') }}" class="action-btn info">
                     <i class='bx bx-clipboard'></i>
-                    Mis Consultas
+                    <span>Mis Consultas</span>
                 </a>
             </div>
         </div>
     {% endif %}
-</div>
+{% endif %}
 {% endblock %}
