@@ -691,3 +691,5 @@ def registrar_rutas(app):
     app.register_blueprint(citas_bp)
     app.register_blueprint(consultas_bp)
     app.register_blueprint(reportes_bp)
+    
+    return app
