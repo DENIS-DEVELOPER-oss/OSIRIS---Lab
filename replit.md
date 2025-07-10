@@ -353,6 +353,28 @@ El proyecto está preparado para ser subido a GitHub con:
   - Layout flexible que mantiene proporciones
   - Animaciones optimizadas para dispositivos móviles
 
+### July 10, 2025 - Restauración del Diseño Original de Login
+- ✅ **Diseño de login completamente restaurado:**
+  - Agregados estilos específicos para `.login-container`, `.login-form-section`, `.welcome-section`
+  - Layout de dos paneles: formulario izquierdo y bienvenida derecha
+  - Sección de formulario con glassmorphism y campos con iconos
+  - Sección de bienvenida con gradiente azul y logo OSIRIS animado
+  - Partículas flotantes específicas para login con animaciones suaves
+  
+- ✅ **Características del login restauradas:**
+  - Campos de entrada con iconos de usuario y candado
+  - Botón de login con gradiente y efectos hover
+  - Información de demostración con credenciales de prueba
+  - Logo OSIRIS flotante con animación de escalado
+  - Alertas de estado con colores diferenciados
+  - Efectos de focus en campos con escalado y sombras
+  
+- ✅ **Diseño responsivo para login:**
+  - En dispositivos móviles cambia a layout vertical
+  - Formulario y bienvenida se apilan para pantallas pequeñas
+  - Logo y texto se adaptan a tamaños menores
+  - Mantiene funcionalidad completa en todos los dispositivos
+
 ### July 10, 2025 - Análisis Avanzado: Segmentación y Predicción
 - ✅ **Implementación completa de análisis avanzados:**
   - Nuevo servicio `ServicioReporte.obtener_datos_segmentacion()` - Análisis de segmentación de pacientes
