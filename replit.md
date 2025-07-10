@@ -138,6 +138,42 @@ El proyecto está preparado para ser subido a GitHub con:
 
 ## Recent Changes
 
+### July 10, 2025 - Nuevo Panel de Administración con Sidebar Azul
+- ✅ **Implementación completa del nuevo diseño de administración:**
+  - Creación de `static/css/admin-dashboard.css` - Sistema de estilos exclusivo para administradores
+  - Implementación de `templates/admin_base.html` - Template base para panel administrativo
+  - Sidebar lateral azul con navegación completa (basado en referencia visual del usuario)
+  - Paleta de colores profesional con azul primario (#4f46e5) y gradientes
+  - Diseño moderno con tarjetas de estadísticas, gráficos y efectos visuales
+  
+- ✅ **Dashboard administrativo modernizado:**
+  - Tarjetas de estadísticas con iconos y colores temáticos
+  - Gráficos integrados con Chart.js (líneas y dona)
+  - Sidebar fijo con navegación completa
+  - Header con barra de búsqueda y avatar de usuario
+  - Animaciones y efectos hover profesionales
+  
+- ✅ **Templates administrativos actualizados:**
+  - `templates/dashboard.html` - Dashboard dual (admin con nuevo diseño, otros roles con diseño anterior)
+  - `templates/reportes/usuarios.html` - Gestión de usuarios con nuevo diseño
+  - `templates/reportes/crear_usuario_directo.html` - Creación de usuarios modernizada
+  - `templates/reportes/estadisticas.html` - Estadísticas con nuevo layout
+  - `templates/reportes/respaldo_csv.html` - Gestión de respaldos modernizada
+  - `templates/reportes/configuracion.html` - Configuración del sistema modernizada
+  
+- ✅ **Características del nuevo diseño administrativo:**
+  - Sidebar lateral con logo OSIRIS y navegación completa
+  - Tarjetas de estadísticas con colores diferenciados (éxito, información, advertencia, peligro)
+  - Área de gráficos con Chart.js para visualización de datos
+  - Diseño responsivo para dispositivos móviles
+  - Efectos de hover y animaciones suaves
+  - Iconos Boxicons integrados consistentemente
+  
+- ✅ **Correcciones técnicas:**
+  - Solución de errores de rutas en la navegación administrativa
+  - Corrección de `url_for` para todas las rutas de reportes
+  - Integración exitosa del sistema dual de templates (admin vs usuarios generales)
+
 ### July 10, 2025 - Sistema Completo con Tema Moderno OSIRIS
 - ✅ **Rediseño completo del sistema con tema moderno profesional:**
   - Creación de `static/css/modern-theme.css` - Sistema unificado de estilos
@@ -145,36 +181,6 @@ El proyecto está preparado para ser subido a GitHub con:
   - Paleta de colores médica con gradientes cyan y efectos visuales
   - Diseño dark mode profesional con efectos de backdrop blur
   - Iconos Boxicons integrados en toda la aplicación
-  
-- ✅ **Templates actualizados con diseño moderno:**
-  - `templates/dashboard.html` - Dashboard con stats cards modernos
-  - `templates/registro.html` - Formulario de registro moderno
-  - `templates/citas/lista.html` - Lista de citas con tabla moderna
-  - `templates/citas/crear.html` - Formulario de citas moderno
-  - `templates/pacientes/lista.html` - Lista de pacientes moderna
-  - `templates/reportes/estadisticas.html` - Estadísticas con tema moderno
-  - `templates/reportes/usuarios.html` - Gestión de usuarios moderna
-  - `templates/reportes/crear_usuario_directo.html` - Creación de usuarios moderna
-  - `templates/reportes/respaldo_csv.html` - Gestión de respaldos moderna
-  - `templates/reportes/configuracion.html` - Configuración del sistema moderna
-  
-- ✅ **Componentes modernos implementados:**
-  - Header con navegación por roles y logo médico
-  - Cards con efectos de hover y animaciones suaves
-  - Botones con gradientes y efectos ripple
-  - Tablas modernas con estilos profesionales
-  - Formularios con campos estilizados y validación visual
-  - Badges y alertas con colores temáticos
-  - Footer profesional
-  
-- ✅ **Funcionalidades mejoradas:**
-  - Navegación adaptativa según el rol del usuario (completa para administradores)
-  - Animaciones y transiciones fluidas
-  - Efectos visuales profesionales
-  - Responsive design mejorado
-  - Mensajes de error con diseño moderno
-  - Panel de administración completamente modernizado
-  - Navegación mejorada con accesos directos a todas las funciones administrativas
 
 ### July 10, 2025 - Limpieza y Optimización del Proyecto
 - ✅ Eliminación de archivos innecesarios:

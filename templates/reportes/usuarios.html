@@ -1,4 +1,4 @@
-{% extends "modern_base.html" %}
+{% extends "admin_base.html" %}
 
 {% block title %}Gestión de Usuarios - Sistema Médico Universitario{% endblock %}
 
@@ -47,41 +47,41 @@
 </style>
 {% endblock %}
 
-{% block content %}
-<div class="modern-card">
-    <div class="card-header">
-        <h2 class="card-title">
-            <i class='bx bx-users'></i>
-            Gestión de Usuarios
-        </h2>
-        <a href="{{ url_for('reportes.crear_usuario_directo') }}" class="modern-btn btn-primary">
-            <i class='bx bx-user-plus'></i> Nuevo Usuario
-        </a>
-    </div>
+{% block page_title %}Gestión de Usuarios{% endblock %}
 
-    <!-- Resumen de Estadísticas -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-icon">
+{% block content %}
+<!-- Resumen de Estadísticas -->
+<div class="admin-stats-grid">
+    <div class="admin-stat-card success">
+        <div class="admin-stat-header">
+            <div class="admin-stat-title">Usuarios Activos</div>
+            <div class="admin-stat-icon">
                 <i class='bx bx-user-check'></i>
             </div>
-            <div class="stat-number">{{ usuarios|selectattr('activo')|list|length }}</div>
-            <div class="stat-label">Usuarios Activos</div>
         </div>
-        
-        <div class="stat-card">
-            <div class="stat-icon">
+        <div class="admin-stat-value">{{ usuarios|selectattr('activo')|list|length }}</div>
+        <div class="admin-stat-label">Usuarios activos</div>
+    </div>
+    
+    <div class="admin-stat-card info">
+        <div class="admin-stat-header">
+            <div class="admin-stat-title">Estudiantes</div>
+            <div class="admin-stat-icon">
                 <i class='bx bx-user'></i>
             </div>
-            <div class="stat-number">{{ usuarios|selectattr('rol', 'equalto', 'PACIENTE')|list|length }}</div>
-            <div class="stat-label">Estudiantes</div>
         </div>
-        
-        <div class="stat-card">
-            <div class="stat-icon">
+        <div class="admin-stat-value">{{ usuarios|selectattr('rol', 'equalto', 'PACIENTE')|list|length }}</div>
+        <div class="admin-stat-label">Pacientes registrados</div>
+    </div>
+    
+    <div class="admin-stat-card warning">
+        <div class="admin-stat-header">
+            <div class="admin-stat-title">Profesionales</div>
+            <div class="admin-stat-icon">
                 <i class='bx bx-user-voice'></i>
             </div>
-            <div class="stat-number">{{ usuarios|selectattr('rol', 'equalto', 'PROFESIONAL')|list|length }}</div>
+        </div>
+        <div class="admin-stat-value">{{ usuarios|selectattr('rol', 'equalto', 'PROFESIONAL')|list|length }}</div>
                 <small>Profesionales</small>
             </div>
             <div class="col-md-3 text-center">

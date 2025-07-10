@@ -1,4 +1,4 @@
-{% extends "modern_base.html" %}
+{% extends "admin_base.html" %}
 
 {% block title %}Gestión de Respaldo CSV - Sistema Médico Universitario{% endblock %}
 
@@ -32,17 +32,9 @@
 </style>
 {% endblock %}
 
+{% block page_title %}Gestión de Respaldo CSV{% endblock %}
+
 {% block content %}
-<div class="modern-card">
-    <div class="card-header">
-        <h2 class="card-title">
-            <i class='bx bx-file-export'></i>
-            Gestión de Respaldo CSV
-        </h2>
-        <a href="{{ url_for('reportes.dashboard_admin') }}" class="modern-btn btn-secondary">
-            <i class='bx bx-arrow-back'></i> Volver al Dashboard
-        </a>
-    </div>
 
     <!-- Información del Sistema CSV -->
     <div class="action-card">

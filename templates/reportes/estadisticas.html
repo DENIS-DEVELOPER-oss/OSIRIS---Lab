@@ -1,4 +1,4 @@
-{% extends "modern_base.html" %}
+{% extends "admin_base.html" %}
 
 {% block title %}Estadísticas Detalladas - Sistema Médico Universitario{% endblock %}
 
@@ -68,17 +68,9 @@
 </style>
 {% endblock %}
 
+{% block page_title %}Estadísticas Detalladas{% endblock %}
+
 {% block content %}
-<div class="modern-card">
-    <div class="card-header">
-        <h2 class="card-title">
-            <i class='bx bx-bar-chart-alt-2'></i>
-            Estadísticas Detalladas
-        </h2>
-        <a href="{{ url_for('reportes.dashboard_admin') }}" class="modern-btn btn-secondary">
-            <i class='bx bx-arrow-back'></i> Volver al Dashboard
-        </a>
-    </div>
             </div>
         </div>
     </div>

@@ -1,80 +1,208 @@
+{% if current_user.es_administrador() %}
+{% extends "admin_base.html" %}
+{% else %}
 {% extends "modern_base.html" %}
+{% endif %}
 
 {% block title %}Dashboard - {{ super() }}{% endblock %}
 
+{% block page_title %}Dashboard{% endblock %}
+
 {% block content %}
-<div class="modern-card">
-    <div class="card-header">
-        <h2 class="card-title">
-            <i class='bx bx-dashboard'></i>
-            Dashboard
-        </h2>
-        <div class="text-muted">
-            Bienvenido, {{ current_user.nombre }}
+{% if current_user.es_administrador() %}
+    <!-- Dashboard Administrador con nuevo diseño -->
+    <div class="admin-stats-grid">
+        <div class="admin-stat-card success">
+            <div class="admin-stat-header">
+                <div class="admin-stat-title">Total Pacientes</div>
+                <div class="admin-stat-icon">
+                    <i class='bx bx-user-plus'></i>
+                </div>
+            </div>
+            <div class="admin-stat-value">{{ resumen.total_pacientes }}</div>
+            <div class="admin-stat-label">Estudiantes registrados</div>
+            <div class="admin-stat-change positive">+5% este mes</div>
+        </div>
+        
+        <div class="admin-stat-card info">
+            <div class="admin-stat-header">
+                <div class="admin-stat-title">Total Citas</div>
+                <div class="admin-stat-icon">
+                    <i class='bx bx-calendar-alt'></i>
+                </div>
+            </div>
+            <div class="admin-stat-value">{{ resumen.total_citas }}</div>
+            <div class="admin-stat-label">Citas programadas</div>
+            <div class="admin-stat-change positive">+12% este mes</div>
+        </div>
+        
+        <div class="admin-stat-card warning">
+            <div class="admin-stat-header">
+                <div class="admin-stat-title">Citas Este Mes</div>
+                <div class="admin-stat-icon">
+                    <i class='bx bx-calendar-check'></i>
+                </div>
+            </div>
+            <div class="admin-stat-value">{{ resumen.citas_mes }}</div>
+            <div class="admin-stat-label">Citas activas</div>
+            <div class="admin-stat-change positive">+8% vs mes anterior</div>
+        </div>
+        
+        <div class="admin-stat-card danger">
+            <div class="admin-stat-header">
+                <div class="admin-stat-title">Alto Riesgo</div>
+                <div class="admin-stat-icon">
+                    <i class='bx bx-error-circle'></i>
+                </div>
+            </div>
+            <div class="admin-stat-value">{{ resumen.consultas_riesgo_alto }}</div>
+            <div class="admin-stat-label">Pacientes críticos</div>
+            <div class="admin-stat-change negative">-2% este mes</div>
         </div>
     </div>
     
-    {% if current_user.es_administrador() %}
-        <!-- Dashboard Administrador -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class='bx bx-user-plus'></i>
+    <!-- Gráficos -->
+    <div class="admin-charts-grid">
+        <div class="admin-chart-card">
+            <div class="admin-chart-header">
+                <div class="admin-chart-title">Citas por Mes</div>
+                <div class="admin-chart-controls">
+                    <button class="admin-chart-btn active">1M</button>
+                    <button class="admin-chart-btn">3M</button>
+                    <button class="admin-chart-btn">6M</button>
+                    <button class="admin-chart-btn">1A</button>
                 </div>
-                <div class="stat-number">{{ resumen.total_pacientes }}</div>
-                <div class="stat-label">Pacientes</div>
             </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class='bx bx-calendar-alt'></i>
-                </div>
-                <div class="stat-number">{{ resumen.total_citas }}</div>
-                <div class="stat-label">Citas Total</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class='bx bx-calendar-check'></i>
-                </div>
-                <div class="stat-number">{{ resumen.citas_mes }}</div>
-                <div class="stat-label">Citas Este Mes</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class='bx bx-error-circle'></i>
-                </div>
-                <div class="stat-number">{{ resumen.consultas_riesgo_alto }}</div>
-                <div class="stat-label">Riesgo Alto</div>
+            <div class="admin-chart-container">
+                <canvas id="citasChart"></canvas>
             </div>
         </div>
         
-        <!-- Acciones rápidas -->
-        <div class="modern-card">
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class='bx bx-cog'></i>
-                    Acciones Rápidas
-                </h3>
+        <div class="admin-chart-card">
+            <div class="admin-chart-header">
+                <div class="admin-chart-title">Consultas por Tipo</div>
             </div>
-            <div class="d-flex gap-2 flex-wrap">
-                <a href="{{ url_for('reportes.gestion_usuarios') }}" class="modern-btn btn-primary">
+            <div class="admin-chart-container">
+                <canvas id="consultasChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Acciones rápidas -->
+    <div class="admin-table-container">
+        <div class="admin-table-header">
+            <div class="admin-table-title">Acciones Rápidas</div>
+            <a href="{{ url_for('reportes.gestion_usuarios') }}" class="admin-btn admin-btn-primary">
+                <i class='bx bx-plus'></i>
+                Ver Todas
+            </a>
+        </div>
+        <div style="padding: 25px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <a href="{{ url_for('reportes.gestion_usuarios') }}" class="admin-btn admin-btn-primary">
                     <i class='bx bx-users'></i>
                     Gestionar Usuarios
                 </a>
-                <a href="{{ url_for('citas.crear') }}" class="modern-btn btn-success">
+                <a href="{{ url_for('citas.crear') }}" class="admin-btn admin-btn-success">
                     <i class='bx bx-calendar-plus'></i>
                     Nueva Cita
                 </a>
-                <a href="{{ url_for('reportes.estadisticas_detalladas') }}" class="modern-btn btn-info">
+                <a href="{{ url_for('reportes.estadisticas_detalladas') }}" class="admin-btn admin-btn-primary">
                     <i class='bx bx-bar-chart-alt-2'></i>
                     Estadísticas
                 </a>
-                <a href="{{ url_for('reportes.respaldo_csv') }}" class="modern-btn btn-warning">
+                <a href="{{ url_for('reportes.gestion_respaldo_csv') }}" class="admin-btn admin-btn-secondary">
                     <i class='bx bx-download'></i>
                     Respaldo CSV
                 </a>
+            </div>
+        </div>
+    </div>
+
+{% block extra_js %}
+<script>
+// Gráfico de líneas para citas por mes
+const citasCtx = document.getElementById('citasChart').getContext('2d');
+const citasChart = new Chart(citasCtx, {
+    type: 'line',
+    data: {
+        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+        datasets: [{
+            label: 'Citas',
+            data: [12, 19, 15, 25, 22, 30],
+            borderColor: '#4f46e5',
+            backgroundColor: 'rgba(79, 70, 229, 0.1)',
+            tension: 0.4,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: 'rgba(0,0,0,0.1)'
+                }
+            },
+            x: {
+                grid: {
+                    display: false
+                }
+            }
+        }
+    }
+});
+
+// Gráfico de dona para consultas por tipo
+const consultasCtx = document.getElementById('consultasChart').getContext('2d');
+const consultasChart = new Chart(consultasCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Medicina', 'Psicología', 'Emergencia'],
+        datasets: [{
+            data: [45, 35, 20],
+            backgroundColor: [
+                '#4f46e5',
+                '#10b981',
+                '#f59e0b'
+            ],
+            borderWidth: 0
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    usePointStyle: true,
+                    padding: 20
+                }
+            }
+        }
+    }
+});
+</script>
+{% endblock %}
+
+{% else %}
+    <!-- Dashboard para otros roles (conserva el diseño anterior) -->
+    <div class="modern-card">
+        <div class="card-header">
+            <h2 class="card-title">
+                <i class='bx bx-dashboard'></i>
+                Dashboard
+            </h2>
+            <div class="text-muted">
+                Bienvenido, {{ current_user.nombre }}
             </div>
         </div>
         

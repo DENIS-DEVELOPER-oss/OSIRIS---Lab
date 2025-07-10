@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}OSIRIS - Panel de Administración{% endblock %}</title>
+    
+    <!-- Estilos CSS -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin-dashboard.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <div class="admin-logo-icon">
+                    <i class='bx bx-plus-medical'></i>
+                </div>
+                <div class="admin-logo-text">OSIRIS</div>
+            </div>
+            
+            <nav class="admin-nav">
+                <ul>
+                    <li class="admin-nav-item">
+                        <a href="{{ url_for('reportes.dashboard_admin') }}" class="admin-nav-link {% if request.endpoint == 'reportes.dashboard_admin' %}active{% endif %}">
+                            <i class='bx bx-home-alt admin-nav-icon'></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="{{ url_for('reportes.gestion_usuarios') }}" class="admin-nav-link {% if request.endpoint == 'reportes.gestion_usuarios' %}active{% endif %}">
+                            <i class='bx bx-users admin-nav-icon'></i>
+                            Usuarios
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="{{ url_for('reportes.crear_usuario_directo') }}" class="admin-nav-link {% if request.endpoint == 'reportes.crear_usuario_directo' %}active{% endif %}">
+                            <i class='bx bx-user-plus admin-nav-icon'></i>
+                            Crear Usuario
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="{{ url_for('citas.lista') }}" class="admin-nav-link {% if request.endpoint == 'citas.lista' %}active{% endif %}">
+                            <i class='bx bx-calendar admin-nav-icon'></i>
+                            Citas
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="{{ url_for('pacientes.lista') }}" class="admin-nav-link {% if request.endpoint == 'pacientes.lista' %}active{% endif %}">
+                            <i class='bx bx-user-check admin-nav-icon'></i>
+                            Pacientes
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="{{ url_for('reportes.estadisticas_detalladas') }}" class="admin-nav-link {% if request.endpoint == 'reportes.estadisticas_detalladas' %}active{% endif %}">
+                            <i class='bx bx-bar-chart-alt-2 admin-nav-icon'></i>
+                            Estadísticas
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="{{ url_for('reportes.gestion_respaldo_csv') }}" class="admin-nav-link {% if request.endpoint == 'reportes.gestion_respaldo_csv' %}active{% endif %}">
+                            <i class='bx bx-file-export admin-nav-icon'></i>
+                            Respaldo CSV
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="{{ url_for('reportes.configuracion_sistema') }}" class="admin-nav-link {% if request.endpoint == 'reportes.configuracion_sistema' %}active{% endif %}">
+                            <i class='bx bx-cog admin-nav-icon'></i>
+                            Configuración
+                        </a>
+                    </li>
+                </ul>
+                
+                <div style="margin-top: 30px; padding: 0 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                    <a href="{{ url_for('auth.logout') }}" class="admin-nav-link">
+                        <i class='bx bx-log-out admin-nav-icon'></i>
+                        Cerrar Sesión
+                    </a>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Área principal -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <h1 class="admin-header-title">{% block page_title %}Dashboard{% endblock %}</h1>
+                <div class="admin-header-actions">
+                    <div class="admin-search">
+                        <i class='bx bx-search admin-search-icon'></i>
+                        <input type="text" class="admin-search-input" placeholder="Buscar...">
+                    </div>
+                    <div class="admin-user-info">
+                        <div class="admin-user-avatar">
+                            {{ current_user.nombre[0].upper() if current_user.nombre else 'A' }}
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; color: var(--admin-text-primary);">
+                                {{ current_user.nombre or 'Administrador' }}
+                            </div>
+                            <div style="font-size: 12px; color: var(--admin-text-secondary);">
+                                {{ current_user.rol.value if current_user.rol else 'ADMINISTRADOR' }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Mensajes flash -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div style="margin-bottom: 20px;">
+                        {% for category, message in messages %}
+                            <div class="admin-alert alert-{{ 'danger' if category == 'error' else category }}" style="background: var(--admin-card); padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid var(--admin-{{ 'danger' if category == 'error' else 'success' if category == 'success' else 'info' }});">
+                                <i class='bx bx-{{ 'error' if category == 'error' else 'check' if category == 'success' else 'info-circle' }}'></i>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            
+            <!-- Contenido principal -->
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    
+    <!-- Scripts -->
+    <script>
+        // Efectos de animación para las tarjetas
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.admin-stat-card, .admin-chart-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.classList.add('admin-fade-in');
+            });
+        });
+        
+        // Funcionalidad de búsqueda
+        const searchInput = document.querySelector('.admin-search-input');
+        if (searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                // Implementar lógica de búsqueda según sea necesario
+                console.log('Buscando:', searchTerm);
+            });
+        }
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

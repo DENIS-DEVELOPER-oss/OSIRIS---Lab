@@ -1,4 +1,4 @@
-{% extends "modern_base.html" %}
+{% extends "admin_base.html" %}
 
 {% block title %}Configuración del Sistema - Sistema Médico Universitario{% endblock %}
 
@@ -82,17 +82,9 @@
 </style>
 {% endblock %}
 
+{% block page_title %}Configuración del Sistema{% endblock %}
+
 {% block content %}
-<div class="modern-card">
-    <div class="card-header">
-        <h2 class="card-title">
-            <i class='bx bx-cog'></i>
-            Configuración del Sistema
-        </h2>
-        <a href="{{ url_for('reportes.dashboard_admin') }}" class="modern-btn btn-secondary">
-            <i class='bx bx-arrow-back'></i> Volver al Dashboard
-        </a>
-    </div>
 
     <!-- Estado del Sistema -->
     <div class="system-status">
