@@ -1,3 +1,12 @@
+# ============================================================================
+# SERVICIOS DE NEGOCIO CON PRINCIPIOS SOLID APLICADOS
+# ============================================================================
+"""
+Este módulo contiene los servicios de negocio originales con comentarios 
+sobre principios SOLID. Para implementaciones completamente SOLID, 
+ver servicios_solid.py.
+"""
+
 # Importaciones necesarias para los servicios de negocio
 from collections import defaultdict  # Para crear diccionarios con valores por defecto
 from datetime import datetime, timedelta  # Para manejo de fechas y cálculos temporales
@@ -5,8 +14,29 @@ from sqlalchemy import func, extract, case  # Funciones SQL para agregaciones y 
 from app import db  # Instancia de la base de datos
 from modelos import Usuario, Paciente, Cita, Consulta, TipoCita, NivelRiesgo, RolUsuario  # Modelos de datos
 
+# ============================================================================
+# NOTA SOBRE REFACTORING SOLID:
+# Los servicios en este archivo se mantienen para compatibilidad.
+# Para nuevas funcionalidades, usar las implementaciones en servicios_solid.py
+# que siguen estrictamente los principios SOLID.
+# ============================================================================
+
 class ServicioAutenticacion:
     """
+    PRINCIPIOS SOLID PRESENTES (implementación legacy):
+    
+    SRP: Esta clase tiene múltiples responsabilidades (VIOLA SRP):
+    - Autenticación de usuarios
+    - Creación de usuarios  
+    - Validación de credenciales
+    - Gestión de respaldos CSV
+    
+    REFACTORING SOLID: Ver ServicioAutenticacionSOLID en servicios_solid.py
+    que separa estas responsabilidades en clases específicas.
+    
+    OCP: VIOLA - agregar nuevos métodos de autenticación requiere modificar esta clase.
+    DIP: VIOLA - depende directamente de implementaciones concretas (Werkzeug, SQLAlchemy).
+    
     Servicio encargado del manejo de autenticación y autorización de usuarios.
     
     Este servicio proporciona métodos para autenticar usuarios mediante diferentes
@@ -23,6 +53,20 @@ class ServicioAutenticacion:
     @staticmethod
     def autenticar_usuario(identificador, password):
         """
+        PRINCIPIOS SOLID:
+        
+        SRP: VIOLA - Este método hace múltiples cosas:
+        - Busca usuarios por DNI/matrícula (responsabilidad de repositorio)
+        - Verifica contraseñas (responsabilidad de hasheador)
+        - Valida usuarios activos (responsabilidad de validador)
+        
+        DIP: VIOLA - Depende directamente de:
+        - check_password_hash (implementación concreta)
+        - Usuario.query (SQLAlchemy específico)
+        
+        REFACTORING SOLID: Ver ServicioAutenticacionSOLID.autenticar()
+        que usa inyección de dependencias y separa responsabilidades.
+        
         Autentica un usuario en el sistema usando DNI o código de matrícula.
         
         El método intenta autenticar primero por DNI (si el identificador es numérico)
@@ -57,6 +101,20 @@ class ServicioAutenticacion:
     @staticmethod
     def crear_usuario(datos_usuario):
         """
+        PRINCIPIOS SOLID:
+        
+        SRP: VIOLA - Este método hace múltiples cosas:
+        - Crea el objeto usuario (responsabilidad de factory)
+        - Genera hash de contraseña (responsabilidad de hasheador)
+        - Persiste en base de datos (responsabilidad de repositorio)
+        - Maneja respaldos CSV (responsabilidad de notificador/respaldo)
+        
+        OCP: VIOLA - Agregar nuevos tipos de persistencia requiere modificar este método.
+        DIP: VIOLA - Depende de implementaciones concretas (generate_password_hash, db.session).
+        
+        REFACTORING SOLID: Ver ComandoCrearUsuario en servicios_solid.py
+        que separa estas responsabilidades usando Command Pattern e inyección de dependencias.
+        
         Crea un nuevo usuario en el sistema con los datos proporcionados.
         
         Este método recibe un diccionario con los datos del usuario, genera

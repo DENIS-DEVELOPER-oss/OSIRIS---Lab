@@ -1,3 +1,24 @@
+# ============================================================================
+# DECORADORES DE SEGURIDAD CON PRINCIPIOS SOLID
+# ============================================================================
+"""
+PRINCIPIOS SOLID APLICADOS EN DECORADORES:
+
+SRP: Cada decorador tiene una responsabilidad específica:
+- requiere_login: Solo verifica autenticación
+- requiere_rol: Solo verifica autorización por rol específico  
+- requiere_administrador: Solo verifica rol de administrador
+- requiere_profesional: Solo verifica rol de profesional
+
+OCP: Los decoradores son extensibles:
+- Se pueden crear nuevos decoradores sin modificar los existentes
+- Composición de decoradores para requerimientos complejos
+
+DIP: Los decoradores dependen de abstracciones:
+- current_user (Flask-Login abstraction)
+- RolUsuario (enumeración, no valores hardcodeados)
+"""
+
 # Importaciones necesarias para la creación de decoradores de seguridad
 from functools import wraps  # Para preservar metadatos de funciones decoradas
 from flask import abort, redirect, url_for, flash  # Funciones de Flask para control de flujo y mensajes
@@ -6,6 +27,17 @@ from modelos import RolUsuario  # Enumeración de roles del sistema
 
 def requiere_login(f):
     """
+    PRINCIPIOS SOLID APLICADOS:
+    
+    SRP: Este decorador tiene una sola responsabilidad - verificar autenticación.
+    No se mezcla con autorización ni otras preocupaciones de seguridad.
+    
+    OCP: Abierto para extensión - se puede combinar con otros decoradores.
+    Cerrado para modificación - agregar nuevos tipos de auth no requiere cambiar este código.
+    
+    DIP: Depende de la abstracción current_user, no de implementaciones específicas
+    de autenticación (sesiones, tokens, etc.).
+    
     Decorador que requiere autenticación de usuario para acceder a una vista.
     
     Este decorador verifica que el usuario esté autenticado antes de permitir
@@ -43,6 +75,20 @@ def requiere_login(f):
 
 def requiere_rol(rol_requerido):
     """
+    PRINCIPIOS SOLID APLICADOS:
+    
+    SRP: Responsabilidad única - verificar autorización por rol específico.
+    No maneja autenticación (se asume) ni otros tipos de autorización.
+    
+    OCP: Extensible para cualquier nuevo rol sin modificar el código.
+    Usa parámetro para especificar el rol requerido.
+    
+    ISP: Interfaz pequeña y específica - solo requiere un rol.
+    No obliga a implementar verificaciones innecesarias.
+    
+    DIP: Depende de la abstracción RolUsuario, no de strings hardcodeados
+    o implementaciones específicas de roles.
+    
     Decorador que requiere un rol específico para acceder a una vista.
     
     Este decorador verifica que el usuario esté autenticado y tenga el rol

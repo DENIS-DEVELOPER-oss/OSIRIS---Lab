@@ -1,3 +1,33 @@
+# ============================================================================
+# MODELOS DE DATOS CON PRINCIPIOS SOLID
+# ============================================================================
+"""
+PRINCIPIOS SOLID APLICADOS EN MODELOS:
+
+SRP: Cada modelo tiene una responsabilidad específica:
+- Usuario: Solo maneja datos de usuario y autenticación
+- Paciente: Solo maneja datos específicos de pacientes
+- Cita: Solo maneja datos de citas médicas
+- Consulta: Solo maneja datos de consultas realizadas
+
+OCP: Los modelos son extensibles:
+- Nuevos campos se pueden agregar sin modificar código existente
+- Herencia permite especialización (ej: diferentes tipos de usuarios)
+
+LSP: Los modelos pueden sustituirse por sus especializaciones:
+- Cualquier Usuario puede ser tratado como UserMixin
+- Las enumeraciones pueden extenderse manteniendo compatibilidad
+
+ISP: Interfaces específicas:
+- UserMixin proporciona solo métodos de autenticación necesarios
+- Cada modelo expone solo los métodos que necesita
+
+DIP: Los modelos dependen de abstracciones:
+- Enum en lugar de strings hardcodeados
+- Relationships en lugar de foreign keys directos
+- UserMixin en lugar de implementación específica de auth
+"""
+
 # Importaciones necesarias para los modelos de la base de datos
 from datetime import datetime, date  # Para manejo de fechas y tiempos
 from enum import Enum  # Para crear enumeraciones con valores fijos
@@ -8,6 +38,12 @@ from app import db  # Instancia de la base de datos desde la aplicación princip
 
 class RolUsuario(Enum):
     """
+    PRINCIPIOS SOLID EN ENUMERACIONES:
+    
+    SRP: Esta enumeración tiene una sola responsabilidad - definir roles de usuario.
+    OCP: Nuevos roles se pueden agregar sin modificar código existente.
+    DIP: Otros componentes dependen de esta abstracción, no de strings hardcodeados.
+    
     Enumeración que define los diferentes roles de usuario en el sistema.
     
     Roles disponibles:
@@ -49,6 +85,26 @@ class NivelRiesgo(Enum):
 
 class Usuario(UserMixin, db.Model):
     """
+    PRINCIPIOS SOLID EN MODELO USUARIO:
+    
+    SRP: Responsabilidad única - manejar datos de usuario y autenticación.
+    Los datos específicos de pacientes se manejan en modelo separado.
+    
+    OCP: Extensible - nuevos campos se pueden agregar sin modificar código existente.
+    UserMixin permite extensiones de autenticación.
+    
+    LSP: Puede sustituirse por cualquier implementación de UserMixin.
+    Todos los usuarios (sin importar rol) cumplen el contrato de autenticación.
+    
+    ISP: Implementa solo las interfaces necesarias:
+    - UserMixin para autenticación
+    - db.Model para persistencia
+    
+    DIP: Depende de abstracciones:
+    - UserMixin (no implementación específica de auth)
+    - RolUsuario enum (no strings hardcodeados)
+    - relationship() (no foreign keys directos)
+    
     Modelo de usuario personalizado para el sistema de gestión médica universitaria.
     
     Este modelo hereda de UserMixin (Flask-Login) y db.Model (SQLAlchemy) para proporcionar

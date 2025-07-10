@@ -573,6 +573,32 @@ El proyecto está preparado para ser subido a GitHub con:
   - Imágenes: osiris.png (logo header), logo.png (imagen principal)
   - Eliminación de código duplicado y archivos temporales
 
+### July 10, 2025 - Implementación de Principios SOLID en Backend
+- ✅ **Nueva arquitectura SOLID implementada:**
+  - Creación de `interfaces.py` - Contratos y abstracciones siguiendo ISP y DIP
+  - Creación de `servicios_solid.py` - Implementaciones que cumplen todos los principios SOLID
+  - Comentarios explicativos en código legacy sobre violaciones a principios SOLID
+  - Factory Pattern para inyección de dependencias y desacoplamiento
+
+- ✅ **Principios SOLID aplicados:**
+  - **SRP**: Cada clase tiene una sola responsabilidad (RepositorioUsuario, HasheadorPassword, ValidadorUsuario)
+  - **OCP**: Interfaces extensibles sin modificar código existente
+  - **LSP**: Implementaciones intercambiables que cumplen contratos
+  - **ISP**: Interfaces específicas y cohesivas, no interfaces "gordas"
+  - **DIP**: Dependencias hacia abstracciones, inyección de dependencias
+
+- ✅ **Nuevas clases implementadas:**
+  - `IRepositorioUsuario`, `IHasheadorPassword`, `IValidadorUsuario` - Interfaces específicas
+  - `ServicioAutenticacionSOLID` - Servicio con inyección de dependencias
+  - `ComandoCrearUsuario`, `ManejadorComandos` - Command Pattern para SRP
+  - `FactoriaServiciosProduccion` - Factory para crear dependencias
+
+- ✅ **Comentarios educativos agregados:**
+  - Explicación de cada principio SOLID donde se aplica
+  - Identificación de violaciones en código legacy
+  - Referencias cruzadas entre implementaciones legacy y SOLID
+  - Documentación completa de patrones aplicados (Command, Factory, Repository)
+
 ### July 10, 2025 - Eliminación de Opción de Respaldo CSV
 - ✅ **Limpieza de navegación administrativa:**
   - Eliminación de opción "Respaldo CSV" del sidebar de administradores
