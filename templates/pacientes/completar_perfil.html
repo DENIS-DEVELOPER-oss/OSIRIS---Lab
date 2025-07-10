@@ -3,137 +3,108 @@
 {% block title %}Completar Perfil - {{ super() }}{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">
-                        <i class="fas fa-user-edit me-2"></i>
-                        Completar Perfil de Paciente
-                    </h4>
+<div class="osiris-form-container">
+    <div class="osiris-form-header">
+        <h1><i class='bx bx-user-plus'></i> Completar Perfil de Paciente</h1>
+        <p>Complete toda la información para acceder a los servicios de salud universitarios</p>
+    </div>
+    
+    <div class="osiris-form-body">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            
+            <div class="osiris-form-row">
+                <div class="osiris-form-group">
+                    <label class="osiris-form-label">{{ form.carrera.label.text }}</label>
+                    {{ form.carrera(class="osiris-form-input" + (" error" if form.carrera.errors else "")) }}
+                    {% if form.carrera.errors %}
+                        {% for error in form.carrera.errors %}
+                            <span class="osiris-form-error">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
                 </div>
-                <div class="card-body">
-                    <div class="alert alert-info" role="alert">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <strong>Información Importante:</strong> Complete toda la información para poder agendar citas médicas y acceder a los servicios de salud universitarios.
-                    </div>
-                    
-                    <form method="POST" class="needs-validation" novalidate>
-                        {{ form.hidden_tag() }}
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                {{ form.carrera.label(class="form-label") }}
-                                {{ form.carrera(class="form-control" + (" is-invalid" if form.carrera.errors else "")) }}
-                                {% if form.carrera.errors %}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.carrera.errors %}
-                                            {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                {{ form.fecha_nacimiento.label(class="form-label") }}
-                                {{ form.fecha_nacimiento(class="form-control" + (" is-invalid" if form.fecha_nacimiento.errors else "")) }}
-                                {% if form.fecha_nacimiento.errors %}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.fecha_nacimiento.errors %}
-                                            {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                {{ form.telefono.label(class="form-label") }}
-                                {{ form.telefono(class="form-control" + (" is-invalid" if form.telefono.errors else "")) }}
-                                {% if form.telefono.errors %}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.telefono.errors %}
-                                            {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                {{ form.direccion.label(class="form-label") }}
-                                {{ form.direccion(class="form-control" + (" is-invalid" if form.direccion.errors else "")) }}
-                                {% if form.direccion.errors %}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.direccion.errors %}
-                                            {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                {{ form.procedencia.label(class="form-label") }}
-                                {{ form.procedencia(class="form-control" + (" is-invalid" if form.procedencia.errors else "")) }}
-                                {% if form.procedencia.errors %}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.procedencia.errors %}
-                                            {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                                <div class="form-text">Seleccione su distrito o provincia de procedencia en Puno</div>
-                            </div>
-                        </div>
-                        
-                        <hr class="my-4">
-                        
-                        <h5 class="mb-3">
-                            <i class="fas fa-phone-alt me-2"></i>
-                            Contacto de Emergencia
-                        </h5>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                {{ form.contacto_emergencia.label(class="form-label") }}
-                                {{ form.contacto_emergencia(class="form-control" + (" is-invalid" if form.contacto_emergencia.errors else "")) }}
-                                {% if form.contacto_emergencia.errors %}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.contacto_emergencia.errors %}
-                                            {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                {{ form.telefono_emergencia.label(class="form-label") }}
-                                {{ form.telefono_emergencia(class="form-control" + (" is-invalid" if form.telefono_emergencia.errors else "")) }}
-                                {% if form.telefono_emergencia.errors %}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.telefono_emergencia.errors %}
-                                            {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        
-                        <div class="d-flex justify-content-between mt-4">
-                            <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left me-2"></i>Volver al Dashboard
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-2"></i>Guardar Información
-                            </button>
-                        </div>
-                    </form>
+                
+                <div class="osiris-form-group">
+                    <label class="osiris-form-label">{{ form.fecha_nacimiento.label.text }}</label>
+                    {{ form.fecha_nacimiento(class="osiris-form-input" + (" error" if form.fecha_nacimiento.errors else "")) }}
+                    {% if form.fecha_nacimiento.errors %}
+                        {% for error in form.fecha_nacimiento.errors %}
+                            <span class="osiris-form-error">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
                 </div>
             </div>
-        </div>
+            
+            <div class="osiris-form-row">
+                <div class="osiris-form-group">
+                    <label class="osiris-form-label">{{ form.telefono.label.text }}</label>
+                    {{ form.telefono(class="osiris-form-input" + (" error" if form.telefono.errors else "")) }}
+                    {% if form.telefono.errors %}
+                        {% for error in form.telefono.errors %}
+                            <span class="osiris-form-error">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <div class="osiris-form-group">
+                    <label class="osiris-form-label">{{ form.direccion.label.text }}</label>
+                    {{ form.direccion(class="osiris-form-input" + (" error" if form.direccion.errors else "")) }}
+                    {% if form.direccion.errors %}
+                        {% for error in form.direccion.errors %}
+                            <span class="osiris-form-error">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="osiris-form-row single">
+                <div class="osiris-form-group">
+                    <label class="osiris-form-label">{{ form.procedencia.label.text }}</label>
+                    {{ form.procedencia(class="osiris-form-select" + (" error" if form.procedencia.errors else "")) }}
+                    {% if form.procedencia.errors %}
+                        {% for error in form.procedencia.errors %}
+                            <span class="osiris-form-error">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                    <span class="osiris-form-help">Seleccione su distrito o provincia de procedencia en Puno</span>
+                </div>
+            </div>
+            
+            <div class="osiris-form-section">
+                <h3><i class='bx bx-phone'></i> Contacto de Emergencia</h3>
+                
+                <div class="osiris-form-row">
+                    <div class="osiris-form-group">
+                        <label class="osiris-form-label">{{ form.contacto_emergencia.label.text }}</label>
+                        {{ form.contacto_emergencia(class="osiris-form-input" + (" error" if form.contacto_emergencia.errors else "")) }}
+                        {% if form.contacto_emergencia.errors %}
+                            {% for error in form.contacto_emergencia.errors %}
+                                <span class="osiris-form-error">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="osiris-form-group">
+                        <label class="osiris-form-label">{{ form.telefono_emergencia.label.text }}</label>
+                        {{ form.telefono_emergencia(class="osiris-form-input" + (" error" if form.telefono_emergencia.errors else "")) }}
+                        {% if form.telefono_emergencia.errors %}
+                            {% for error in form.telefono_emergencia.errors %}
+                                <span class="osiris-form-error">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="osiris-form-actions">
+                <button type="submit" class="osiris-btn osiris-btn-primary">
+                    <i class='bx bx-save'></i> COMPLETAR PERFIL
+                </button>
+                <a href="{{ url_for('main.dashboard') }}" class="osiris-btn osiris-btn-secondary">
+                    <i class='bx bx-x'></i> Cancelar
+                </a>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}

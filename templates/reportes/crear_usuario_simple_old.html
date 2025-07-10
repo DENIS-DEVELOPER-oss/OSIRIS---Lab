@@ -1,0 +1,276 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Crear Usuario - Sistema Médico Universitario{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-section {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 25px;
+        border-left: 4px solid #007bff;
+        margin-bottom: 20px;
+    }
+    .campo-condicional {
+        transition: all 0.3s ease;
+    }
+    .help-text {
+        color: #6c757d;
+        font-size: 0.875rem;
+        margin-top: 5px;
+    }
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-0">Crear Nuevo Usuario</h2>
+                    <p class="text-muted">Sistema simplificado para crear usuarios</p>
+                </div>
+                <div>
+                    <a href="{{ url_for('reportes.gestion_usuarios') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Volver a Usuarios
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario de Creación -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-user-plus"></i> Información del Usuario
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="form-section">
+                            <h6 class="mb-3"><i class="fas fa-user"></i> Datos Generales</h6>
+                            
+                            <div class="row">
+                                <div class="col-md-8 mb-3">
+                                    <label for="nombre" class="form-label fw-bold">Nombre Completo</label>
+                                    <input type="text" class="form-control" id="nombre" name="nombre" required>
+                                    <div class="help-text">
+                                        <i class="fas fa-info-circle"></i> Nombre completo del usuario
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4 mb-3">
+                                    <label for="rol" class="form-label fw-bold">Rol</label>
+                                    <select class="form-select" id="rol" name="rol" required>
+                                        <option value="">Seleccionar rol</option>
+                                        <option value="PACIENTE">Estudiante</option>
+                                        <option value="PROFESIONAL">Profesional</option>
+                                        <option value="ADMINISTRADOR">Administrador</option>
+                                    </select>
+                                    <div class="help-text">
+                                        <i class="fas fa-user-tag"></i> Determina los permisos del usuario
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h6 class="mb-3"><i class="fas fa-id-card"></i> Identificación</h6>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3" id="dniField">
+                                    <label for="dni" class="form-label fw-bold">DNI</label>
+                                    <input type="text" class="form-control" id="dni" name="dni">
+                                    <div class="help-text">
+                                        <i class="fas fa-id-badge"></i> Requerido para profesionales y administradores
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3" id="matriculaField">
+                                    <label for="codigo_matricula" class="form-label fw-bold">Código de Matrícula</label>
+                                    <input type="text" class="form-control" id="codigo_matricula" name="codigo_matricula">
+                                    <div class="help-text">
+                                        <i class="fas fa-graduation-cap"></i> Requerido para estudiantes
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h6 class="mb-3"><i class="fas fa-key"></i> Credenciales de Acceso</h6>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="password" class="form-label fw-bold">Contraseña</label>
+                                    <input type="password" class="form-control" id="password" name="password" required minlength="6">
+                                    <div class="help-text">
+                                        <i class="fas fa-shield-alt"></i> Mínimo 6 caracteres
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="confirm_password" class="form-label fw-bold">Confirmar Contraseña</label>
+                                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" required minlength="6">
+                                    <div class="help-text">
+                                        <i class="fas fa-check-double"></i> Debe coincidir con la contraseña
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información del rol seleccionado -->
+                        <div class="alert alert-info" id="infoRol">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Seleccione un rol</strong> para ver los requisitos específicos.
+                        </div>
+
+                        <!-- Botones de acción -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-primary btn-lg w-100">
+                                    <i class="fas fa-user-plus"></i> Crear Usuario
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="{{ url_for('reportes.gestion_usuarios') }}" class="btn btn-secondary btn-lg w-100">
+                                    <i class="fas fa-times"></i> Cancelar
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Configuración de roles y sus características
+const rolesConfig = {
+    'PACIENTE': {
+        nombre: 'estudiante',
+        info: '<strong>Estudiante:</strong> Acceso a agendar citas y ver su historial médico. Debe ingresar código de matrícula.',
+        mostrarDni: false,
+        mostrarMatricula: true
+    },
+    'PROFESIONAL': {
+        nombre: 'profesional médico',
+        info: '<strong>Profesional:</strong> Acceso a gestionar citas médicas y registrar consultas. Debe ingresar DNI.',
+        mostrarDni: true,
+        mostrarMatricula: false
+    },
+    'ADMINISTRADOR': {
+        nombre: 'administrador',
+        info: '<strong>Administrador:</strong> Acceso completo al sistema y panel administrativo. Debe ingresar DNI.',
+        mostrarDni: true,
+        mostrarMatricula: false
+    }
+};
+
+// Función para actualizar la interfaz según el rol seleccionado
+function actualizarInterfazRol() {
+    const rolSelect = document.getElementById('rol');
+    const rolSeleccionado = rolSelect.value;
+    
+    if (!rolSeleccionado) {
+        document.getElementById('infoRol').innerHTML = '<i class="fas fa-info-circle"></i> <strong>Seleccione un rol</strong> para ver los requisitos específicos.';
+        return;
+    }
+    
+    const config = rolesConfig[rolSeleccionado];
+    
+    if (!config) return;
+    
+    // Mostrar/ocultar campos de identificación
+    const dniField = document.getElementById('dniField');
+    const matriculaField = document.getElementById('matriculaField');
+    const dniInput = document.getElementById('dni');
+    const matriculaInput = document.getElementById('codigo_matricula');
+    
+    if (config.mostrarDni) {
+        dniField.style.display = 'block';
+        matriculaField.style.display = 'none';
+        dniInput.required = true;
+        matriculaInput.required = false;
+    } else {
+        dniField.style.display = 'none';
+        matriculaField.style.display = 'block';
+        dniInput.required = false;
+        matriculaInput.required = true;
+    }
+    
+    // Actualizar información del rol
+    const infoRol = document.getElementById('infoRol');
+    infoRol.innerHTML = '<i class="fas fa-info-circle"></i> ' + config.info;
+}
+
+// Event listener para cambios en el rol
+document.getElementById('rol').addEventListener('change', actualizarInterfazRol);
+
+// Validación en tiempo real de confirmación de contraseña
+document.getElementById('confirm_password').addEventListener('input', function() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = this.value;
+    
+    if (confirmPassword && password !== confirmPassword) {
+        this.classList.add('is-invalid');
+        this.classList.remove('is-valid');
+    } else if (confirmPassword && password === confirmPassword) {
+        this.classList.add('is-valid');
+        this.classList.remove('is-invalid');
+    } else {
+        this.classList.remove('is-valid', 'is-invalid');
+    }
+});
+
+// Validación del formulario antes de enviar
+document.querySelector('form').addEventListener('submit', function(e) {
+    const rol = document.getElementById('rol').value;
+    const dni = document.getElementById('dni').value;
+    const matricula = document.getElementById('codigo_matricula').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm_password').value;
+    
+    // Validar contraseñas
+    if (password !== confirmPassword) {
+        e.preventDefault();
+        alert('Las contraseñas no coinciden. Por favor, verifique los datos.');
+        return false;
+    }
+    
+    // Validar campos requeridos según rol
+    if (rol === 'PACIENTE' && !matricula) {
+        e.preventDefault();
+        alert('Código de matrícula es obligatorio para estudiantes.');
+        return false;
+    }
+    
+    if ((rol === 'PROFESIONAL' || rol === 'ADMINISTRADOR') && !dni) {
+        e.preventDefault();
+        alert('DNI es obligatorio para profesionales y administradores.');
+        return false;
+    }
+    
+    // Mostrar indicador de carga
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando Usuario...';
+    submitBtn.disabled = true;
+});
+
+// Inicializar la interfaz
+document.addEventListener('DOMContentLoaded', function() {
+    actualizarInterfazRol();
+});
+</script>
+{% endblock %}
