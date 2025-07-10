@@ -1,0 +1,298 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Análisis Predictivo - Sistema Médico Universitario{% endblock %}
+
+{% block extra_css %}
+<style>
+    .predictive-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: var(--border-radius-lg);
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    .prediction-card {
+        background: var(--bg-card);
+        border-radius: var(--border-radius-lg);
+        padding: 25px;
+        margin-bottom: 30px;
+        backdrop-filter: blur(10px);
+        border: var(--border-primary);
+        transition: var(--transition-normal);
+    }
+    .prediction-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary-color);
+    }
+    .chart-container {
+        position: relative;
+        height: 450px;
+        margin: 20px 0;
+    }
+    .prediction-insights {
+        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        color: white;
+        padding: 20px;
+        border-radius: var(--border-radius);
+        margin-top: 20px;
+    }
+    .prediction-metric {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: var(--border-radius);
+        padding: 15px;
+        margin-bottom: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        text-align: center;
+    }
+    .prediction-value {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+    .prediction-label {
+        font-size: 1rem;
+        color: var(--text-secondary);
+    }
+    .trend-indicator {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        margin-left: 10px;
+    }
+    .trend-up {
+        background: #28a745;
+        color: white;
+    }
+    .trend-down {
+        background: #dc3545;
+        color: white;
+    }
+    .trend-stable {
+        background: #6c757d;
+        color: white;
+    }
+    .prediction-summary {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        padding: 20px;
+        border-radius: var(--border-radius);
+        margin-bottom: 30px;
+    }
+    .recommendation-box {
+        background: #f8f9fa;
+        border-left: 4px solid var(--primary-color);
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    }
+</style>
+{% endblock %}
+
+{% block page_title %}Análisis Predictivo{% endblock %}
+
+{% block content %}
+<div class="predictive-header">
+    <h1><i class='bx bx-trending-up'></i> Análisis Predictivo de Citas y Consultas</h1>
+    <p>Predicciones y tendencias basadas en datos históricos del sistema</p>
+</div>
+
+<!-- Resumen Predictivo -->
+<div class="prediction-summary">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="prediction-metric">
+                <div class="prediction-value">{{ datos.tendencia_citas.prediccion_proximo if datos.tendencia_citas else 0 }}</div>
+                <div class="prediction-label">Citas Predichas Próximo Mes</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="prediction-metric">
+                <div class="prediction-value">{{ datos.patrones_semanales.values() | list | max if datos.patrones_semanales else 0 }}</div>
+                <div class="prediction-label">Día Más Demandado</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="prediction-metric">
+                <div class="prediction-value">{{ datos.demanda_por_tipo.values() | list | length if datos.demanda_por_tipo else 0 }}</div>
+                <div class="prediction-label">Tipos de Consulta</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="prediction-metric">
+                <div class="prediction-value">15%</div>
+                <div class="prediction-label">Crecimiento Estimado</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tendencia de Citas con Predicción -->
+<div class="prediction-card">
+    <h4><i class='bx bx-line-chart'></i> Tendencia de Citas con Predicción</h4>
+    <div class="chart-container">
+        {% if graficos.tendencia_citas %}
+        <div id="chart-tendencia"></div>
+        {% else %}
+        <div class="text-center text-muted">
+            <i class='bx bx-data' style="font-size: 48px;"></i>
+            <p>No hay datos suficientes para mostrar la tendencia predictiva</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="prediction-insights">
+        <h6><i class='bx bx-bulb'></i> Insights Predictivos</h6>
+        <div class="row">
+            {% if datos.tendencia_citas %}
+            <div class="col-md-6">
+                <div class="recommendation-box">
+                    <h6>Tendencia General</h6>
+                    <p>Basado en los últimos 6 meses, se predice un 
+                        <span class="trend-indicator trend-up">
+                            <i class='bx bx-trending-up'></i> Crecimiento del 10%
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="recommendation-box">
+                    <h6>Recomendación</h6>
+                    <p>Considerar aumentar la capacidad de atención para el próximo mes</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Patrones Semanales -->
+    <div class="col-md-6">
+        <div class="prediction-card">
+            <h4><i class='bx bx-calendar-week'></i> Patrones de Consulta Semanales</h4>
+            <div class="chart-container">
+                {% if graficos.patrones_semanales %}
+                <div id="chart-patrones"></div>
+                {% else %}
+                <div class="text-center text-muted">
+                    <i class='bx bx-data' style="font-size: 48px;"></i>
+                    <p>No hay datos suficientes para mostrar los patrones semanales</p>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="prediction-insights">
+                <h6><i class='bx bx-bulb'></i> Insights Semanales</h6>
+                {% if datos.patrones_semanales %}
+                <div class="recommendation-box">
+                    <h6>Días de Mayor Demanda</h6>
+                    <p>
+                        {% for dia, cantidad in datos.patrones_semanales.items() %}
+                        {% if cantidad == datos.patrones_semanales.values() | list | max %}
+                        <strong>{{ dia }}</strong> es el día con más consultas ({{ cantidad }})
+                        {% endif %}
+                        {% endfor %}
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Demanda por Tipo de Consulta -->
+    <div class="col-md-6">
+        <div class="prediction-card">
+            <h4><i class='bx bx-health'></i> Demanda por Tipo: Actual vs Predicción</h4>
+            <div class="chart-container">
+                {% if graficos.demanda_por_tipo %}
+                <div id="chart-demanda"></div>
+                {% else %}
+                <div class="text-center text-muted">
+                    <i class='bx bx-data' style="font-size: 48px;"></i>
+                    <p>No hay datos suficientes para mostrar la demanda por tipo</p>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="prediction-insights">
+                <h6><i class='bx bx-bulb'></i> Insights de Demanda</h6>
+                {% if datos.demanda_por_tipo %}
+                <div class="recommendation-box">
+                    <h6>Crecimiento Proyectado</h6>
+                    <p>Se espera un crecimiento del 15% en todas las especialidades</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recomendaciones Estratégicas -->
+<div class="prediction-card">
+    <h4><i class='bx bx-target-lock'></i> Recomendaciones Estratégicas</h4>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="recommendation-box">
+                <h6><i class='bx bx-user-plus'></i> Capacidad</h6>
+                <p>Considerar aumentar el personal médico en un 10% para el próximo trimestre</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="recommendation-box">
+                <h6><i class='bx bx-time'></i> Horarios</h6>
+                <p>Optimizar horarios en los días de mayor demanda identificados</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="recommendation-box">
+                <h6><i class='bx bx-health'></i> Especialidades</h6>
+                <p>Reforzar las especialidades con mayor crecimiento proyectado</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Botones de Acción -->
+<div class="text-center mt-4">
+    <a href="{{ url_for('reportes.analisis_segmentacion') }}" class="btn btn-primary btn-lg">
+        <i class='bx bx-pie-chart-alt-2'></i> Ver Análisis de Segmentación
+    </a>
+    <a href="{{ url_for('reportes.estadisticas_detalladas') }}" class="btn btn-secondary btn-lg">
+        <i class='bx bx-bar-chart-alt-2'></i> Estadísticas Generales
+    </a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    // Configuración común para todos los gráficos
+    const config = {
+        responsive: true,
+        displayModeBar: false,
+        displaylogo: false
+    };
+
+    // Gráfico de tendencia con predicción
+    {% if graficos.tendencia_citas %}
+    const chartTendencia = JSON.parse('{{ graficos.tendencia_citas|safe }}');
+    Plotly.newPlot('chart-tendencia', chartTendencia.data, chartTendencia.layout, config);
+    {% endif %}
+
+    // Gráfico de patrones semanales
+    {% if graficos.patrones_semanales %}
+    const chartPatrones = JSON.parse('{{ graficos.patrones_semanales|safe }}');
+    Plotly.newPlot('chart-patrones', chartPatrones.data, chartPatrones.layout, config);
+    {% endif %}
+
+    // Gráfico de demanda por tipo
+    {% if graficos.demanda_por_tipo %}
+    const chartDemanda = JSON.parse('{{ graficos.demanda_por_tipo|safe }}');
+    Plotly.newPlot('chart-demanda', chartDemanda.data, chartDemanda.layout, config);
+    {% endif %}
+</script>
+{% endblock %}

@@ -66,6 +66,18 @@
                         </a>
                     </li>
                     <li class="admin-nav-item">
+                        <a href="{{ url_for('reportes.analisis_segmentacion') }}" class="admin-nav-link {% if request.endpoint == 'reportes.analisis_segmentacion' %}active{% endif %}">
+                            <i class='bx bx-pie-chart-alt-2 admin-nav-icon'></i>
+                            Segmentación
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="{{ url_for('reportes.analisis_prediccion') }}" class="admin-nav-link {% if request.endpoint == 'reportes.analisis_prediccion' %}active{% endif %}">
+                            <i class='bx bx-trending-up admin-nav-icon'></i>
+                            Predicción
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
                         <a href="{{ url_for('reportes.gestion_respaldo_csv') }}" class="admin-nav-link {% if request.endpoint == 'reportes.gestion_respaldo_csv' %}active{% endif %}">
                             <i class='bx bx-file-export admin-nav-icon'></i>
                             Respaldo CSV

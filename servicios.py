@@ -1,7 +1,7 @@
 # Importaciones necesarias para los servicios de negocio
 from collections import defaultdict  # Para crear diccionarios con valores por defecto
 from datetime import datetime, timedelta  # Para manejo de fechas y cálculos temporales
-from sqlalchemy import func, extract  # Funciones SQL para agregaciones y extracciones
+from sqlalchemy import func, extract, case  # Funciones SQL para agregaciones y extracciones
 from app import db  # Instancia de la base de datos
 from modelos import Usuario, Paciente, Cita, Consulta, TipoCita, NivelRiesgo, RolUsuario  # Modelos de datos
 
@@ -683,7 +683,7 @@ class ServicioReporte:
             # Calcular promedio de nivel de riesgo
             promedio_riesgo = db.session.query(
                 func.avg(
-                    func.case(
+                    case(
                         (Consulta.nivel_riesgo == NivelRiesgo.BAJO, 1),
                         (Consulta.nivel_riesgo == NivelRiesgo.MEDIO, 2),
                         (Consulta.nivel_riesgo == NivelRiesgo.ALTO, 3),
@@ -749,6 +749,154 @@ class ServicioReporte:
             })
         
         return alertas
+    
+    @staticmethod
+    def obtener_datos_segmentacion():
+        """
+        Obtiene datos para análisis de segmentación de pacientes.
+        
+        Returns:
+            dict: Datos de segmentación por múltiples criterios
+        """
+        segmentacion = {}
+        
+        # Segmentación por edad
+        # Calcular edades y segmentar
+        edad_18_22 = Paciente.query.filter(
+            (func.extract('year', func.current_date()) - func.extract('year', Paciente.fecha_nacimiento)) <= 22,
+            (func.extract('year', func.current_date()) - func.extract('year', Paciente.fecha_nacimiento)) >= 18
+        ).count()
+        
+        edad_23_27 = Paciente.query.filter(
+            (func.extract('year', func.current_date()) - func.extract('year', Paciente.fecha_nacimiento)) >= 23,
+            (func.extract('year', func.current_date()) - func.extract('year', Paciente.fecha_nacimiento)) <= 27
+        ).count()
+        
+        edad_28_mas = Paciente.query.filter(
+            (func.extract('year', func.current_date()) - func.extract('year', Paciente.fecha_nacimiento)) > 27
+        ).count()
+        
+        segmentacion['por_edad'] = {
+            '18-22': edad_18_22,
+            '23-27': edad_23_27,
+            '28+': edad_28_mas
+        }
+        
+        # Segmentación por tipo de consulta más frecuente
+        consultas_por_tipo = db.session.query(
+            Cita.tipo_cita,
+            func.count(Cita.id).label('total')
+        ).group_by(Cita.tipo_cita).all()
+        
+        segmentacion['por_tipo_consulta'] = {
+            tipo.value: total for tipo, total in consultas_por_tipo
+        }
+        
+        # Segmentación por riesgo
+        consultas_por_riesgo = db.session.query(
+            Consulta.nivel_riesgo,
+            func.count(Consulta.id).label('total')
+        ).group_by(Consulta.nivel_riesgo).all()
+        
+        segmentacion['por_riesgo'] = {
+            riesgo.value: total for riesgo, total in consultas_por_riesgo if riesgo
+        }
+        
+        # Segmentación por actividad (últimos 30 días)
+        fecha_limite = datetime.now() - timedelta(days=30)
+        
+        pacientes_activos = db.session.query(Paciente).join(
+            Usuario
+        ).join(
+            Cita, Cita.paciente_id == Usuario.id
+        ).filter(
+            Cita.fecha >= fecha_limite.date()
+        ).distinct().count()
+        
+        total_pacientes = Paciente.query.count()
+        pacientes_inactivos = total_pacientes - pacientes_activos
+        
+        segmentacion['por_actividad'] = {
+            'Activos (30 días)': pacientes_activos,
+            'Inactivos': pacientes_inactivos
+        }
+        
+        return segmentacion
+    
+    @staticmethod
+    def obtener_datos_prediccion():
+        """
+        Obtiene datos para análisis predictivo de citas y consultas.
+        
+        Returns:
+            dict: Datos para predicciones y tendencias
+        """
+        prediccion = {}
+        
+        # Análisis de tendencia de citas (últimos 6 meses)
+        meses_anteriores = []
+        citas_por_mes = []
+        
+        for i in range(6):
+            fecha = datetime.now() - timedelta(days=30*i)
+            mes = fecha.strftime('%Y-%m')
+            
+            citas_mes = Cita.query.filter(
+                func.extract('year', Cita.fecha) == fecha.year,
+                func.extract('month', Cita.fecha) == fecha.month
+            ).count()
+            
+            meses_anteriores.append(mes)
+            citas_por_mes.append(citas_mes)
+        
+        # Invertir para orden cronológico
+        meses_anteriores.reverse()
+        citas_por_mes.reverse()
+        
+        # Calcular tendencia (predicción simple basada en promedio móvil)
+        if len(citas_por_mes) >= 3:
+            promedio_ultimos_3 = sum(citas_por_mes[-3:]) / 3
+            prediccion_proximo_mes = int(promedio_ultimos_3 * 1.1)  # 10% de crecimiento estimado
+        else:
+            prediccion_proximo_mes = sum(citas_por_mes) // len(citas_por_mes) if citas_por_mes else 0
+        
+        prediccion['tendencia_citas'] = {
+            'meses': meses_anteriores,
+            'valores': citas_por_mes,
+            'prediccion_proximo': prediccion_proximo_mes
+        }
+        
+        # Análisis de patrones de consulta por día de la semana
+        consultas_por_dia = {}
+        dias_semana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
+        
+        for i, dia in enumerate(dias_semana):
+            # SQLAlchemy: 1=Domingo, 2=Lunes, etc.
+            dia_numero = i + 2 if i < 6 else 1
+            
+            total_dia = Cita.query.filter(
+                func.extract('dow', Cita.fecha) == dia_numero
+            ).count()
+            
+            consultas_por_dia[dia] = total_dia
+        
+        prediccion['patrones_semanales'] = consultas_por_dia
+        
+        # Predicción de demanda por tipo de consulta
+        tipos_consulta = db.session.query(
+            Cita.tipo_cita,
+            func.count(Cita.id).label('total')
+        ).group_by(Cita.tipo_cita).all()
+        
+        prediccion['demanda_por_tipo'] = {
+            tipo.value: {
+                'actual': total,
+                'prediccion': int(total * 1.15)  # 15% de crecimiento estimado
+            }
+            for tipo, total in tipos_consulta
+        }
+        
+        return prediccion
     
     @staticmethod
     def obtener_configuracion_sistema():

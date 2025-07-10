@@ -684,6 +684,180 @@ def registrar_rutas(app):
         
         return render_template('reportes/dashboard_graficos.html', graficos=graficos)
     
+    # === RUTAS PARA ANÁLISIS AVANZADO ===
+    
+    @reportes_bp.route('/analisis/segmentacion')
+    @requiere_administrador
+    def analisis_segmentacion():
+        """Análisis de segmentación de pacientes"""
+        datos = ServicioReporte.obtener_datos_segmentacion()
+        
+        # Crear gráficos de segmentación
+        graficos = {}
+        
+        # Gráfico 1: Segmentación por edad
+        if datos.get('por_edad'):
+            fig1 = go.Figure(data=[
+                go.Pie(
+                    labels=list(datos['por_edad'].keys()),
+                    values=list(datos['por_edad'].values()),
+                    hole=0.4,
+                    marker=dict(colors=['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A'])
+                )
+            ])
+            fig1.update_layout(
+                title='Segmentación por Edad',
+                template='plotly_white',
+                height=400
+            )
+            graficos['por_edad'] = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
+        
+        # Gráfico 2: Segmentación por tipo de consulta
+        if datos.get('por_tipo_consulta'):
+            fig2 = go.Figure(data=[
+                go.Bar(
+                    x=list(datos['por_tipo_consulta'].keys()),
+                    y=list(datos['por_tipo_consulta'].values()),
+                    marker_color=['#28a745', '#17a2b8', '#dc3545', '#ffc107']
+                )
+            ])
+            fig2.update_layout(
+                title='Segmentación por Tipo de Consulta',
+                xaxis_title='Tipo de Consulta',
+                yaxis_title='Número de Pacientes',
+                template='plotly_white',
+                height=400
+            )
+            graficos['por_tipo_consulta'] = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
+        
+        # Gráfico 3: Segmentación por nivel de riesgo
+        if datos.get('por_riesgo'):
+            fig3 = go.Figure(data=[
+                go.Pie(
+                    labels=list(datos['por_riesgo'].keys()),
+                    values=list(datos['por_riesgo'].values()),
+                    hole=0.3,
+                    marker=dict(colors=['#28a745', '#ffc107', '#fd7e14', '#dc3545'])
+                )
+            ])
+            fig3.update_layout(
+                title='Segmentación por Nivel de Riesgo',
+                template='plotly_white',
+                height=400
+            )
+            graficos['por_riesgo'] = json.dumps(fig3, cls=plotly.utils.PlotlyJSONEncoder)
+        
+        # Gráfico 4: Segmentación por actividad
+        if datos.get('por_actividad'):
+            fig4 = go.Figure(data=[
+                go.Bar(
+                    x=list(datos['por_actividad'].keys()),
+                    y=list(datos['por_actividad'].values()),
+                    marker_color=['#28a745', '#6c757d']
+                )
+            ])
+            fig4.update_layout(
+                title='Segmentación por Actividad',
+                xaxis_title='Tipo de Actividad',
+                yaxis_title='Número de Pacientes',
+                template='plotly_white',
+                height=400
+            )
+            graficos['por_actividad'] = json.dumps(fig4, cls=plotly.utils.PlotlyJSONEncoder)
+        
+        return render_template('reportes/analisis_segmentacion.html', 
+                             graficos=graficos, 
+                             datos=datos)
+    
+    @reportes_bp.route('/analisis/prediccion')
+    @requiere_administrador
+    def analisis_prediccion():
+        """Análisis predictivo de citas y consultas"""
+        datos = ServicioReporte.obtener_datos_prediccion()
+        
+        # Crear gráficos predictivos
+        graficos = {}
+        
+        # Gráfico 1: Tendencia de citas con predicción
+        if datos.get('tendencia_citas'):
+            tendencia = datos['tendencia_citas']
+            
+            # Agregar mes futuro para predicción
+            meses_completos = tendencia['meses'] + ['Próximo mes']
+            valores_completos = tendencia['valores'] + [tendencia['prediccion_proximo']]
+            
+            fig1 = go.Figure()
+            
+            # Línea de datos históricos
+            fig1.add_trace(go.Scatter(
+                x=tendencia['meses'],
+                y=tendencia['valores'],
+                mode='lines+markers',
+                name='Datos Históricos',
+                line=dict(color='#007bff', width=3),
+                marker=dict(size=8)
+            ))
+            
+            # Punto de predicción
+            fig1.add_trace(go.Scatter(
+                x=['Próximo mes'],
+                y=[tendencia['prediccion_proximo']],
+                mode='markers',
+                name='Predicción',
+                marker=dict(size=12, color='#dc3545', symbol='star')
+            ))
+            
+            fig1.update_layout(
+                title='Tendencia de Citas con Predicción',
+                xaxis_title='Mes',
+                yaxis_title='Número de Citas',
+                template='plotly_white',
+                height=400
+            )
+            graficos['tendencia_citas'] = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
+        
+        # Gráfico 2: Patrones semanales
+        if datos.get('patrones_semanales'):
+            fig2 = go.Figure(data=[
+                go.Bar(
+                    x=list(datos['patrones_semanales'].keys()),
+                    y=list(datos['patrones_semanales'].values()),
+                    marker_color=['#4ECDC4', '#45B7D1', '#FFA07A', '#FF6B6B', '#98D8C8', '#F7DC6F', '#BB8FCE']
+                )
+            ])
+            fig2.update_layout(
+                title='Patrones de Consulta por Día de la Semana',
+                xaxis_title='Día de la Semana',
+                yaxis_title='Número de Consultas',
+                template='plotly_white',
+                height=400
+            )
+            graficos['patrones_semanales'] = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
+        
+        # Gráfico 3: Demanda por tipo de consulta (actual vs predicción)
+        if datos.get('demanda_por_tipo'):
+            tipos = list(datos['demanda_por_tipo'].keys())
+            valores_actuales = [datos['demanda_por_tipo'][t]['actual'] for t in tipos]
+            valores_prediccion = [datos['demanda_por_tipo'][t]['prediccion'] for t in tipos]
+            
+            fig3 = go.Figure(data=[
+                go.Bar(name='Actual', x=tipos, y=valores_actuales, marker_color='#17a2b8'),
+                go.Bar(name='Predicción', x=tipos, y=valores_prediccion, marker_color='#28a745')
+            ])
+            fig3.update_layout(
+                title='Demanda por Tipo de Consulta: Actual vs Predicción',
+                xaxis_title='Tipo de Consulta',
+                yaxis_title='Número de Consultas',
+                template='plotly_white',
+                height=400,
+                barmode='group'
+            )
+            graficos['demanda_por_tipo'] = json.dumps(fig3, cls=plotly.utils.PlotlyJSONEncoder)
+        
+        return render_template('reportes/analisis_prediccion.html', 
+                             graficos=graficos, 
+                             datos=datos)
+    
     # Registrar blueprints
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)

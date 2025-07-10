@@ -1,0 +1,241 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Análisis de Segmentación - Sistema Médico Universitario{% endblock %}
+
+{% block extra_css %}
+<style>
+    .analytics-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: var(--border-radius-lg);
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    .analytics-card {
+        background: var(--bg-card);
+        border-radius: var(--border-radius-lg);
+        padding: 25px;
+        margin-bottom: 30px;
+        backdrop-filter: blur(10px);
+        border: var(--border-primary);
+        transition: var(--transition-normal);
+    }
+    .analytics-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary-color);
+    }
+    .chart-container {
+        position: relative;
+        height: 450px;
+        margin: 20px 0;
+    }
+    .insights-panel {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        padding: 20px;
+        border-radius: var(--border-radius);
+        margin-top: 20px;
+    }
+    .metric-card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: var(--border-radius);
+        padding: 15px;
+        margin-bottom: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .metric-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+    .metric-label {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+</style>
+{% endblock %}
+
+{% block page_title %}Análisis de Segmentación{% endblock %}
+
+{% block content %}
+<div class="analytics-header">
+    <h1><i class='bx bx-pie-chart-alt-2'></i> Análisis de Segmentación de Pacientes</h1>
+    <p>Análisis detallado de la segmentación de pacientes por diferentes criterios</p>
+</div>
+
+<div class="row">
+    <!-- Segmentación por Edad -->
+    <div class="col-md-6">
+        <div class="analytics-card">
+            <h4><i class='bx bx-user'></i> Segmentación por Edad</h4>
+            <div class="chart-container">
+                {% if graficos.por_edad %}
+                <div id="chart-edad"></div>
+                {% else %}
+                <div class="text-center text-muted">
+                    <i class='bx bx-data' style="font-size: 48px;"></i>
+                    <p>No hay datos suficientes para mostrar la segmentación por edad</p>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="insights-panel">
+                <h6><i class='bx bx-bulb'></i> Insights</h6>
+                <div class="row">
+                    {% for grupo, cantidad in datos.por_edad.items() %}
+                    <div class="col-md-4">
+                        <div class="metric-card">
+                            <div class="metric-value">{{ cantidad }}</div>
+                            <div class="metric-label">{{ grupo }} años</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Segmentación por Tipo de Consulta -->
+    <div class="col-md-6">
+        <div class="analytics-card">
+            <h4><i class='bx bx-health'></i> Segmentación por Tipo de Consulta</h4>
+            <div class="chart-container">
+                {% if graficos.por_tipo_consulta %}
+                <div id="chart-tipo-consulta"></div>
+                {% else %}
+                <div class="text-center text-muted">
+                    <i class='bx bx-data' style="font-size: 48px;"></i>
+                    <p>No hay datos suficientes para mostrar la segmentación por tipo de consulta</p>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="insights-panel">
+                <h6><i class='bx bx-bulb'></i> Insights</h6>
+                <div class="row">
+                    {% for tipo, cantidad in datos.por_tipo_consulta.items() %}
+                    <div class="col-md-4">
+                        <div class="metric-card">
+                            <div class="metric-value">{{ cantidad }}</div>
+                            <div class="metric-label">{{ tipo }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Segmentación por Nivel de Riesgo -->
+    <div class="col-md-6">
+        <div class="analytics-card">
+            <h4><i class='bx bx-warning'></i> Segmentación por Nivel de Riesgo</h4>
+            <div class="chart-container">
+                {% if graficos.por_riesgo %}
+                <div id="chart-riesgo"></div>
+                {% else %}
+                <div class="text-center text-muted">
+                    <i class='bx bx-data' style="font-size: 48px;"></i>
+                    <p>No hay datos suficientes para mostrar la segmentación por riesgo</p>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="insights-panel">
+                <h6><i class='bx bx-bulb'></i> Insights</h6>
+                <div class="row">
+                    {% for riesgo, cantidad in datos.por_riesgo.items() %}
+                    <div class="col-md-3">
+                        <div class="metric-card">
+                            <div class="metric-value">{{ cantidad }}</div>
+                            <div class="metric-label">{{ riesgo }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Segmentación por Actividad -->
+    <div class="col-md-6">
+        <div class="analytics-card">
+            <h4><i class='bx bx-time'></i> Segmentación por Actividad</h4>
+            <div class="chart-container">
+                {% if graficos.por_actividad %}
+                <div id="chart-actividad"></div>
+                {% else %}
+                <div class="text-center text-muted">
+                    <i class='bx bx-data' style="font-size: 48px;"></i>
+                    <p>No hay datos suficientes para mostrar la segmentación por actividad</p>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="insights-panel">
+                <h6><i class='bx bx-bulb'></i> Insights</h6>
+                <div class="row">
+                    {% for actividad, cantidad in datos.por_actividad.items() %}
+                    <div class="col-md-6">
+                        <div class="metric-card">
+                            <div class="metric-value">{{ cantidad }}</div>
+                            <div class="metric-label">{{ actividad }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Botones de Acción -->
+<div class="text-center mt-4">
+    <a href="{{ url_for('reportes.analisis_prediccion') }}" class="btn btn-primary btn-lg">
+        <i class='bx bx-trending-up'></i> Ver Análisis Predictivo
+    </a>
+    <a href="{{ url_for('reportes.estadisticas_detalladas') }}" class="btn btn-secondary btn-lg">
+        <i class='bx bx-bar-chart-alt-2'></i> Estadísticas Generales
+    </a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    // Configuración común para todos los gráficos
+    const config = {
+        responsive: true,
+        displayModeBar: false,
+        displaylogo: false
+    };
+
+    // Gráfico de segmentación por edad
+    {% if graficos.por_edad %}
+    const chartEdad = JSON.parse('{{ graficos.por_edad|safe }}');
+    Plotly.newPlot('chart-edad', chartEdad.data, chartEdad.layout, config);
+    {% endif %}
+
+    // Gráfico de segmentación por tipo de consulta
+    {% if graficos.por_tipo_consulta %}
+    const chartTipoConsulta = JSON.parse('{{ graficos.por_tipo_consulta|safe }}');
+    Plotly.newPlot('chart-tipo-consulta', chartTipoConsulta.data, chartTipoConsulta.layout, config);
+    {% endif %}
+
+    // Gráfico de segmentación por riesgo
+    {% if graficos.por_riesgo %}
+    const chartRiesgo = JSON.parse('{{ graficos.por_riesgo|safe }}');
+    Plotly.newPlot('chart-riesgo', chartRiesgo.data, chartRiesgo.layout, config);
+    {% endif %}
+
+    // Gráfico de segmentación por actividad
+    {% if graficos.por_actividad %}
+    const chartActividad = JSON.parse('{{ graficos.por_actividad|safe }}');
+    Plotly.newPlot('chart-actividad', chartActividad.data, chartActividad.layout, config);
+    {% endif %}
+</script>
+{% endblock %}

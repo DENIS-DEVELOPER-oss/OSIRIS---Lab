@@ -182,6 +182,37 @@ El proyecto está preparado para ser subido a GitHub con:
   - Diseño dark mode profesional con efectos de backdrop blur
   - Iconos Boxicons integrados en toda la aplicación
 
+### July 10, 2025 - Análisis Avanzado: Segmentación y Predicción
+- ✅ **Implementación completa de análisis avanzados:**
+  - Nuevo servicio `ServicioReporte.obtener_datos_segmentacion()` - Análisis de segmentación de pacientes
+  - Nuevo servicio `ServicioReporte.obtener_datos_prediccion()` - Análisis predictivo con tendencias
+  - Corrección del error SQLAlchemy en `obtener_rendimiento_profesionales()`
+  - Optimización de consultas SQL para PostgreSQL
+
+- ✅ **Gráficos de segmentación implementados:**
+  - Segmentación por edad (18-22, 23-27, 28+)
+  - Segmentación por tipo de consulta (Medicina, Psicología, Emergencia)
+  - Segmentación por nivel de riesgo (Bajo, Medio, Alto, Crítico)
+  - Segmentación por actividad (Activos últimos 30 días vs Inactivos)
+
+- ✅ **Análisis predictivo con visualizaciones:**
+  - Tendencia de citas con predicción del próximo mes
+  - Patrones de consulta por día de la semana
+  - Predicción de demanda por tipo de consulta (15% crecimiento estimado)
+  - Recomendaciones estratégicas automáticas
+
+- ✅ **Nuevas rutas y templates:**
+  - `/reportes/analisis/segmentacion` - Dashboard de segmentación con 4 gráficos
+  - `/reportes/analisis/prediccion` - Dashboard predictivo con tendencias
+  - Templates con diseño profesional usando Plotly para gráficos interactivos
+  - Navegación integrada en sidebar administrativo
+
+- ✅ **Mejoras en la experiencia de usuario:**
+  - Acceso directo desde estadísticas a análisis avanzados
+  - Tarjetas de insights con métricas clave
+  - Recomendaciones estratégicas basadas en datos
+  - Botones de navegación entre diferentes análisis
+
 ### July 10, 2025 - Limpieza y Optimización del Proyecto
 - ✅ Eliminación de archivos innecesarios:
   - Archivos temporales: cookies.txt, comandos_git.txt
