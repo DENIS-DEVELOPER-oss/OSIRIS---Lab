@@ -1,93 +1,71 @@
-{% extends "base.html" %}
+{% extends "modern_base.html" %}
 
 {% block title %}Crear Usuario - Sistema Médico Universitario{% endblock %}
 
 {% block extra_css %}
 <style>
     .form-section {
-        background: #f8f9fa;
-        border-radius: 10px;
+        background: var(--bg-card);
+        border-radius: var(--border-radius);
         padding: 25px;
-        border-left: 4px solid #007bff;
+        border-left: 4px solid var(--primary-color);
         margin-bottom: 20px;
-    }
-    .form-control:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        backdrop-filter: blur(10px);
+        border: var(--border-primary);
     }
     .help-text {
-        color: #6c757d;
+        color: var(--text-muted);
         font-size: 0.875rem;
         margin-top: 5px;
+    }
+    .section-title {
+        color: var(--primary-color);
+        font-weight: 600;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <!-- Header -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h2 class="mb-0">Crear Nuevo Usuario</h2>
-                    <p class="text-muted">Formulario directo para crear usuarios</p>
-                </div>
-                <div>
-                    <a href="{{ url_for('reportes.gestion_usuarios') }}" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left"></i> Volver a Usuarios
-                    </a>
-                </div>
-            </div>
-        </div>
+<div class="modern-card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <i class='bx bx-user-plus'></i>
+            Crear Nuevo Usuario
+        </h2>
+        <a href="{{ url_for('reportes.gestion_usuarios') }}" class="modern-btn btn-secondary">
+            <i class='bx bx-arrow-back'></i> Volver a Usuarios
+        </a>
     </div>
 
-    <!-- Alertas -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <form method="POST" autocomplete="off" class="modern-form">
+        <div class="form-section">
+            <h6 class="section-title">
+                <i class='bx bx-user'></i> Datos Generales
+            </h6>
+            
+            <div class="d-flex gap-2">
+                <div class="form-group flex-1">
+                    <label class="form-label">Nombre Completo *</label>
+                    <input type="text" class="form-input" id="nombre" name="nombre" required 
+                           placeholder="Ej: Juan Pérez García">
+                    <div class="help-text">
+                        <i class='bx bx-info-circle'></i> Nombre completo del usuario
+                    </div>
                 </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-
-    <!-- Formulario -->
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card shadow">
-                <div class="card-header bg-success text-white">
-                    <h5 class="card-title mb-0">
-                        <i class="fas fa-user-plus"></i> Registro Directo de Usuario
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <form method="POST" autocomplete="off">
-                        
-                        <div class="form-section">
-                            <h6 class="mb-3"><i class="fas fa-user"></i> Datos Generales</h6>
-                            
-                            <div class="row">
-                                <div class="col-md-8 mb-3">
-                                    <label for="nombre" class="form-label fw-bold">Nombre Completo *</label>
-                                    <input type="text" class="form-control" id="nombre" name="nombre" required 
-                                           placeholder="Ej: Juan Pérez García">
-                                    <div class="help-text">
-                                        <i class="fas fa-info-circle"></i> Nombre completo del usuario
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-4 mb-3">
-                                    <label for="rol" class="form-label fw-bold">Rol *</label>
-                                    <select class="form-select" id="rol" name="rol" required>
-                                        <option value="">Seleccionar...</option>
-                                        <option value="PACIENTE">Estudiante</option>
-                                        <option value="PROFESIONAL">Profesional</option>
-                                        <option value="ADMINISTRADOR">Administrador</option>
-                                    </select>
-                                    <div class="help-text">
+                
+                <div class="form-group">
+                    <label class="form-label">Rol *</label>
+                    <select class="form-select" id="rol" name="rol" required>
+                        <option value="">Seleccionar...</option>
+                        <option value="PACIENTE">Estudiante</option>
+                        <option value="PROFESIONAL">Profesional</option>
+                        <option value="ADMINISTRADOR">Administrador</option>
+                    </select>
+                    <div class="help-text">
                                         <i class="fas fa-user-tag"></i> Tipo de usuario
                                     </div>
                                 </div>

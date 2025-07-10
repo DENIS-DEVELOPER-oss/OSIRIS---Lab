@@ -1,93 +1,84 @@
-{% extends "base.html" %}
+{% extends "modern_base.html" %}
 
 {% block title %}Gestión de Respaldo CSV - Sistema Médico Universitario{% endblock %}
 
 {% block extra_css %}
 <style>
-    .stats-card {
-        border-left: 4px solid #007bff;
-        transition: all 0.3s ease;
-    }
-    .stats-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
     .action-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 10px;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        color: var(--text-dark);
+        border-radius: var(--border-radius-lg);
         padding: 25px;
         margin-bottom: 20px;
         text-align: center;
+        box-shadow: var(--shadow-glow);
     }
     .csv-info {
-        background: #f8f9fa;
-        border-radius: 10px;
+        background: var(--bg-card);
+        border-radius: var(--border-radius);
         padding: 20px;
-        border-left: 4px solid #28a745;
+        border-left: 4px solid var(--success-color);
+        backdrop-filter: blur(10px);
+        border: var(--border-primary);
     }
     .warning-section {
-        background: #fff3cd;
-        border: 1px solid #ffeaa7;
-        border-radius: 8px;
+        background: rgba(243, 156, 18, 0.1);
+        border: 1px solid var(--warning-color);
+        border-radius: var(--border-radius);
         padding: 20px;
         margin-bottom: 20px;
+        backdrop-filter: blur(10px);
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <!-- Header -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h2 class="mb-0">Gestión de Respaldo CSV</h2>
-                    <p class="text-muted">Administrar respaldos de usuarios en archivo CSV</p>
-                </div>
-                <div>
-                    <a href="{{ url_for('reportes.dashboard_admin') }}" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left"></i> Volver al Dashboard
-                    </a>
-                </div>
-            </div>
-        </div>
+<div class="modern-card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <i class='bx bx-file-export'></i>
+            Gestión de Respaldo CSV
+        </h2>
+        <a href="{{ url_for('reportes.dashboard_admin') }}" class="modern-btn btn-secondary">
+            <i class='bx bx-arrow-back'></i> Volver al Dashboard
+        </a>
     </div>
 
     <!-- Información del Sistema CSV -->
     <div class="action-card">
-        <h4><i class="fas fa-database"></i> Sistema de Respaldo Automático</h4>
+        <h4><i class='bx bx-database'></i> Sistema de Respaldo Automático</h4>
         <p class="mb-0">Cada usuario creado se guarda automáticamente en archivo CSV como respaldo. También puedes importar usuarios desde archivo CSV.</p>
     </div>
 
     <!-- Estadísticas del Archivo CSV -->
-    <div class="row mb-4">
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card stats-card h-100">
-                <div class="card-body text-center">
-                    <i class="fas fa-file-csv fa-3x text-success mb-3"></i>
-                    <h5>Estado del Archivo</h5>
-                    <h3 class="{% if estadisticas.existe_archivo %}text-success{% else %}text-danger{% endif %}">
-                        {% if estadisticas.existe_archivo %}
-                            <i class="fas fa-check-circle"></i> Disponible
-                        {% else %}
-                            <i class="fas fa-times-circle"></i> No Existe
-                        {% endif %}
-                    </h3>
-                </div>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class='bx bx-file'></i>
+            </div>
+            <div class="stat-number">
+                {% if estadisticas.existe_archivo %}
+                    <i class='bx bx-check-circle' style="color: var(--success-color);"></i>
+                {% else %}
+                    <i class='bx bx-x-circle' style="color: var(--danger-color);"></i>
+                {% endif %}
+            </div>
+            <div class="stat-label">
+                {% if estadisticas.existe_archivo %}
+                    Archivo Disponible
+                {% else %}
+                    Archivo No Existe
+                {% endif %}
             </div>
         </div>
 
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card stats-card h-100">
-                <div class="card-body text-center">
-                    <i class="fas fa-users fa-3x text-primary mb-3"></i>
-                    <h5>Registros en CSV</h5>
-                    <h3 class="text-primary">{{ estadisticas.total_registros }}</h3>
-                    <small class="text-muted">usuarios guardados</small>
-                </div>
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class='bx bx-users'></i>
             </div>
+            <div class="stat-number">{{ estadisticas.total_registros }}</div>
+            <div class="stat-label">Registros en CSV</div>
+        </div>
         </div>
 
         <div class="col-lg-3 col-md-6 mb-3">
