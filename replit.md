@@ -346,6 +346,14 @@ El proyecto está preparado para ser subido a GitHub con:
   - Secciones de información diferenciadas por rol de usuario
   - Iconos específicos para cada función médica/estudiantil
 
+- ✅ **Vista específica de pacientes para profesionales:**
+  - Nueva ruta `/pacientes/lista-profesional` solo para profesionales médicos
+  - Template `lista_profesional.html` que muestra solo pacientes asignados
+  - Redirección automática desde `/pacientes/` según rol de usuario
+  - Profesionales ya no pueden acceder a la vista administrativa de pacientes
+  - Vista profesional muestra pacientes con citas asignadas únicamente
+  - Diseño moderno con tarjetas de paciente y acciones específicas
+
 ### July 10, 2025 - Eliminación de Opción de Respaldo CSV
 - ✅ **Limpieza de navegación administrativa:**
   - Eliminación de opción "Respaldo CSV" del sidebar de administradores

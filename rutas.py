@@ -105,11 +105,15 @@ def registrar_rutas(app):
     @pacientes_bp.route('/')
     @requiere_login
     def lista():
-        """Lista de pacientes"""
+        """Lista de pacientes - solo para administradores"""
         if current_user.es_paciente():
             # Los pacientes solo ven su propio perfil
             return redirect(url_for('pacientes.perfil'))
+        elif current_user.es_profesional():
+            # Los profesionales van a su vista específica
+            return redirect(url_for('pacientes.lista_profesional'))
         
+        # Solo administradores llegan aquí
         pacientes = ServicioPaciente.obtener_pacientes()
         return render_template('pacientes/lista.html', pacientes=pacientes)
     
@@ -155,6 +159,21 @@ def registrar_rutas(app):
                 print(f"Error en completar perfil: {e}")
         
         return render_template('pacientes/completar_perfil.html', form=form)
+    
+    @pacientes_bp.route('/lista-profesional')
+    @requiere_profesional
+    def lista_profesional():
+        """Lista de pacientes asignados al profesional"""
+        # Obtener pacientes que tienen citas con este profesional
+        from sqlalchemy import distinct
+        pacientes_ids = db.session.query(distinct(Cita.paciente_id)).filter_by(profesional_id=current_user.id).all()
+        pacientes_ids = [p[0] for p in pacientes_ids]
+        
+        pacientes = []
+        if pacientes_ids:
+            pacientes = Paciente.query.filter(Paciente.id.in_(pacientes_ids)).all()
+        
+        return render_template('pacientes/lista_profesional.html', pacientes=pacientes)
     
     # Blueprint para citas
     citas_bp = Blueprint('citas', __name__, url_prefix='/citas')

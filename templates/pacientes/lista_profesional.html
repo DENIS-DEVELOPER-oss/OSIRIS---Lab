@@ -1,0 +1,245 @@
+{% extends "modern_base.html" %}
+
+{% block title %}Mis Pacientes - Sistema Médico Universitario{% endblock %}
+
+{% block content %}
+<!-- Header profesional -->
+<div class="dashboard-header-gradient">
+    <div class="dashboard-header-content">
+        <h1 class="dashboard-title">
+            <i class='bx bx-user-check'></i>
+            Mis Pacientes
+        </h1>
+        <p class="dashboard-subtitle">Pacientes asignados para consultas médicas</p>
+    </div>
+</div>
+
+<div class="dashboard-actions">
+    {% if pacientes %}
+        <div class="actions-header">
+            <h3>Pacientes Asignados</h3>
+            <p class="actions-subtitle">{{ pacientes|length }} paciente(s) bajo su atención médica</p>
+        </div>
+        
+        <!-- Lista de pacientes -->
+        <div class="pacientes-grid">
+            {% for paciente in pacientes %}
+            <div class="paciente-card">
+                <div class="paciente-info">
+                    <div class="paciente-avatar">
+                        <i class='bx bx-user'></i>
+                    </div>
+                    <div class="paciente-datos">
+                        <h4 class="paciente-nombre">{{ paciente.usuario.nombre }}</h4>
+                        <p class="paciente-carrera">{{ paciente.carrera }}</p>
+                        <div class="paciente-detalles">
+                            <span class="detalle-item">
+                                <i class='bx bx-id-card'></i>
+                                Matrícula: {{ paciente.usuario.codigo_matricula }}
+                            </span>
+                            {% if paciente.telefono %}
+                            <span class="detalle-item">
+                                <i class='bx bx-phone'></i>
+                                {{ paciente.telefono }}
+                            </span>
+                            {% endif %}
+                            {% if paciente.procedencia %}
+                            <span class="detalle-item">
+                                <i class='bx bx-map'></i>
+                                {{ paciente.procedencia }}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="paciente-acciones">
+                    <a href="{{ url_for('citas.lista_profesional') }}" class="btn-accion primary">
+                        <i class='bx bx-calendar'></i>
+                        Ver Citas
+                    </a>
+                    <a href="{{ url_for('consultas.lista') }}" class="btn-accion success">
+                        <i class='bx bx-clipboard'></i>
+                        Consultas
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- Estado vacío -->
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class='bx bx-user-x'></i>
+            </div>
+            <h3>Sin Pacientes Asignados</h3>
+            <p>Aún no tiene pacientes asignados para consultas médicas.</p>
+            <p class="text-muted">Los pacientes aparecerán aquí cuando tengan citas programadas con usted.</p>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+.pacientes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.paciente-card {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 25px;
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.paciente-card:hover {
+    border-color: #4f46e5;
+    box-shadow: 0 5px 15px rgba(79, 70, 229, 0.1);
+    background: white;
+}
+
+.paciente-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+}
+
+.paciente-avatar {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.paciente-datos {
+    flex: 1;
+}
+
+.paciente-nombre {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 5px;
+}
+
+.paciente-carrera {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.paciente-detalles {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.detalle-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.detalle-item i {
+    color: #4f46e5;
+    width: 16px;
+}
+
+.paciente-acciones {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.btn-accion {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.btn-accion.primary {
+    background: #4f46e5;
+    color: white;
+}
+
+.btn-accion.primary:hover {
+    background: #3730a3;
+    transform: translateY(-2px);
+}
+
+.btn-accion.success {
+    background: #10b981;
+    color: white;
+}
+
+.btn-accion.success:hover {
+    background: #059669;
+    transform: translateY(-2px);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6b7280;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    color: #d1d5db;
+    margin-bottom: 20px;
+}
+
+.empty-state h3 {
+    color: #1f2937;
+    margin-bottom: 10px;
+}
+
+.text-muted {
+    font-size: 14px;
+    color: #9ca3af;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pacientes-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .paciente-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+    
+    .paciente-acciones {
+        flex-direction: row;
+        justify-content: center;
+        width: 100%;
+    }
+}
+</style>
+
+{% endblock %}
