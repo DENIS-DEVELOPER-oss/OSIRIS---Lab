@@ -305,7 +305,15 @@ def registrar_rutas(app):
     def dashboard_admin():
         """Dashboard administrativo principal con resumen general"""
         resumen = ServicioReporte.obtener_resumen_dashboard()
-        return render_template('reportes/dashboard.html', resumen=resumen)
+        estadisticas_citas = ServicioReporte.obtener_estadisticas_citas()
+        tendencia_mensual = ServicioReporte.obtener_tendencia_mensual_citas()
+        niveles_riesgo = ServicioReporte.obtener_niveles_riesgo()
+        
+        return render_template('reportes/dashboard.html', 
+                             resumen=resumen,
+                             estadisticas_citas=estadisticas_citas,
+                             tendencia_mensual=tendencia_mensual,
+                             niveles_riesgo=niveles_riesgo)
     
     @reportes_bp.route('/usuarios')
     @requiere_administrador

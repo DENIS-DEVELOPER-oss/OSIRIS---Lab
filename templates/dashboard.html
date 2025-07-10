@@ -21,7 +21,7 @@
             </div>
             <div class="admin-stat-value">{{ resumen.total_pacientes }}</div>
             <div class="admin-stat-label">Estudiantes registrados</div>
-            <div class="admin-stat-change positive">+5% este mes</div>
+            <div class="admin-stat-change positive">Registrados</div>
         </div>
         
         <div class="admin-stat-card info">
@@ -33,7 +33,7 @@
             </div>
             <div class="admin-stat-value">{{ resumen.total_citas }}</div>
             <div class="admin-stat-label">Citas programadas</div>
-            <div class="admin-stat-change positive">+12% este mes</div>
+            <div class="admin-stat-change positive">Total sistema</div>
         </div>
         
         <div class="admin-stat-card warning">
@@ -45,7 +45,7 @@
             </div>
             <div class="admin-stat-value">{{ resumen.citas_mes }}</div>
             <div class="admin-stat-label">Citas activas</div>
-            <div class="admin-stat-change positive">+8% vs mes anterior</div>
+            <div class="admin-stat-change positive">Mes actual</div>
         </div>
         
         <div class="admin-stat-card danger">
@@ -57,7 +57,7 @@
             </div>
             <div class="admin-stat-value">{{ resumen.consultas_riesgo_alto }}</div>
             <div class="admin-stat-label">Pacientes críticos</div>
-            <div class="admin-stat-change negative">-2% este mes</div>
+            <div class="admin-stat-change negative">Requieren atención</div>
         </div>
     </div>
     
@@ -121,15 +121,29 @@
 
 {% block extra_js %}
 <script>
-// Gráfico de líneas para citas por mes
+// Preparar datos reales desde el backend
+const tendenciaMensual = {{ tendencia_mensual | tojson }};
+const estadisticasCitas = {{ estadisticas_citas | tojson }};
+
+// Convertir datos de tendencia mensual para el gráfico
+const mesesLabels = tendenciaMensual.meses.length > 0 ? 
+    tendenciaMensual.meses.map(mes => {
+        const [año, mesNum] = mes.split('-');
+        const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 
+                      'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+        return meses[parseInt(mesNum) - 1];
+    }) : ['Sin datos'];
+const totalesCitas = tendenciaMensual.totales.length > 0 ? tendenciaMensual.totales : [0];
+
+// Gráfico de líneas para citas por mes (datos reales)
 const citasCtx = document.getElementById('citasChart').getContext('2d');
 const citasChart = new Chart(citasCtx, {
     type: 'line',
     data: {
-        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+        labels: mesesLabels,
         datasets: [{
             label: 'Citas',
-            data: [12, 19, 15, 25, 22, 30],
+            data: totalesCitas,
             borderColor: '#4f46e5',
             backgroundColor: 'rgba(79, 70, 229, 0.1)',
             tension: 0.4,
@@ -160,19 +174,42 @@ const citasChart = new Chart(citasCtx, {
     }
 });
 
-// Gráfico de dona para consultas por tipo
+// Preparar datos para gráfico de dona (datos reales)
+const tiposCita = ['TipoCita.MEDICINA', 'TipoCita.PSICOLOGIA', 'TipoCita.EMERGENCIA'];
+const labelsCitas = [];
+const datosCitas = [];
+const coloresCitas = ['#4f46e5', '#10b981', '#f59e0b'];
+
+// Mapear tipos de cita a etiquetas legibles
+const mapaEtiquetas = {
+    'TipoCita.MEDICINA': 'Medicina',
+    'TipoCita.PSICOLOGIA': 'Psicología', 
+    'TipoCita.EMERGENCIA': 'Emergencia'
+};
+
+// Procesar datos reales de estadísticas de citas
+for (let tipo of tiposCita) {
+    if (estadisticasCitas[tipo]) {
+        labelsCitas.push(mapaEtiquetas[tipo]);
+        datosCitas.push(estadisticasCitas[tipo]);
+    }
+}
+
+// Si no hay datos, mostrar mensaje
+if (labelsCitas.length === 0) {
+    labelsCitas.push('Sin datos');
+    datosCitas.push(1);
+}
+
+// Gráfico de dona para consultas por tipo (datos reales)
 const consultasCtx = document.getElementById('consultasChart').getContext('2d');
 const consultasChart = new Chart(consultasCtx, {
     type: 'doughnut',
     data: {
-        labels: ['Medicina', 'Psicología', 'Emergencia'],
+        labels: labelsCitas,
         datasets: [{
-            data: [45, 35, 20],
-            backgroundColor: [
-                '#4f46e5',
-                '#10b981',
-                '#f59e0b'
-            ],
+            data: datosCitas,
+            backgroundColor: coloresCitas.slice(0, labelsCitas.length),
             borderWidth: 0
         }]
     },
