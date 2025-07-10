@@ -457,6 +457,30 @@ El proyecto está preparado para ser subido a GitHub con:
   - Contenido principal mantenido en español profesional médico
   - Meta tags y estructura semántica optimizada para idioma español
 
+### July 10, 2025 - Integración del Logo Principal en Sección Derecha
+- ✅ **Logo principal OSIRIS integrado en la sección derecha:**
+  - Reemplazada ilustración médica SVG por logo real (logo.png)
+  - Logo de 320px con animación de flotación suave (logoFloat)
+  - Efecto de resplandor (glow) con gradiente cyan que pulsa dinámicamente
+  - Drop-shadow profesional para dar profundidad y elegancia
+
+- ✅ **Elementos decorativos médicos modernos:**
+  - 4 iconos médicos flotantes con gradientes de colores diferenciados
+  - Iconos: salud, cruz médica, corazón, voz de usuario
+  - Animaciones individuales con delays escalonados (0s, 2s, 4s, 6s)
+  - Posicionamiento estratégico en esquinas y laterales
+
+- ✅ **Partículas flotantes mejoradas:**
+  - 4 partículas con tamaños variables (4px a 10px)
+  - Gradientes de colores: cyan, verde, amarillo, rojo
+  - Animación compleja con rotación 360° y escalado dinámico
+  - Duración extendida a 12 segundos para movimiento más suave
+
+- ✅ **Diseño responsive optimizado:**
+  - Logo adaptativo: 320px desktop, 220px móvil
+  - Elementos médicos escalados proporcionalmente
+  - Resplandor ajustado automáticamente según tamaño de pantalla
+
 ### July 10, 2025 - Eliminación de Opción de Respaldo CSV
 - ✅ **Limpieza de navegación administrativa:**
   - Eliminación de opción "Respaldo CSV" del sidebar de administradores
