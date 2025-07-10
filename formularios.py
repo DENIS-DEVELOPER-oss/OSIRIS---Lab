@@ -109,6 +109,45 @@ class FormularioRegistro(FlaskForm):
         Regexp(r'^\d{6}$', message='Código debe contener solo números (6 dígitos)')  # Validación de formato
     ])
     
+    # Campos adicionales para pacientes (estudiantes)
+    telefono = TelField('Teléfono', validators=[
+        Length(max=15, message='Teléfono no puede exceder 15 caracteres')
+    ])
+    
+    direccion = StringField('Dirección', validators=[
+        Length(max=200, message='Dirección no puede exceder 200 caracteres')
+    ])
+    
+    carrera = StringField('Carrera', validators=[
+        Length(max=100, message='Carrera no puede exceder 100 caracteres')
+    ])
+    
+    procedencia = SelectField('Procedencia', choices=[
+        ('', 'Seleccionar procedencia'),
+        ('Puno', 'Puno (Ciudad)'),
+        ('Juliaca', 'Juliaca'),
+        ('Ilave', 'Ilave'),
+        ('Yunguyo', 'Yunguyo'),
+        ('Desaguadero', 'Desaguadero'),
+        ('Ayaviri', 'Ayaviri'),
+        ('Putina', 'Putina'),
+        ('Sandia', 'Sandia'),
+        ('Macusani', 'Macusani'),
+        ('Crucero', 'Crucero'),
+        ('Azángaro', 'Azángaro'),
+        ('Lampa', 'Lampa'),
+        ('Juli', 'Juli'),
+        ('Pomata', 'Pomata'),
+        ('Zepita', 'Zepita'),
+        ('Pilcuyo', 'Pilcuyo'),
+        ('Huancané', 'Huancané'),
+        ('Moho', 'Moho'),
+        ('Conima', 'Conima'),
+        ('Tilali', 'Tilali'),
+        ('Taraco', 'Taraco'),
+        ('Otro', 'Otro lugar')
+    ])
+    
     # Campo password: Contraseña del usuario con requisitos de seguridad
     password = PasswordField('Contraseña', validators=[
         DataRequired(message='Este campo es obligatorio'),  # Campo obligatorio

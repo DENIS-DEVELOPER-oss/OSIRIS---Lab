@@ -351,6 +351,8 @@ def registrar_rutas(app):
                 # Campos adicionales para estudiantes
                 carrera = request.form.get('carrera', '').strip()
                 procedencia = request.form.get('procedencia', '').strip()
+                telefono = request.form.get('telefono', '').strip()
+                direccion = request.form.get('direccion', '').strip()
                 
                 # Validaciones básicas
                 errores = []
@@ -401,6 +403,8 @@ def registrar_rutas(app):
                     paciente = ServicioPaciente.crear_paciente(usuario.id, {
                         'carrera': carrera,
                         'procedencia': procedencia if procedencia else None,
+                        'telefono': telefono if telefono else None,
+                        'direccion': direccion if direccion else None,
                         'fecha_nacimiento': date(2000, 1, 1)  # Fecha placeholder, se puede actualizar después
                     })
                 

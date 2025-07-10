@@ -53,9 +53,9 @@
                         <select name="rol" required id="rolSelect" onchange="toggleFields()"
                                 style="width: 100%; padding: 12px; border: 1px solid var(--admin-border); border-radius: 6px; background: var(--admin-bg);">
                             <option value="">Seleccionar rol</option>
-                            <option value="PACIENTE">👨‍🎓 Estudiante</option>
-                            <option value="PROFESIONAL">👨‍⚕️ Profesional</option>
-                            <option value="ADMINISTRADOR">👨‍💼 Administrador</option>
+                            <option value="PACIENTE">👨‍🎓 Estudiante/Paciente</option>
+                            <option value="PROFESIONAL">👨‍⚕️ Profesional Médico</option>
+                            <option value="ADMINISTRADOR">👨‍💼 Administrador del Sistema</option>
                         </select>
                         <small style="color: var(--admin-text-secondary); font-size: 12px;">Seleccione los permisos de acceso</small>
                     </div>
@@ -98,12 +98,12 @@
                 </div>
             </div>
             
-            <!-- Información Académica (Solo para Estudiantes) -->
+            <!-- Información Adicional (Solo para Estudiantes) -->
             <div id="academicSection" style="display: none; margin-bottom: 30px;">
                 <h5 style="color: var(--admin-text-primary); margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
-                    <i class='bx bx-school'></i> Información Académica
+                    <i class='bx bx-school'></i> Información del Estudiante
                 </h5>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                     <div>
                         <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">
                             <i class='bx bx-book'></i> Carrera
@@ -145,6 +145,29 @@
                             <option value="Otro">Otro lugar</option>
                         </select>
                         <small style="color: var(--admin-text-secondary); font-size: 12px;">Distrito o provincia de origen para el mapa</small>
+                    </div>
+                </div>
+                
+                <!-- Información de Contacto para Estudiantes -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">
+                            <i class='bx bx-phone'></i> Teléfono
+                        </label>
+                        <input type="tel" name="telefono" maxlength="15"
+                               style="width: 100%; padding: 12px; border: 1px solid var(--admin-border); border-radius: 6px; background: var(--admin-bg);"
+                               placeholder="Ej: 951234567">
+                        <small style="color: var(--admin-text-secondary); font-size: 12px;">Número de teléfono del estudiante</small>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">
+                            <i class='bx bx-home'></i> Dirección
+                        </label>
+                        <input type="text" name="direccion" maxlength="200"
+                               style="width: 100%; padding: 12px; border: 1px solid var(--admin-border); border-radius: 6px; background: var(--admin-bg);"
+                               placeholder="Ej: Jr. Los Andes 123, Puno">
+                        <small style="color: var(--admin-text-secondary); font-size: 12px;">Dirección actual del estudiante</small>
                     </div>
                 </div>
             </div>
@@ -205,17 +228,51 @@ function toggleFields() {
         roleInfo.style.display = 'block';
         
         if (selectedRole === 'PACIENTE') {
-            roleDescription.innerHTML = 'Los estudiantes pueden acceder a consultas médicas, gestionar su perfil y agendar citas. Se requiere información académica y de procedencia para el mapa de Puno.';
+            roleDescription.innerHTML = `
+                <strong>🎓 Estudiante/Paciente:</strong>
+                <ul style="margin: 10px 0 0 20px; color: var(--admin-text-secondary);">
+                    <li>Acceso a consultas médicas y psicológicas</li>
+                    <li>Gestión de perfil personal y académico</li>
+                    <li>Visualización de citas y historial médico</li>
+                    <li>Sistema de identificación con código de matrícula de 6 dígitos</li>
+                    <li>Información incluida en mapas geográficos de Puno</li>
+                </ul>
+            `;
             dniField.style.display = 'none';
             matriculaField.style.display = 'block';
             academicSection.style.display = 'block';
             document.querySelector('input[name="dni"]').required = false;
             document.querySelector('input[name="codigo_matricula"]').required = true;
             document.querySelector('input[name="carrera"]').required = true;
+        } else if (selectedRole === 'PROFESIONAL') {
+            roleDescription.innerHTML = `
+                <strong>👨‍⚕️ Profesional Médico:</strong>
+                <ul style="margin: 10px 0 0 20px; color: var(--admin-text-secondary);">
+                    <li>Atención y registro de consultas médicas/psicológicas</li>
+                    <li>Gestión de citas asignadas y calendario</li>
+                    <li>Acceso al historial médico de pacientes</li>
+                    <li>Evaluación de riesgo y seguimiento de casos</li>
+                    <li>Sistema de identificación con DNI de 8 dígitos</li>
+                </ul>
+            `;
+            dniField.style.display = 'block';
+            matriculaField.style.display = 'none';
+            academicSection.style.display = 'none';
+            document.querySelector('input[name="dni"]').required = true;
+            document.querySelector('input[name="codigo_matricula"]').required = false;
+            document.querySelector('input[name="carrera"]').required = false;
         } else {
-            roleDescription.innerHTML = selectedRole === 'PROFESIONAL' ? 
-                'Los profesionales pueden atender consultas, gestionar citas y acceder al historial médico.' :
-                'Los administradores tienen acceso completo al sistema, incluyendo gestión de usuarios y reportes.';
+            roleDescription.innerHTML = `
+                <strong>👨‍💼 Administrador del Sistema:</strong>
+                <ul style="margin: 10px 0 0 20px; color: var(--admin-text-secondary);">
+                    <li>Acceso completo a todas las funciones del sistema</li>
+                    <li>Gestión de usuarios (crear, editar, desactivar)</li>
+                    <li>Programación y administración de citas</li>
+                    <li>Generación de reportes y estadísticas avanzadas</li>
+                    <li>Configuración del sistema y respaldos de datos</li>
+                    <li>Sistema de identificación con DNI de 8 dígitos</li>
+                </ul>
+            `;
             dniField.style.display = 'block';
             matriculaField.style.display = 'none';
             academicSection.style.display = 'none';
