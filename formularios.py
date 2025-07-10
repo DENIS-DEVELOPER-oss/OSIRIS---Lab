@@ -1,7 +1,7 @@
 # Importaciones necesarias para la creación de formularios web
 from flask_wtf import FlaskForm  # Clase base para formularios con protección CSRF
 from wtforms import StringField, PasswordField, SelectField, DateField, TimeField, TextAreaField, TelField  # Tipos de campos de formulario
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError  # Validadores de campos
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Regexp  # Validadores de campos
 from datetime import date, datetime  # Para manejo de fechas y validaciones temporales
 from modelos import Usuario, RolUsuario, TipoCita, NivelRiesgo  # Modelos y enumeraciones del sistema
 
@@ -100,7 +100,8 @@ class FormularioRegistro(FlaskForm):
     
     # Campo código_matricula: Código universitario (obligatorio para estudiantes)
     codigo_matricula = StringField('Código de Matrícula', validators=[
-        Length(min=4, max=20, message='Código debe tener entre 4 y 20 caracteres')  # Validación de longitud
+        Length(min=6, max=6, message='Código debe tener exactamente 6 dígitos'),  # Validación de longitud exacta
+        Regexp(r'^\d{6}$', message='Código debe contener solo números (6 dígitos)')  # Validación de formato
     ])
     
     # Campo password: Contraseña del usuario con requisitos de seguridad

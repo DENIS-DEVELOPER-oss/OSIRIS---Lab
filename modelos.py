@@ -78,7 +78,8 @@ class Usuario(UserMixin, db.Model):
     
     # Campo código_matricula: Código de matrícula universitaria para estudiantes
     # Es único en la base de datos pero puede ser nulo (para profesionales que usan DNI)
-    codigo_matricula = Column(String(20), unique=True, nullable=True)
+    # Código de matrícula debe ser exactamente 6 dígitos para estudiantes
+    codigo_matricula = Column(String(6), unique=True, nullable=True)
     
     # Campo rol: Rol del usuario en el sistema usando la enumeración RolUsuario
     # Este campo determina los permisos y funcionalidades disponibles

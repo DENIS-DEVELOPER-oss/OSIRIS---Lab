@@ -90,10 +90,10 @@
                         <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">
                             <i class='bx bx-bookmark'></i> Código de Matrícula
                         </label>
-                        <input type="text" name="codigo_matricula" maxlength="10" pattern="[0-9]{10}"
+                        <input type="text" name="codigo_matricula" maxlength="6" pattern="[0-9]{6}"
                                style="width: 100%; padding: 12px; border: 1px solid var(--admin-border); border-radius: 6px; background: var(--admin-bg);"
-                               placeholder="Ej: 1234567890">
-                        <small style="color: var(--admin-text-secondary); font-size: 12px;">Solo números, hasta 10 dígitos</small>
+                               placeholder="Ej: 123456">
+                        <small style="color: var(--admin-text-secondary); font-size: 12px;">Solo números, 6 dígitos</small>
                     </div>
                 </div>
             </div>
@@ -235,6 +235,8 @@ function toggleFields() {
 document.addEventListener('DOMContentLoaded', function() {
     const password = document.getElementById('password');
     const confirmPassword = document.getElementById('confirmPassword');
+    const matriculaInput = document.querySelector('input[name="codigo_matricula"]');
+    const dniInput = document.querySelector('input[name="dni"]');
     
     function validatePasswords() {
         if (password.value !== confirmPassword.value) {
@@ -242,6 +244,30 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             confirmPassword.setCustomValidity('');
         }
+    }
+    
+    // Validación de matrícula - solo números, máximo 6 dígitos
+    if (matriculaInput) {
+        matriculaInput.addEventListener('input', function(e) {
+            // Remover caracteres no numéricos
+            this.value = this.value.replace(/[^0-9]/g, '');
+            // Limitar a 6 dígitos
+            if (this.value.length > 6) {
+                this.value = this.value.slice(0, 6);
+            }
+        });
+    }
+    
+    // Validación de DNI - solo números, máximo 8 dígitos
+    if (dniInput) {
+        dniInput.addEventListener('input', function(e) {
+            // Remover caracteres no numéricos
+            this.value = this.value.replace(/[^0-9]/g, '');
+            // Limitar a 8 dígitos
+            if (this.value.length > 8) {
+                this.value = this.value.slice(0, 8);
+            }
+        });
     }
     
     password.addEventListener('change', validatePasswords);

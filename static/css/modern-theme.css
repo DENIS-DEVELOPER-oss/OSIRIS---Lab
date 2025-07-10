@@ -2629,3 +2629,53 @@ h1, h2, h3, h4, h5, h6 {
         padding: 12px;
     }
 }
+
+/* Botón "Volver al Inicio" en login */
+.back-to-home-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #e8f4f8, #d5e8f1);
+    color: #2c3e50;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(52, 152, 219, 0.2);
+}
+
+.back-to-home-btn:hover {
+    background: linear-gradient(135deg, #d5e8f1, #c8dde6);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+    color: #2c3e50;
+    text-decoration: none;
+}
+
+.back-to-home-btn i {
+    font-size: 16px;
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.login-footer p {
+    margin-bottom: 0;
+    color: #7f8c8d;
+    font-size: 14px;
+}
+
+.login-footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}
