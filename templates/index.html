@@ -29,7 +29,7 @@
             width: 100vw !important;
             max-width: 100vw !important;
             margin: 0 !important;
-            padding: 70px 0 0 0 !important;
+            padding: 70px 0 100px 0 !important;
         }
         
         .content-left, .content-right {
@@ -54,12 +54,7 @@
             <span class="logo-text">OSIRIS</span>
         </a>
 
-        <nav class="navbar">
-            <a href="{{ url_for('main.index') }}" class="active">Inicio</a>
-            <a href="#about">Nosotros</a>
-            <a href="#services">Soporte</a>
-            <a href="{{ url_for('auth.login') }}">Iniciar sesión</a>
-        </nav>
+
     </header>
 
     <main class="main-content">
@@ -115,6 +110,28 @@
             </div>
         </div>
     </main>
+
+    <!-- Footer de navegación -->
+    <footer class="bottom-nav">
+        <div class="nav-container">
+            <a href="{{ url_for('main.index') }}" class="nav-item active">
+                <i class='bx bx-home'></i>
+                <span>Inicio</span>
+            </a>
+            <a href="#about" class="nav-item">
+                <i class='bx bx-info-circle'></i>
+                <span>Nosotros</span>
+            </a>
+            <a href="#services" class="nav-item">
+                <i class='bx bx-support'></i>
+                <span>Soporte</span>
+            </a>
+            <a href="{{ url_for('auth.login') }}" class="nav-item login-btn">
+                <i class='bx bx-log-in'></i>
+                <span>Iniciar sesión</span>
+            </a>
+        </div>
+    </footer>
 
     <script>
         // Smooth scrolling for navigation links

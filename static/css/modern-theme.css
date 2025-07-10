@@ -2163,7 +2163,7 @@ h1, h2, h3, h4, h5, h6 {
    ESTILOS ESPECÍFICOS PARA PÁGINA DE INICIO
    ======================================== */
 
-/* Header de página de inicio - TAMAÑO OPTIMIZADO */
+/* Header de página de inicio - SOLO LOGO */
 .header {
     position: fixed;
     top: 0;
@@ -2175,7 +2175,7 @@ h1, h2, h3, h4, h5, h6 {
     backdrop-filter: blur(15px);
     border-bottom: 1px solid rgba(6, 182, 212, 0.15);
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     z-index: 1001;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
@@ -2248,23 +2248,107 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 4px 15px rgba(6, 182, 212, 0.25);
 }
 
-.navbar a::before {
-    content: '';
-    position: absolute;
-    top: 100%;
+/* Footer de navegación inferior */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
     left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--primary-color);
-    transition: var(--transition-normal);
+    width: 100vw;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border-top: 1px solid rgba(6, 182, 212, 0.15);
+    box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.08);
+    z-index: 1001;
+    padding: 15px 0;
 }
 
-.navbar a:hover::before,
-.navbar a.active::before {
-    width: 100%;
+.nav-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
-/* Contenido principal de inicio - PANTALLA COMPLETA OPTIMIZADA */
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(6, 182, 212, 0.1);
+    min-width: 80px;
+}
+
+.nav-item i {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    color: white;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+}
+
+.nav-item.login-btn {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    font-weight: 600;
+}
+
+.nav-item.login-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+    filter: brightness(1.1);
+}
+
+/* Responsive para navegación inferior en móviles */
+@media (max-width: 768px) {
+    .nav-container {
+        gap: 20px;
+        padding: 0 10px;
+    }
+    
+    .nav-item {
+        min-width: 60px;
+        font-size: 12px;
+        padding: 6px 8px;
+    }
+    
+    .nav-item i {
+        font-size: 18px;
+        margin-bottom: 2px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-container {
+        gap: 15px;
+    }
+    
+    .nav-item {
+        min-width: 50px;
+        font-size: 11px;
+        padding: 5px 6px;
+    }
+    
+    .nav-item i {
+        font-size: 16px;
+    }
+}
+
+/* Contenido principal de inicio - PANTALLA COMPLETA CON FOOTER */
 .main-content {
     position: fixed;
     top: 0;
@@ -2274,7 +2358,7 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     justify-content: stretch;
     align-items: center;
-    padding: 70px 0 0 0;
+    padding: 70px 0 100px 0;
     margin: 0;
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 25%, #cbd5e1 50%, #94a3b8 75%, #64748b 100%);
     background-size: 200% 200%;
