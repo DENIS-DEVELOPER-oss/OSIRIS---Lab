@@ -2,222 +2,144 @@
 
 {% block title %}Nueva Cita - Sistema Médico Universitario{% endblock %}
 
-{% block page_title %}Nueva Cita Médica{% endblock %}
-
 {% block content %}
-<div class="osiris-form-container">
-    <div class="osiris-form-header">
-        <h1><i class='bx bx-calendar-plus'></i> Nueva Cita Médica</h1>
-        <p>Complete todos los campos para programar una nueva cita médica</p>
+<!-- Dashboard Header -->
+<div class="admin-header">
+    <div>
+        <h1 class="admin-header-title">Nueva Cita Médica</h1>
+        <p class="admin-header-subtitle">Complete todos los campos para programar una nueva cita médica</p>
+        <small class="admin-status">Formulario de programación de citas</small>
     </div>
-    
-    <div class="osiris-form-body">
+    <div class="admin-header-actions">
+        <a href="{{ url_for('citas.lista') }}" class="admin-btn admin-btn-secondary">
+            <i class='bx bx-arrow-back'></i>
+            Volver a Citas
+        </a>
+    </div>
+</div>
+
+<!-- Formulario de Nueva Cita -->
+<div class="admin-table-container">
+    <div class="admin-table-header">
+        <div class="admin-table-title">Información de la Cita</div>
+        <div style="color: var(--admin-text-secondary); font-size: 14px;">
+            Complete la información para programar la cita médica
+        </div>
+    </div>
+    <div style="padding: 30px;">
         <form method="POST">
             {{ form.hidden_tag() }}
             
-            <div class="osiris-form-row">
-                <div class="osiris-form-group">
-                    <label class="osiris-form-label">{{ form.paciente_id.label.text }}</label>
-                    {{ form.paciente_id(class="osiris-form-select" + (" error" if form.paciente_id.errors else "")) }}
-                    {% if form.paciente_id.errors %}
-                        {% for error in form.paciente_id.errors %}
-                            <span class="osiris-form-error">{{ error }}</span>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-                
-                <div class="osiris-form-group">
-                    <label class="osiris-form-label">{{ form.profesional_id.label.text }}</label>
-                    {{ form.profesional_id(class="osiris-form-select" + (" error" if form.profesional_id.errors else "")) }}
-                    {% if form.profesional_id.errors %}
-                        {% for error in form.profesional_id.errors %}
-                            <span class="osiris-form-error">{{ error }}</span>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-            </div>
-            
-            <div class="osiris-form-row">
-                <div class="osiris-form-group">
-                    <label class="osiris-form-label">{{ form.fecha.label.text }}</label>
-                    {{ form.fecha(class="osiris-form-input" + (" error" if form.fecha.errors else "")) }}
-                    {% if form.fecha.errors %}
-                        {% for error in form.fecha.errors %}
-                            <span class="osiris-form-error">{{ error }}</span>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-                
-                <div class="osiris-form-group">
-                    <label class="osiris-form-label">{{ form.hora.label.text }}</label>
-                    {{ form.hora(class="osiris-form-input" + (" error" if form.hora.errors else "")) }}
-                    {% if form.hora.errors %}
-                        {% for error in form.hora.errors %}
-                            <span class="osiris-form-error">{{ error }}</span>
-                        {% endfor %}
-                    {% endif %}
+            <!-- Participantes -->
+            <div style="margin-bottom: 30px;">
+                <h5 style="color: var(--admin-text-primary); margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+                    <i class='bx bx-user'></i> Participantes
+                </h5>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">
+                            <i class='bx bx-user-circle'></i> {{ form.paciente_id.label.text }}
+                        </label>
+                        {{ form.paciente_id(style="width: 100%; padding: 12px; border: 1px solid var(--admin-border); border-radius: 6px; background: var(--admin-bg);") }}
+                        {% if form.paciente_id.errors %}
+                            {% for error in form.paciente_id.errors %}
+                                <div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                        <small style="color: var(--admin-text-secondary); font-size: 12px;">Selecciona el estudiante que recibirá la atención médica</small>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">
+                            <i class='bx bx-user-check'></i> {{ form.profesional_id.label.text }}
+                        </label>
+                        {{ form.profesional_id(style="width: 100%; padding: 12px; border: 1px solid var(--admin-border); border-radius: 6px; background: var(--admin-bg);") }}
+                        {% if form.profesional_id.errors %}
+                            {% for error in form.profesional_id.errors %}
+                                <div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                        <small style="color: var(--admin-text-secondary); font-size: 12px;">Asigna el médico o psicólogo que atenderá</small>
+                    </div>
                 </div>
             </div>
             
-            <div class="osiris-form-row single">
-                <div class="osiris-form-group">
-                    <label class="osiris-form-label">{{ form.tipo_cita.label.text }}</label>
-                    {{ form.tipo_cita(class="osiris-form-select" + (" error" if form.tipo_cita.errors else "")) }}
-                    {% if form.tipo_cita.errors %}
-                        {% for error in form.tipo_cita.errors %}
-                            <span class="osiris-form-error">{{ error }}</span>
-                        {% endfor %}
-                    {% endif %}
+            <!-- Programación -->
+            <div style="margin-bottom: 30px;">
+                <h5 style="color: var(--admin-text-primary); margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+                    <i class='bx bx-time'></i> Programación de la Cita
+                </h5>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">
+                            <i class='bx bx-calendar'></i> {{ form.fecha.label.text }}
+                        </label>
+                        {{ form.fecha(style="width: 100%; padding: 12px; border: 1px solid var(--admin-border); border-radius: 6px; background: var(--admin-bg);") }}
+                        {% if form.fecha.errors %}
+                            {% for error in form.fecha.errors %}
+                                <div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                        <small style="color: var(--admin-text-secondary); font-size: 12px;">Fecha de la consulta médica</small>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">
+                            <i class='bx bx-time-five'></i> {{ form.hora.label.text }}
+                        </label>
+                        {{ form.hora(style="width: 100%; padding: 12px; border: 1px solid var(--admin-border); border-radius: 6px; background: var(--admin-bg);") }}
+                        {% if form.hora.errors %}
+                            {% for error in form.hora.errors %}
+                                <div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                        <small style="color: var(--admin-text-secondary); font-size: 12px;">Hora de inicio de la consulta</small>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">
+                            <i class='bx bx-medical'></i> {{ form.tipo_cita.label.text }}
+                        </label>
+                        {{ form.tipo_cita(style="width: 100%; padding: 12px; border: 1px solid var(--admin-border); border-radius: 6px; background: var(--admin-bg);") }}
+                        {% if form.tipo_cita.errors %}
+                            {% for error in form.tipo_cita.errors %}
+                                <div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                        <small style="color: var(--admin-text-secondary); font-size: 12px;">Tipo de consulta a realizar</small>
+                    </div>
                 </div>
             </div>
             
-            <div class="osiris-form-row single">
-                <div class="osiris-form-group">
-                    <label class="osiris-form-label">{{ form.motivo.label.text }}</label>
-                    {{ form.motivo(class="osiris-form-textarea" + (" error" if form.motivo.errors else ""), rows="4") }}
+            <!-- Detalles -->
+            <div style="margin-bottom: 30px;">
+                <h5 style="color: var(--admin-text-primary); margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+                    <i class='bx bx-note'></i> Detalles de la Cita
+                </h5>
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-text-primary);">
+                        <i class='bx bx-message-detail'></i> {{ form.motivo.label.text }}
+                    </label>
+                    {{ form.motivo(rows="4", style="width: 100%; padding: 12px; border: 1px solid var(--admin-border); border-radius: 6px; background: var(--admin-bg); resize: vertical;", placeholder="Describe el motivo de la consulta, síntomas o razón de la cita...") }}
                     {% if form.motivo.errors %}
                         {% for error in form.motivo.errors %}
-                            <span class="osiris-form-error">{{ error }}</span>
+                            <div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ error }}</div>
                         {% endfor %}
                     {% endif %}
-                    <span class="osiris-form-help">Describe brevemente el motivo de la consulta (opcional)</span>
+                    <small style="color: var(--admin-text-secondary); font-size: 12px;">Proporciona información adicional sobre el motivo de la consulta</small>
                 </div>
             </div>
             
-            <div class="osiris-form-actions">
-                <button type="submit" class="osiris-btn osiris-btn-primary">
-                    <i class='bx bx-save'></i> CREAR CITA
-                </button>
-                <a href="{{ url_for('citas.lista') }}" class="osiris-btn osiris-btn-secondary">
-                    <i class='bx bx-x'></i> Cancelar
+            <!-- Botones de Acción -->
+            <div style="display: flex; justify-content: center; gap: 15px; margin-top: 30px;">
+                <a href="{{ url_for('citas.lista') }}" class="admin-btn admin-btn-secondary">
+                    <i class='bx bx-arrow-back'></i> Cancelar
                 </a>
+                <button type="submit" class="admin-btn admin-btn-success">
+                    <i class='bx bx-check-circle'></i> Crear Cita Médica
+                </button>
             </div>
         </form>
     </div>
-</div>
-                        </label>
-                        {{ form.paciente_id(class="form-select" + (" error" if form.paciente_id.errors else "")) }}
-                        {% if form.paciente_id.errors %}
-                            <div class="error-message">
-                                <i class='bx bx-error-circle'></i>
-                                {% for error in form.paciente_id.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                        <div class="form-help">Selecciona el estudiante que recibirá la atención médica</div>
-                    </div>
-                </div>
-                
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="form-label">
-                            <i class='bx bx-user-check'></i> {{ form.profesional_id.label.text }}
-                        </label>
-                        {{ form.profesional_id(class="form-select" + (" error" if form.profesional_id.errors else "")) }}
-                        {% if form.profesional_id.errors %}
-                            <div class="error-message">
-                                <i class='bx bx-error-circle'></i>
-                                {% for error in form.profesional_id.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                        <div class="form-help">Asigna el médico o psicólogo que atenderá</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Sección: Programación -->
-        <div class="form-section">
-            <h5><i class='bx bx-time'></i> Programación de la Cita</h5>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label">
-                            <i class='bx bx-calendar'></i> {{ form.fecha.label.text }}
-                        </label>
-                        {{ form.fecha(class="form-control" + (" error" if form.fecha.errors else "")) }}
-                        {% if form.fecha.errors %}
-                            <div class="error-message">
-                                <i class='bx bx-error-circle'></i>
-                                {% for error in form.fecha.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                        <div class="form-help">Fecha de la consulta médica</div>
-                    </div>
-                </div>
-                
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label">
-                            <i class='bx bx-time-five'></i> {{ form.hora.label.text }}
-                        </label>
-                        {{ form.hora(class="form-control" + (" error" if form.hora.errors else "")) }}
-                        {% if form.hora.errors %}
-                            <div class="error-message">
-                                <i class='bx bx-error-circle'></i>
-                                {% for error in form.hora.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                        <div class="form-help">Hora de inicio de la consulta</div>
-                    </div>
-                </div>
-                
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label">
-                            <i class='bx bx-medical'></i> {{ form.tipo_cita.label.text }}
-                        </label>
-                        {{ form.tipo_cita(class="form-select" + (" error" if form.tipo_cita.errors else "")) }}
-                        {% if form.tipo_cita.errors %}
-                            <div class="error-message">
-                                <i class='bx bx-error-circle'></i>
-                                {% for error in form.tipo_cita.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                        <div class="form-help">Tipo de consulta a realizar</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Sección: Detalles -->
-        <div class="form-section">
-            <h5><i class='bx bx-note'></i> Detalles de la Cita</h5>
-            <div class="form-group">
-                <label class="form-label">
-                    <i class='bx bx-message-detail'></i> {{ form.motivo.label.text }}
-                </label>
-                {{ form.motivo(class="form-control" + (" error" if form.motivo.errors else ""), rows="4", placeholder="Describe el motivo de la consulta, síntomas o razón de la cita...") }}
-                {% if form.motivo.errors %}
-                    <div class="error-message">
-                        <i class='bx bx-error-circle'></i>
-                        {% for error in form.motivo.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <div class="form-help">Proporciona información adicional sobre el motivo de la consulta</div>
-            </div>
-        </div>
-        
-        <!-- Botones de Acción -->
-        <div class="btn-group-actions">
-            <a href="{{ url_for('citas.lista') }}" class="btn btn-secondary btn-lg">
-                <i class='bx bx-arrow-back'></i> Cancelar
-            </a>
-            <button type="submit" class="btn btn-success btn-lg">
-                <i class='bx bx-check-circle'></i> Crear Cita Médica
-            </button>
-        </div>
-    </form>
 </div>
 {% endblock %}
