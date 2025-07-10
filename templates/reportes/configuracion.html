@@ -484,9 +484,10 @@ function mostrarMensaje(mensaje, tipo) {
 }
 
 // Inicializar tooltips
-$(document).ready(function() {
-    if (typeof $().tooltip === 'function') {
-        $('[data-toggle="tooltip"]').tooltip();
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
     }
 });
 </script>

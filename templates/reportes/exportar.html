@@ -396,7 +396,8 @@ function aplicarFiltros() {
 // Función para exportar reporte
 function exportarReporte(tipo) {
     tipoReporteActual = tipo;
-    $('#modalFormato').modal('show');
+    const modal = new bootstrap.Modal(document.getElementById('modalFormato'));
+    modal.show();
 }
 
 // Función para confirmar exportación
@@ -405,7 +406,8 @@ function confirmarExportacion() {
     const fechaInicio = document.getElementById('fechaInicio').value;
     const fechaFin = document.getElementById('fechaFin').value;
     
-    $('#modalFormato').modal('hide');
+    const modal = bootstrap.Modal.getInstance(document.getElementById('modalFormato'));
+    modal.hide();
     
     // Mostrar sección de progreso
     const progressSection = document.getElementById('progressSection');
@@ -477,7 +479,8 @@ function generarReportePersonalizado() {
     }
     
     tipoReporteActual = 'personalizado';
-    $('#modalFormato').modal('show');
+    const modal = new bootstrap.Modal(document.getElementById('modalFormato'));
+    modal.show();
 }
 
 // Función para programar reporte
