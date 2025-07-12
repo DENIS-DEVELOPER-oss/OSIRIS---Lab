@@ -1,26 +1,29 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OSIRIS - Gestión Médica Universitaria</title>
+
+    <!-- Iconos Boxicons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <!-- Estilo personalizado -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home-style.css') }}">
 </head>
-
 <body>
+
     <header class="header">
         <a href="{{ url_for('main.index') }}" class="logo">
-            <img src="{{ url_for('static', filename='images/osiris.png') }}" alt="OSIRIS" height="90">
+            <img src="{{ url_for('static', filename='images/osiris.png') }}" alt="OSIRIS" height="70">
         </a>
 
         <nav class="navbar">
-            <a href="{{ url_for('main.index') }}" style="--i:1;" class="active">Inicio</a>
-            <a href="#" style="--i:3;">Nosotros</a>
-            <a href="#" style="--i:4;">Soporte</a>
-            <a href="{{ url_for('auth.login') }}" style="--i:5;">Iniciar sesión</a>
+            <a href="{{ url_for('main.index') }}" class="active">Inicio</a>
+            <a href="#">Nosotros</a>
+            <a href="#">Soporte</a>
+            <a href="{{ url_for('auth.login') }}">Iniciar sesión</a>
         </nav>
     </header>
 
@@ -29,25 +32,27 @@
             <h3>Bienestar universitario con</h3>
             <h1>TECNOLOGÍA INTELIGENTE</h1>
             <h3>Conecta con nuestros especialistas en salud <span class="multiple-text"></span></h3>
-            <p>Bienvenido a esta aplicación desarrollada por el grupo de desarrollo OSIRIS, una plataforma inteligente de gestión médica diseñada para brindar atención eficiente, segura y oportuna a la comunidad universitaria.</p>
+            <p>
+                Bienvenido a OSIRIS, una plataforma inteligente de gestión médica desarrollada para brindar atención eficiente, segura y oportuna a toda la comunidad universitaria.
+            </p>
 
             <div class="social-media">
-                <a href="#" style="--i:7;"><i class='bx bxl-facebook-circle'></i></a>
-                <a href="#" style="--i:8;"><i class='bx bxl-instagram-alt'></i></a>
-                <a href="#" style="--i:9;"><i class='bx bxl-whatsapp'></i></a>
-                <a href="#" style="--i:10;"><i class='bx bxl-tiktok'></i></a>
+                <a href="#"><i class='bx bxl-facebook-circle'></i></a>
+                <a href="#"><i class='bx bxl-instagram'></i></a>
+                <a href="#"><i class='bx bxl-whatsapp'></i></a>
+                <a href="#"><i class='bx bxl-tiktok'></i></a>
             </div>
 
             <a href="{{ url_for('auth.login') }}" class="btn">Iniciar sesión</a>
         </div>
 
         <div class="home-img">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo de la plataforma OSIRIS" width="550" height="400">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo OSIRIS" width="500">
         </div>
     </section>
 
+    <!-- Scripts -->
     <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
     <script src="{{ url_for('static', filename='js/home-script.js') }}"></script>
 </body>
-
 </html>
